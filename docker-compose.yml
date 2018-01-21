@@ -1,0 +1,75 @@
+version: '3'
+
+services:
+  proxy:
+    image: jwilder/nginx-proxy:alpine
+    labels:
+      - com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy=true
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./proxy/conf.d:/etc/nginx/conf.d:rw
+      - ./proxy/vhost.d:/etc/nginx/vhost.d:rw
+      - ./proxy/html:/usr/share/nginx/html:rw
+      - ./proxy/certs:/etc/nginx/certs:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    restart: always
+
+  letsencrypt:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    depends_on:
+      - proxy
+    volumes:
+      - ./proxy/certs:/etc/nginx/certs:rw
+      - ./proxy/vhost.d:/etc/nginx/vhost.d:rw
+      - ./proxy/html:/usr/share/nginx/html:rw
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    restart: always
+
+  db:
+    image: mariadb:10.2
+    volumes:
+      - ./db:/var/lib/mysql
+      - /etc/localtime:/etc/localtime:ro
+    env_file:
+      - ./env/db.env
+    restart: always
+
+  redis:
+    image: redis
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    restart: always
+
+  app:
+    image: crazymax/matomo:latest
+    hostname: matomo
+    domainname: example.com
+    depends_on:
+      - letsencrypt
+      - proxy
+      - db
+      - redis
+    volumes:
+      - ./app/config:/var/www/config
+      - ./app/user:/var/www/misc/user
+      - ./app/plugins:/var/www/plugins
+    environment:
+      - TZ=Europe/Paris
+      - SITE_URL=https://matomo.example.com
+      - CRON_GEOIP=0 2 * * *
+      - CRON_ARCHIVE=*/15 * * * *
+      - LOG_LEVEL=WARN
+      - MEMORY_LIMIT=256M
+      - UPLOAD_MAX_SIZE=16M
+      - OPCACHE_MEM_SIZE=128M
+      - VIRTUAL_HOST=matomo.example.com
+      - LETSENCRYPT_HOST=matomo.example.com
+      - LETSENCRYPT_EMAIL=webmaster@example.com
+    env_file:
+      - ./env/db.env
+      - ./env/ssmtp.env
+    restart: always
