@@ -1,4 +1,4 @@
-<p align="center"><a href="https://github.com/crazy-max/docker-matomo" target="_blank"><img height="100"src="https://raw.githubusercontent.com/crazy-max/docker-matomo/master/res/matomo_docker.png"></a></p>
+<p align="center"><a href="https://github.com/crazy-max/docker-matomo" target="_blank"><img height="100"src="https://raw.githubusercontent.com/crazy-max/docker-matomo/master/.res/matomo_docker.png"></a></p>
 
 <p align="center">
   <a href="https://microbadger.com/images/crazymax/matomo"><img src="https://images.microbadger.com/badges/version/crazymax/matomo.svg?style=flat-square" alt="Version"></a>
@@ -130,15 +130,6 @@ The most basic way to show your support is to star :star2: the project, or to ra
 Any funds donated will be used to help further development on this project! :gift_heart:
 
 [![Donate Paypal](.res/paypal.png)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=JP85E7WHT33FL)
-
-## My Docker images
-
-* [docker-artifactory](https://github.com/crazy-max/docker-artifactory) : JFrog Artifactory Docker images
-* [docker-dokuwiki](https://github.com/crazy-max/docker-dokuwiki) : DokuWiki Docker image based on Alpine Linux and Nginx
-* [docker-firefox-syncserver](https://github.com/crazy-max/docker-firefox-syncserver) : Firefox Sync Server Docker image
-* [docker-nextcloud](https://github.com/crazy-max/docker-nextcloud) : Nextcloud Docker image based on Nextcloud image with advanced features
-* [docker-rtorrent](https://github.com/crazy-max/docker-rtorrent) : rTorrent Docker image based on Alpine
-* [docker-svn2git-mirror](https://github.com/crazy-max/docker-svn2git-mirror) : Docker image to mirror SVN repositories to Git periodically
 
 ## License
 
