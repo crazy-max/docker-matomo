@@ -68,8 +68,9 @@ done
 
 mkdir -p /data/misc && chown -R nginx. /data/misc
 if [ ! -d /data/misc/user ]; then
-  if [ -d /var/www/misc/user ]; then
-    mv /var/www/misc/user /data/misc/user
+  if [[ ! -L /var/www/misc/user && -d /var/www/misc/user ]]; then
+    cp -Rf /var/www/misc/user /data/misc/
+    rm -rf /var/www/misc/user
   fi
   ln -sf /data/misc/user /var/www/misc/user
   chown -h nginx. /var/www/misc/user
