@@ -56,6 +56,7 @@ if [ -f /data/config/config.ini.php ]; then
   runas_nginx "php /var/www/console config:set --section='General' --key='enable_browser_archiving_triggering' --value='0'"
 fi
 
+mkdir -p /data/plugins && chown -R nginx. /data/plugins
 plugins=$(ls -l /data/plugins | egrep '^d' | awk '{print $9}')
 for plugin in ${plugins}; do
   if [ -d /var/www/plugins/${plugin} ]; then
@@ -65,6 +66,7 @@ for plugin in ${plugins}; do
   chown -h nginx. /var/www/plugins/${plugin}
 done
 
+mkdir -p /data/misc && chown -R nginx. /data/misc
 if [ ! -d /data/misc/user ]; then
   if [ -d /var/www/misc/user ]; then
     mv /var/www/misc/user /data/misc/user
