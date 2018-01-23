@@ -4,7 +4,7 @@
 
 * Add `bootstrap.php` to move user data in a persistent folder
 * Use `inotifywatch` to check if a plugin installed/removed
-* Preserve plugins across upgrades
+* Preserve plugins and user folder across upgrades
 
 ## 3.3.0-RC1 (2018/01/21)
 
