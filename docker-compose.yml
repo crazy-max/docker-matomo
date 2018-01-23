@@ -54,9 +54,7 @@ services:
       - db
       - redis
     volumes:
-      - ./app/config:/var/www/config
-      - ./app/user:/var/www/misc/user
-      - ./app/plugins:/var/www/plugins
+      - ./data:/data
     environment:
       - TZ=Europe/Paris
       - SITE_URL=https://matomo.example.com

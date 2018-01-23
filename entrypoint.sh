@@ -1,5 +1,9 @@
 #!/bin/sh
 
+function runas_nginx() {
+  su - nginx -s /bin/sh -c "$1"
+}
+
 CRONTAB_PATH=${CRONTAB_PATH:-"/var/spool/cron/crontabs"}
 SCRIPTS_PATH=${SCRIPTS_PATH:-"/usr/local/bin"}
 CRON_GEOIP=${CRON_GEOIP:-"0 2 * * *"}
@@ -43,10 +47,22 @@ else
 fi
 
 # Matomo
-if [ -f /var/www/config/config.ini.php ]; then
-  php /var/www/console config:set --section="General" --key="minimum_memory_limit" --value="-1" # Use PHP memory_limit
-  php /var/www/console config:set --section="General" --key="enable_browser_archiving_triggering" --value="0" # Disable browsers to trigger the Matomo archiving process
+cp -f /tpls/bootstrap.php /var/www/bootstrap.php
+cp -Rf /var/www/config /data
+chown -R nginx. /data /var/www
+if [ -f /data/config/config.ini.php ]; then
+  runas_nginx "php /var/www/console core:update"
+  runas_nginx "php /var/www/console config:set --section='General' --key='minimum_memory_limit' --value='-1'"
+  runas_nginx "php /var/www/console config:set --section='General' --key='enable_browser_archiving_triggering' --value='0'"
 fi
+plugins=$(ls -l /data/plugins | egrep '^d' | awk '{print $9}')
+for plugin in ${plugins}; do
+  if [ -d /var/www/plugins/${plugin} ]; then
+    rm -rf /var/www/plugins/${plugin}
+  fi
+  ln -sf /data/plugins/${plugin} /var/www/plugins/${plugin}
+  chown -h nginx. /var/www/plugins/${plugin}
+done
 
 # Crons
 rm -rf ${CRONTAB_PATH}
@@ -56,9 +72,7 @@ printf "${CRON_ARCHIVE} matomo_archive > /proc/1/fd/1 2>/proc/1/fd/2" > ${CRONTA
 
 # Init and perms
 mkdir -p /var/log/supervisord
-mkdir -p /var/www/tmp/cache/tracker
 chmod -R 0644 ${CRONTAB_PATH}
-chown -R nginx. /var/lib/nginx
-chown -R nginx. /var/www
+chown -R nginx. /data /var/www
 
 exec "$@"

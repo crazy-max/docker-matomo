@@ -16,7 +16,7 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
   org.label-schema.schema-version="1.0"
 
 RUN apk --update --no-cache add \
-    ca-certificates dcron curl geoip libressl nginx nginx-mod-http-geoip ssmtp supervisor tar tzdata wget \
+    ca-certificates dcron curl geoip inotify-tools libressl nginx nginx-mod-http-geoip ssmtp supervisor tar tzdata wget \
     php7 php7-cli php7-ctype php7-curl php7-dom php7-iconv php7-fpm php7-gd php7-json php7-mbstring php7-opcache \
     php7-openssl php7-pdo php7-pdo_mysql php7-redis php7-session php7-simplexml php7-xml php7-zlib \
   && rm -rf /var/cache/apk/* /var/www/* /tmp/*
@@ -25,7 +25,7 @@ ENV MATOMO_VERSION="3.3.0" \
   CRONTAB_PATH="/var/spool/cron/crontabs" \
   SCRIPTS_PATH="/usr/local/bin"
 
-RUN mkdir -p /run/nginx /etc/nginx/geoip /var/www \
+RUN mkdir -p /data/config /data/plugins /etc/nginx/geoip /var/www /run/nginx \
   && cd /var/www \
   && curl -O -L "https://builds.matomo.org/piwik-${MATOMO_VERSION}.tar.gz" \
   && tar -xzf "piwik-${MATOMO_VERSION}.tar.gz" --strip 1 \
@@ -46,13 +46,12 @@ RUN mkdir -m 0644 -p ${CRONTAB_PATH} \
     mv $script ${SCRIPTS_PATH}/$scriptBasename; \
     chmod a+x ${SCRIPTS_PATH}/*; done \
   && find /tpls -type f -exec chmod 644 {} \; \
-  && chmod a+x /entrypoint.sh
+  && chmod a+x /entrypoint.sh \
+  && chown -R nginx. /data /var/www
 
 EXPOSE 80
 WORKDIR "/var/www"
-VOLUME [ "/var/www/config", "/var/www/misc/user", "/var/www/plugins" ]
+VOLUME [ "/data" ]
 
 ENTRYPOINT [ "/entrypoint.sh" ]
 CMD [ "/usr/bin/supervisord", "-c", "/etc/supervisord.conf" ]
-
-HEALTHCHECK --interval=5m --timeout=3s CMD curl -f http://localhost/ || exit 1

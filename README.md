@@ -12,7 +12,7 @@
 ## About
 
 [Matomo](https://matomo.org/) (formerly Piwik) Docker image based on Alpine Linux and Nginx.<br />
-If you are interested, [check out](https://github.com/search?utf8=%E2%9C%93&q=docker++user%3Acrazy-max&type=Repositories) my other 🐳 Docker images!
+If you are interested, [check out](https://github.com/search?utf8=%E2%9C%93&q=docker+user%3Acrazy-max+user%3Aftpgrab&type=Repositories) my other 🐳 Docker images!
 
 ## Features
 
@@ -20,6 +20,7 @@ If you are interested, [check out](https://github.com/search?utf8=%E2%9C%93&q=do
 
 * GeoLite data created by [MaxMind](http://www.maxmind.com) for geolocation.
 * Cron to archive Matomo reports and update GeoLite data.
+* Plugins and config are kept across upgrades of this image.
 * [SSMTP](https://github.com/alterrebe/docker-mail-relay) for SMTP relay to send emails.
 
 ### From docker-compose
@@ -49,9 +50,7 @@ If you are interested, [check out](https://github.com/search?utf8=%E2%9C%93&q=do
 
 ### Volumes
 
-* `/var/www/config` : Matomo config folder
-* `/var/www/misc/user` : Directory to store the [custom logo](https://matomo.org/faq/new-to-piwik/faq_129/) for Matomo
-* `/var/www/plugins` : Matomo plugins folder if you want to add custom plugins
+* `/data` : Contains config, installed plugins (not core ones) and tmp folder
 
 ### Ports
 
@@ -117,10 +116,11 @@ In case you are using queued tracking: Make sure to configure a different databa
 
 ## Update
 
+You can update Matomo automatically through the UI, it works well. But i recommend to recreate the container whenever i push an update :
+
 ```bash
 docker-compose pull
 docker-compose up -d
-docker-compose exec --user nginx php console core:update
 ```
 
 ## How can i help ?
