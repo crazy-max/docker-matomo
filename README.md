@@ -50,7 +50,7 @@ If you are interested, [check out](https://github.com/search?utf8=%E2%9C%93&q=do
 
 ### Volumes
 
-* `/data` : Contains config, installed plugins (not core ones) and tmp folder
+* `/data` : Contains config folder, installed plugins (not core ones), tmp folder and user folder to store your [custom logo](https://matomo.org/faq/new-to-piwik/faq_129/)
 
 ### Ports
 

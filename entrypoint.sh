@@ -55,6 +55,7 @@ if [ -f /data/config/config.ini.php ]; then
   runas_nginx "php /var/www/console config:set --section='General' --key='minimum_memory_limit' --value='-1'"
   runas_nginx "php /var/www/console config:set --section='General' --key='enable_browser_archiving_triggering' --value='0'"
 fi
+
 plugins=$(ls -l /data/plugins | egrep '^d' | awk '{print $9}')
 for plugin in ${plugins}; do
   if [ -d /var/www/plugins/${plugin} ]; then
@@ -63,6 +64,14 @@ for plugin in ${plugins}; do
   ln -sf /data/plugins/${plugin} /var/www/plugins/${plugin}
   chown -h nginx. /var/www/plugins/${plugin}
 done
+
+if [ ! -d /data/misc/user ]; then
+  if [ -d /var/www/misc/user ]; then
+    mv /var/www/misc/user /data/misc/user
+  fi
+  ln -sf /data/misc/user /var/www/misc/user
+  chown -h nginx. /var/www/misc/user
+fi
 
 # Crons
 rm -rf ${CRONTAB_PATH}

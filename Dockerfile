@@ -25,7 +25,7 @@ ENV MATOMO_VERSION="3.3.0" \
   CRONTAB_PATH="/var/spool/cron/crontabs" \
   SCRIPTS_PATH="/usr/local/bin"
 
-RUN mkdir -p /data/config /data/plugins /etc/nginx/geoip /var/www /run/nginx \
+RUN mkdir -p /data/config /data/misc /data/plugins /etc/nginx/geoip /var/www /run/nginx \
   && cd /var/www \
   && curl -O -L "https://builds.matomo.org/piwik-${MATOMO_VERSION}.tar.gz" \
   && tar -xzf "piwik-${MATOMO_VERSION}.tar.gz" --strip 1 \
