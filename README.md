@@ -11,8 +11,8 @@
 
 ## About
 
-[Matomo](https://matomo.org/) (formerly Piwik) Docker image based on Alpine Linux and Nginx.<br />
-If you are interested, [check out](https://github.com/search?utf8=%E2%9C%93&q=docker+user%3Acrazy-max+user%3Aftpgrab&type=Repositories) my other 🐳 Docker images!
+🐳 [Matomo](https://matomo.org/) (formerly Piwik) Docker image based on Alpine Linux and Nginx.<br />
+If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 🐳 Docker images!
 
 ## Features
 
