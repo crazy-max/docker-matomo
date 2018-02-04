@@ -6,8 +6,6 @@ function runas_nginx() {
 
 CRONTAB_PATH=${CRONTAB_PATH:-"/var/spool/cron/crontabs"}
 SCRIPTS_PATH=${SCRIPTS_PATH:-"/usr/local/bin"}
-CRON_GEOIP=${CRON_GEOIP:-"0 2 * * *"}
-CRON_ARCHIVE=${CRON_ARCHIVE:-"*/15 * * * *"}
 LOG_LEVEL=WARN
 MEMORY_LIMIT=${MEMORY_LIMIT:-"256M"}
 UPLOAD_MAX_SIZE=${UPLOAD_MAX_SIZE:-"16M"}
@@ -76,11 +74,21 @@ if [ ! -d /data/misc/user ]; then
   chown -h nginx. /var/www/misc/user
 fi
 
+# Supervisor
+cp -f /tpls/etc/supervisord/* /etc/supervisord/
+
 # Crons
 rm -rf ${CRONTAB_PATH}
 mkdir -m 0644 -p ${CRONTAB_PATH}
-printf "${CRON_GEOIP} geoip > /proc/1/fd/1 2>/proc/1/fd/2" > ${CRONTAB_PATH}/geoip
-printf "${CRON_ARCHIVE} matomo_archive > /proc/1/fd/1 2>/proc/1/fd/2" > ${CRONTAB_PATH}/matomo
+if [ ! -z "$CRON_GEOIP" ]; then
+  printf "${CRON_GEOIP} geoip > /proc/1/fd/1 2>/proc/1/fd/2" > ${CRONTAB_PATH}/geoip
+fi
+if [ ! -z "$CRON_ARCHIVE" ]; then
+  printf "${CRON_ARCHIVE} matomo_archive > /proc/1/fd/1 2>/proc/1/fd/2" > ${CRONTAB_PATH}/matomo
+fi
+if [ -z "$CRON_GEOIP" -a -z "$CRON_ARCHIVE" ]; then
+  rm -f /etc/supervisord/cron.conf
+fi
 
 # Init and perms
 mkdir -p /var/log/supervisord

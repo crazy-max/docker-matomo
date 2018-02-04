@@ -35,8 +35,8 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 
 * `TZ` : The timezone assigned to the container (default to `UTC`)
 * `SITE_URL` : Your Matomo site URL
-* `CRON_GEOIP` : Periodically update GeoIP data (default to `0 2 * * *`)
-* `CRON_ARCHIVE` : Periodically execute Matomo [archive](https://matomo.org/docs/setup-auto-archiving/#linuxunix-how-to-set-up-a-crontab-to-automatically-archive-the-reports) (default to `*/15 * * * *`)
+* `CRON_GEOIP` : Periodically update GeoIP data (disabled if empty)
+* `CRON_ARCHIVE` : Periodically execute Matomo [archive](https://matomo.org/docs/setup-auto-archiving/#linuxunix-how-to-set-up-a-crontab-to-automatically-archive-the-reports) (disabled if empty)
 * `LOG_LEVEL` : [Log level](https://matomo.org/faq/troubleshooting/faq_115/) of Matomo UI (default to `WARN`)
 * `MEMORY_LIMIT` : PHP memory limit (default to `256M`)
 * `UPLOAD_MAX_SIZE` : Upload max size (default to `16M`)
@@ -58,7 +58,7 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 
 ## Usage
 
-Download the [docker-compose.yml](docker-compose.yml) template and the [env](env) folder in the same directory.<br />
+Docker compose is the recommended way to run this image. You can use the following [docker compose template](docker-compose.yml) and download the [env](env) folder in the same directory.<br />
 Edit those files with your preferences, then run :
 
 ```bash
@@ -66,11 +66,21 @@ docker-compose up -d
 docker-compose logs -f
 ```
 
+Or use the following minimal command :
+
+```bash
+docker run -d -p 80:80 --name matomo \
+  -e TZ="Europe/Paris" \
+  -e SITE_URL="https://matomo.example.com" \
+  -v $(pwd)/data:/data \
+  crazymax/matomo:latest
+```
+
 ## Configuration
 
 ### Disable Matomo archiving from browser
 
-As this image automatically archive the reports, you have to disable Matomo archiving to trigger from the browser. Go to **System > General settings** :
+If you have enabled `CRON_ARCHIVE` to automatically archive the reports, you have to disable Matomo archiving to trigger from the browser. Go to **System > General settings** :
 
 ![Disable Matomo archiving from browser](.res/disable-archive-reports-browser.png)
 
