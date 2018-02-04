@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.3.0-RC4 (2018/02/04)
+
+* Crons are disabled by default
+* Fix permissions on plugins watcher
+* Remove build dependencies
+* Verify integrity of Matomo tarballs
+* Publish image to Quay
+
 ## 3.3.0-RC3 (2018/01/23)
 
 * Fix an issue while creating user symlink
