@@ -1,5 +1,15 @@
 # Changelog
 
+## 3.3.0-RC5 (2018/02/05)
+
+* Redirect Nginx and PHP-FPM to stdout
+* Ability to set a custom UID / GID
+* Remove env file
+* SSMTP authentication optional
+* Store PHP session in data folder
+* Disable browser archiving only if cron task enabled
+* Matomo log level not dynamically retrieved
+
 ## 3.3.0-RC4 (2018/02/04)
 
 * Crons are disabled by default

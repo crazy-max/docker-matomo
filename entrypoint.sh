@@ -1,98 +1,118 @@
 #!/bin/sh
 
-function runas_nginx() {
-  su - nginx -s /bin/sh -c "$1"
+function runas_user() {
+  su - ${USERNAME} -s /bin/sh -c "$1"
 }
 
-CRONTAB_PATH=${CRONTAB_PATH:-"/var/spool/cron/crontabs"}
-SCRIPTS_PATH=${SCRIPTS_PATH:-"/usr/local/bin"}
-LOG_LEVEL=WARN
+TZ=${TZ:-"UTC"}
+LOG_LEVEL=${LOG_LEVEL:-"WARN"}
 MEMORY_LIMIT=${MEMORY_LIMIT:-"256M"}
 UPLOAD_MAX_SIZE=${UPLOAD_MAX_SIZE:-"16M"}
-OPCACHE_MEM_SIZE=${OPCACHE_MEM_SIZE:-"128M"}
+OPCACHE_MEM_SIZE=${OPCACHE_MEM_SIZE:-"128"}
+
+SSMTP_PORT=${SSMTP_PORT:-"25"}
+SSMTP_HOSTNAME=${SSMTP_HOSTNAME:-"$(hostname -f)"}
+SSMTP_TLS=${SSMTP_TLS:-"NO"}
 
 # Timezone
-ln -snf /usr/share/zoneinfo/${TZ:-"UTC"} /etc/localtime
-echo ${TZ:-"UTC"} > /etc/timezone
+echo "Setting timezone to ${TZ}..."
+ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime
+echo ${TZ} > /etc/timezone
+
+# Create docker user
+echo "Creating ${USERNAME} user and group (uid=${UID} ; gid=${GID})..."
+addgroup -g ${GID} ${USERNAME}
+adduser -D -s /bin/sh -G ${USERNAME} -u ${UID} ${USERNAME}
+
+# Init
+echo "Initializing files and folders..."
+mkdir -p /data/config /data/misc /data/plugins /data/session /var/log/supervisord
+chown -R ${USERNAME}. /data /var/lib/nginx /var/tmp/nginx /var/www
 
 # PHP
-echo "sendmail_path=/usr/sbin/ssmtp -t" > /etc/php7/conf.d/sendmail-ssmtp.ini
-cp -f /tpls/etc/php7/php-fpm.d/www.conf /etc/php7/php-fpm.d/www.conf
-sed -i -e "s/@MEMORY_LIMIT@/$MEMORY_LIMIT/g" /etc/php7/php-fpm.d/www.conf \
-  -e "s/@UPLOAD_MAX_SIZE@/$UPLOAD_MAX_SIZE/g" /etc/php7/php-fpm.d/www.conf
+echo "Setting PHP-FPM configuration..."
+sed -e "s/@MEMORY_LIMIT@/$MEMORY_LIMIT/g" \
+  -e "s/@UPLOAD_MAX_SIZE@/$UPLOAD_MAX_SIZE/g" \
+  /tpls/etc/php7/php-fpm.d/www.conf > /etc/php7/php-fpm.d/www.conf
 
 # OpCache
-cp -f /tpls/etc/php7/conf.d/opcache.ini /etc/php7/conf.d/opcache.ini
-sed -i -e "s/@OPCACHE_MEM_SIZE@/$OPCACHE_MEM_SIZE/g" /etc/php7/conf.d/opcache.ini
+echo "Setting OpCache configuration..."
+sed -e "s/@OPCACHE_MEM_SIZE@/$OPCACHE_MEM_SIZE/g" \
+  /tpls/etc/php7/conf.d/opcache.ini > /etc/php7/conf.d/opcache.ini
 
 # Nginx
-cp -f /tpls/etc/nginx/nginx.conf /etc/nginx/nginx.conf
-sed -i -e "s/@UPLOAD_MAX_SIZE@/$UPLOAD_MAX_SIZE/g" /etc/nginx/nginx.conf
+echo "Setting Nginx configuration..."
+sed -e "s/@UPLOAD_MAX_SIZE@/$UPLOAD_MAX_SIZE/g" \
+  /tpls/etc/nginx/nginx.conf > /etc/nginx/nginx.conf
 
 # SSMTP
-if [ -z "$SSMTP_HOST" -o -z "$SSMTP_USER" -o -z "$SSMTP_PASSWORD" ] ; then
-  echo "SSMTP_HOST, SSMTP_AUTH_USER and SSMTP_AUTH_PASSWORD must be defined if you want to send emails"
+echo "Setting SSMTP configuration..."
+if [ -z "$SSMTP_HOST" ] ; then
+  echo "WARNING: SSMTP_HOST must be defined if you want to send emails"
   cp -f /etc/ssmtp/ssmtp.conf.or /etc/ssmtp/ssmtp.conf
 else
-  cp -f /tpls/etc/ssmtp/ssmtp.conf /etc/ssmtp/ssmtp.conf
-  sed -i -e "s/@SSMTP_HOST@/$SSMTP_HOST/g" /etc/ssmtp/ssmtp.conf \
-    -e "s/@SSMTP_PORT@/${SSMTP_PORT:-"25"}/g" /etc/ssmtp/ssmtp.conf \
-    -e "s/@SSMTP_HOST@/$SSMTP_HOST/g" /etc/ssmtp/ssmtp.conf \
-    -e "s/@SSMTP_HOSTNAME@/${SSMTP_HOSTNAME:-"$(hostname -f)"}/g" /etc/ssmtp/ssmtp.conf \
-    -e "s/@SSMTP_USER@/$SSMTP_USER/g" /etc/ssmtp/ssmtp.conf \
-    -e "s/@SSMTP_PASSWORD@/$SSMTP_PASSWORD/g" /etc/ssmtp/ssmtp.conf \
-    -e "s/@SSMTP_TLS@/${SSMTP_TLS:-"NO"}/g" /etc/ssmtp/ssmtp.conf
+  cat > /etc/ssmtp/ssmtp.conf <<EOL
+mailhub=${SSMTP_HOST}:${SSMTP_PORT}
+hostname=${SSMTP_HOSTNAME}
+FromLineOverride=YES
+AuthUser=${SSMTP_USER}
+AuthPass=${SSMTP_PASSWORD}
+UseTLS=${SSMTP_TLS}
+UseSTARTTLS=${SSMTP_TLS}
+EOL
 fi
 
-# Matomo
-cp -f /tpls/bootstrap.php /var/www/bootstrap.php
-cp -Rf /var/www/config /data
-chown -R nginx. /data /var/www
+# Init Matomo
+echo "Initializing Matomo files / folders..."
+cp -Rf /var/www/config /data/
+chown -R ${USERNAME}. /data /var/www
+
+# Upgrade Matomo
 if [ -f /data/config/config.ini.php ]; then
-  runas_nginx "php /var/www/console core:update"
-  runas_nginx "php /var/www/console config:set --section='General' --key='minimum_memory_limit' --value='-1'"
-  runas_nginx "php /var/www/console config:set --section='General' --key='enable_browser_archiving_triggering' --value='0'"
+  echo "Upgrading and setting Matomo configuration..."
+  runas_user "php /var/www/console core:update"
+  runas_user "php /var/www/console config:set --section='General' --key='minimum_memory_limit' --value='-1'"
 fi
 
-mkdir -p /data/plugins && chown -R nginx. /data/plugins
+# Check plugins
+echo "Checking Matomo plugins..."
 plugins=$(ls -l /data/plugins | egrep '^d' | awk '{print $9}')
 for plugin in ${plugins}; do
   if [ -d /var/www/plugins/${plugin} ]; then
     rm -rf /var/www/plugins/${plugin}
   fi
   ln -sf /data/plugins/${plugin} /var/www/plugins/${plugin}
-  chown -h nginx. /var/www/plugins/${plugin}
+  chown -h ${USERNAME}. /var/www/plugins/${plugin}
 done
 
-mkdir -p /data/misc && chown -R nginx. /data/misc
+# Check user folder
+echo "Checking Matomo user-misc folder..."
 if [ ! -d /data/misc/user ]; then
   if [[ ! -L /var/www/misc/user && -d /var/www/misc/user ]]; then
-    cp -Rf /var/www/misc/user /data/misc/
-    rm -rf /var/www/misc/user
+    mv -f /var/www/misc/user /data/misc/
   fi
   ln -sf /data/misc/user /var/www/misc/user
-  chown -h nginx. /var/www/misc/user
+  chown -h ${USERNAME}. /var/www/misc/user
 fi
-
-# Supervisor
-cp -f /tpls/etc/supervisord/* /etc/supervisord/
 
 # Crons
 rm -rf ${CRONTAB_PATH}
 mkdir -m 0644 -p ${CRONTAB_PATH}
 if [ ! -z "$CRON_GEOIP" ]; then
+  echo "Creating GeoIP cron task with the following period fields : $CRON_GEOIP"
   printf "${CRON_GEOIP} geoip > /proc/1/fd/1 2>/proc/1/fd/2" > ${CRONTAB_PATH}/geoip
 fi
 if [ ! -z "$CRON_ARCHIVE" ]; then
+  echo "Creating Matomo archive cron task with the following period fields : $CRON_ARCHIVE"
   printf "${CRON_ARCHIVE} matomo_archive > /proc/1/fd/1 2>/proc/1/fd/2" > ${CRONTAB_PATH}/matomo
 fi
 if [ -z "$CRON_GEOIP" -a -z "$CRON_ARCHIVE" ]; then
   rm -f /etc/supervisord/cron.conf
 fi
 
-# Init and perms
-mkdir -p /var/log/supervisord
+# Fix perms
+echo "Fixing permissions..."
 chmod -R 0644 ${CRONTAB_PATH}
-chown -R nginx. /data /var/www
+chown -R ${USERNAME}. /data /var/lib/nginx /var/tmp/nginx /var/www
 
 exec "$@"

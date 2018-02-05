@@ -23,19 +23,20 @@ RUN apk --update --no-cache add \
 
 ENV MATOMO_VERSION="3.3.0" \
   CRONTAB_PATH="/var/spool/cron/crontabs" \
-  SCRIPTS_PATH="/usr/local/bin"
+  SCRIPTS_PATH="/usr/local/bin" \
+  USERNAME="docker" \
+  UID=1000 GID=1000
 
 RUN apk --update --no-cache add -t build-dependencies \
-    ca-certificates curl gnupg libressl tar wget \
-  && mkdir -p /data/config /data/misc /data/plugins /etc/nginx/geoip /etc/supervisord /var/www /run/nginx \
-  && cd /var/www \
+    ca-certificates gnupg libressl tar wget \
+  && cd /tmp \
   && wget -q https://builds.matomo.org/piwik-${MATOMO_VERSION}.tar.gz \
   && wget -q https://builds.matomo.org/piwik-${MATOMO_VERSION}.tar.gz.asc \
   && wget -q https://builds.matomo.org/signature.asc \
   && gpg --import signature.asc \
   && gpg --verify piwik-${MATOMO_VERSION}.tar.gz.asc piwik-${MATOMO_VERSION}.tar.gz \
-  && tar -xzf piwik-${MATOMO_VERSION}.tar.gz --strip 1 \
-  && rm -f piwik-${MATOMO_VERSION}.tar* signature.asc \
+  && tar -xzf piwik-${MATOMO_VERSION}.tar.gz --strip 1 -C /var/www \
+  && mkdir -p /etc/nginx/geoip \
   && cd /etc/nginx/geoip \
   && wget -q https://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz \
   && gzip -d GeoLiteCity.dat.gz && mv GeoLiteCity.dat GeoIPCity.dat \
@@ -43,7 +44,7 @@ RUN apk --update --no-cache add -t build-dependencies \
   && gzip -d GeoIP.dat.gz && mv GeoIP.dat GeoIPCountry.dat \
   && cp -f /etc/ssmtp/ssmtp.conf /etc/ssmtp/ssmtp.conf.or \
   && apk del build-dependencies \
-  && rm -rf /var/cache/apk/*
+  && rm -rf /root/.gnupg /tmp/* /var/cache/apk/*
 
 ADD entrypoint.sh /entrypoint.sh
 ADD assets /
@@ -53,8 +54,7 @@ RUN mkdir -m 0644 -p ${CRONTAB_PATH} \
     scriptBasename=`echo $script | cut -d "." -f 1`; \
     mv $script ${SCRIPTS_PATH}/$scriptBasename; \
     chmod a+x ${SCRIPTS_PATH}/*; done \
-  && chmod a+x /entrypoint.sh \
-  && chown -R nginx. /data /var/log/nginx /var/log/php7 /var/www
+  && chmod a+x /entrypoint.sh
 
 EXPOSE 80
 WORKDIR "/var/www"

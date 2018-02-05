@@ -5,7 +5,7 @@
   <a href="https://travis-ci.org/crazy-max/docker-matomo"><img src="https://img.shields.io/travis/crazy-max/docker-matomo/master.svg?style=flat-square" alt="Build Status"></a>
   <a href="https://hub.docker.com/r/crazymax/matomo/"><img src="https://img.shields.io/docker/stars/crazymax/matomo.svg?style=flat-square" alt="Docker Stars"></a>
   <a href="https://hub.docker.com/r/crazymax/matomo/"><img src="https://img.shields.io/docker/pulls/crazymax/matomo.svg?style=flat-square" alt="Docker Pulls"></a>
-  <a href="https://saythanks.io/to/crazymax"><img src="https://img.shields.io/badge/thank-crazymax-426aa5.svg?style=flat-square" alt="Say Thanks"></a>
+  <a href="https://quay.io/repository/crazymax/matomo"><img src="https://quay.io/repository/crazymax/matomo/status?style=flat-square" alt="Docker Repository on Quay"></a>
   <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=JP85E7WHT33FL"><img src="https://img.shields.io/badge/donate-paypal-7057ff.svg?style=flat-square" alt="Donate Paypal"></a>
 </p>
 
@@ -18,16 +18,22 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 
 ### Included
 
-* GeoLite data created by [MaxMind](http://www.maxmind.com) for geolocation.
-* Cron to archive Matomo reports and update GeoLite data.
-* Plugins and config are kept across upgrades of this image.
-* [SSMTP](https://github.com/alterrebe/docker-mail-relay) for SMTP relay to send emails.
+* Alpine Linux 3.7, Nginx, PHP 7.1
+* Tarball authenticity checked during building process
+* Config, plugins and user preferences in the same folder
+* GeoLite data created by [MaxMind](http://www.maxmind.com) for geolocation
+* Cron tasks to archive Matomo reports and update GeoLite data
+* Plugins and config are kept across upgrades of this image
+* [SSMTP](https://linux.die.net/man/8/ssmtp) for SMTP relay to send emails
+* OPCache enabled to store precompiled script bytecode in shared memory
+* Redis enabled and ready to enhance server performance
 
 ### From docker-compose
 
 * Reverse proxy with [nginx-proxy](https://github.com/jwilder/nginx-proxy)
 * Creation/renewal of Let's Encrypt certificates automatically with [letsencrypt-nginx-proxy-companion](https://github.com/JrCs/docker-letsencrypt-nginx-proxy-companion)
-* [Redis](https://github.com/docker-library/redis) image ready to use with [RedisCache](https://matomo.org/faq/how-to/faq_20511/) or [QueuedTracking plugin](https://matomo.org/faq/how-to/faq_19738) for better scalability.
+* [Redis](https://github.com/docker-library/redis) image ready to use as [Redis cache](https://matomo.org/faq/how-to/faq_20511/) or [QueuedTracking plugin](https://matomo.org/faq/how-to/faq_19738) for better scalability
+* [MariaDB](https://github.com/docker-library/mariadb) image as database instance
 
 ## Docker
 
@@ -40,7 +46,7 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 * `LOG_LEVEL` : [Log level](https://matomo.org/faq/troubleshooting/faq_115/) of Matomo UI (default to `WARN`)
 * `MEMORY_LIMIT` : PHP memory limit (default to `256M`)
 * `UPLOAD_MAX_SIZE` : Upload max size (default to `16M`)
-* `OPCACHE_MEM_SIZE` : PHP OpCache memory consumption (default to `128M`)
+* `OPCACHE_MEM_SIZE` : PHP OpCache memory consumption (default to `128`)
 * `SSMTP_HOST` : SMTP server host
 * `SSMTP_PORT` : SMTP server port (default to `25`)
 * `SSMTP_HOSTNAME` : Full hostname (default to `$(hostname -f)`)
@@ -58,8 +64,7 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 
 ## Usage
 
-Docker compose is the recommended way to run this image. You can use the following [docker compose template](docker-compose.yml) and download the [env](env) folder in the same directory.<br />
-Edit those files with your preferences, then run :
+Docker compose is the recommended way to run this image. You can use the following [docker compose template](docker-compose.yml). Edit this file with your preferences, then run :
 
 ```bash
 docker-compose up -d
@@ -124,9 +129,9 @@ database = 14
 
 In case you are using queued tracking: Make sure to configure a different database! Otherwise queued requests will be flushed.
 
-## Update
+## Upgrade
 
-You can update Matomo automatically through the UI, it works well. But i recommend to recreate the container whenever i push an update :
+You can upgrade Matomo automatically through the UI, it works well. But i recommend to recreate the container whenever i push an update :
 
 ```bash
 docker-compose pull
