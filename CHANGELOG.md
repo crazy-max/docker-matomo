@@ -9,6 +9,7 @@
 * Store PHP session in data folder
 * Disable browser archiving only if cron task enabled
 * Matomo log level not dynamically retrieved
+* Fix Matomo log level not set
 
 ## 3.3.0-RC4 (2018/02/04)
 

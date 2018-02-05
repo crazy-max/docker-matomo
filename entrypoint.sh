@@ -74,6 +74,10 @@ if [ -f /data/config/config.ini.php ]; then
   runas_user "php /var/www/console config:set --section='General' --key='minimum_memory_limit' --value='-1'"
 fi
 
+# Matomo log level
+echo "Setting Matomo log level to $LOG_LEVEL..."
+runas_user "php /var/www/console config:set --section='log' --key='log_level' --value='$LOG_LEVEL'"
+
 # Check plugins
 echo "Checking Matomo plugins..."
 plugins=$(ls -l /data/plugins | egrep '^d' | awk '{print $9}')
