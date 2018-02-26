@@ -1,7 +1,7 @@
 #!/bin/sh
 
 function runas_user() {
-  su - ${USERNAME} -s /bin/sh -c "$1"
+  su - nginx -s /bin/sh -c "$1"
 }
 
 TZ=${TZ:-"UTC"}
@@ -18,16 +18,6 @@ SSMTP_TLS=${SSMTP_TLS:-"NO"}
 echo "Setting timezone to ${TZ}..."
 ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime
 echo ${TZ} > /etc/timezone
-
-# Create docker user
-echo "Creating ${USERNAME} user and group (uid=${UID} ; gid=${GID})..."
-addgroup -g ${GID} ${USERNAME}
-adduser -D -s /bin/sh -G ${USERNAME} -u ${UID} ${USERNAME}
-
-# Init
-echo "Initializing files and folders..."
-mkdir -p /data/config /data/misc /data/plugins /data/session /var/log/supervisord
-chown -R ${USERNAME}. /data /var/lib/nginx /var/tmp/nginx /var/www
 
 # PHP
 echo "Setting PHP-FPM configuration..."
@@ -65,7 +55,6 @@ fi
 # Init Matomo
 echo "Initializing Matomo files / folders..."
 cp -Rf /var/www/config /data/
-chown -R ${USERNAME}. /data /var/www
 
 # Upgrade Matomo
 if [ -f /data/config/config.ini.php ]; then
@@ -88,7 +77,6 @@ for plugin in ${plugins}; do
     rm -rf /var/www/plugins/${plugin}
   fi
   ln -sf /data/plugins/${plugin} /var/www/plugins/${plugin}
-  chown -h ${USERNAME}. /var/www/plugins/${plugin}
 done
 
 # Check user folder
@@ -98,7 +86,6 @@ if [ ! -d /data/misc/user ]; then
     mv -f /var/www/misc/user /data/misc/
   fi
   ln -sf /data/misc/user /var/www/misc/user
-  chown -h ${USERNAME}. /var/www/misc/user
 fi
 
 # Crons
@@ -119,6 +106,5 @@ fi
 # Fix perms
 echo "Fixing permissions..."
 chmod -R 0644 ${CRONTAB_PATH}
-chown -R ${USERNAME}. /data /var/lib/nginx /var/tmp/nginx /var/www
 
 exec "$@"

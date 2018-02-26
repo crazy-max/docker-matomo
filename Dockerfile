@@ -23,9 +23,7 @@ RUN apk --update --no-cache add \
 
 ENV MATOMO_VERSION="3.3.0" \
   CRONTAB_PATH="/var/spool/cron/crontabs" \
-  SCRIPTS_PATH="/usr/local/bin" \
-  USERNAME="docker" \
-  UID=1000 GID=1000
+  SCRIPTS_PATH="/usr/local/bin"
 
 RUN apk --update --no-cache add -t build-dependencies \
     ca-certificates gnupg libressl tar wget \
@@ -43,6 +41,8 @@ RUN apk --update --no-cache add -t build-dependencies \
   && wget -q http://geolite.maxmind.com/download/geoip/database/GeoLiteCountry/GeoIP.dat.gz \
   && gzip -d GeoIP.dat.gz && mv GeoIP.dat GeoIPCountry.dat \
   && cp -f /etc/ssmtp/ssmtp.conf /etc/ssmtp/ssmtp.conf.or \
+  && mkdir -p /data/config /data/misc /data/plugins /data/session /data/tmp /var/log/supervisord \
+  && chown -R nginx. /data /var/www \
   && apk del build-dependencies \
   && rm -rf /root/.gnupg /tmp/* /var/cache/apk/*
 
