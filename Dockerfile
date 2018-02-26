@@ -17,8 +17,8 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
 
 RUN apk --update --no-cache add \
     dcron geoip inotify-tools nginx nginx-mod-http-geoip ssmtp supervisor tzdata \
-    php7 php7-cli php7-ctype php7-curl php7-dom php7-iconv php7-fpm php7-gd php7-json php7-mbstring php7-opcache \
-    php7-openssl php7-pdo php7-pdo_mysql php7-redis php7-session php7-simplexml php7-xml php7-zlib \
+    php7 php7-cli php7-ctype php7-curl php7-dom php7-iconv php7-fpm php7-gd php7-json php7-ldap php7-mbstring \
+    php7-opcache php7-openssl php7-pdo php7-pdo_mysql php7-redis php7-session php7-simplexml php7-xml php7-zlib \
   && rm -rf /var/cache/apk/* /var/www/* /tmp/*
 
 ENV MATOMO_VERSION="3.3.0" \
