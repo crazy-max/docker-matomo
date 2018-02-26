@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.3.0-RC6 (2018/02/26)
+
+* Add php7-ldap extension
+* Check config file (Issue #2)
+* Fix permission issues
+
 ## 3.3.0-RC5 (2018/02/05)
 
 * Redirect Nginx and PHP-FPM to stdout
