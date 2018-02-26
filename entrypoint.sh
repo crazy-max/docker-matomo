@@ -75,8 +75,10 @@ if [ -f /data/config/config.ini.php ]; then
 fi
 
 # Matomo log level
-echo "Setting Matomo log level to $LOG_LEVEL..."
-runas_user "php /var/www/console config:set --section='log' --key='log_level' --value='$LOG_LEVEL'"
+if [ -f /data/config/config.ini.php ]; then
+  echo "Setting Matomo log level to $LOG_LEVEL..."
+  runas_user "php /var/www/console config:set --section='log' --key='log_level' --value='$LOG_LEVEL'"
+fi
 
 # Check plugins
 echo "Checking Matomo plugins..."
