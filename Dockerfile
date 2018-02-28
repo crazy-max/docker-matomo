@@ -16,14 +16,15 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
   org.label-schema.schema-version="1.0"
 
 RUN apk --update --no-cache add \
-    dcron geoip inotify-tools nginx nginx-mod-http-geoip ssmtp supervisor tzdata \
+    geoip inotify-tools nginx nginx-mod-http-geoip ssmtp supervisor tzdata \
     php7 php7-cli php7-ctype php7-curl php7-dom php7-iconv php7-fpm php7-gd php7-json php7-ldap php7-mbstring \
     php7-opcache php7-openssl php7-pdo php7-pdo_mysql php7-redis php7-session php7-simplexml php7-xml php7-zlib \
   && rm -rf /var/cache/apk/* /var/www/* /tmp/*
 
 ENV MATOMO_VERSION="3.3.0" \
   CRONTAB_PATH="/var/spool/cron/crontabs" \
-  SCRIPTS_PATH="/usr/local/bin"
+  USERNAME="docker" \
+  PUID=1000 PGID=1000
 
 RUN apk --update --no-cache add -t build-dependencies \
     ca-certificates gnupg libressl tar wget \
@@ -41,20 +42,13 @@ RUN apk --update --no-cache add -t build-dependencies \
   && wget -q http://geolite.maxmind.com/download/geoip/database/GeoLiteCountry/GeoIP.dat.gz \
   && gzip -d GeoIP.dat.gz && mv GeoIP.dat GeoIPCountry.dat \
   && cp -f /etc/ssmtp/ssmtp.conf /etc/ssmtp/ssmtp.conf.or \
-  && mkdir -p /data/config /data/misc /data/plugins /data/session /data/tmp /var/log/supervisord \
-  && chown -R nginx. /data /var/www \
   && apk del build-dependencies \
   && rm -rf /root/.gnupg /tmp/* /var/cache/apk/*
 
 ADD entrypoint.sh /entrypoint.sh
 ADD assets /
 
-RUN mkdir -m 0644 -p ${CRONTAB_PATH} \
-  && cd /scripts/ && for script in *.sh; do \
-    scriptBasename=`echo $script | cut -d "." -f 1`; \
-    mv $script ${SCRIPTS_PATH}/$scriptBasename; \
-    chmod a+x ${SCRIPTS_PATH}/*; done \
-  && chmod a+x /entrypoint.sh
+RUN chmod a+x /entrypoint.sh /usr/local/bin/*
 
 EXPOSE 80
 WORKDIR "/var/www"

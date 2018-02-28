@@ -1,9 +1,23 @@
 #!/bin/sh
 
-function runas_user() {
-  su - nginx -s /bin/sh -c "$1"
+function fixperms() {
+  for folder in $@; do
+    if $(find ${folder} ! -user ${PUID} -o ! -group ${PGID} | egrep '.' -q); then
+      echo "Fixing permissions in $folder..."
+      chown -R ${PUID}.${PGID} "${folder}"
+    else
+      echo "Permissions already fixed in ${folder}."
+    fi
+  done
 }
 
+function runas_user() {
+  su - ${USERNAME} -s /bin/sh -c "$1"
+}
+
+USERNAME=${USERNAME:-"docker"}
+PUID=${PUID:-1000}
+PGID=${PGID:-1000}
 TZ=${TZ:-"UTC"}
 LOG_LEVEL=${LOG_LEVEL:-"WARN"}
 MEMORY_LIMIT=${MEMORY_LIMIT:-"256M"}
@@ -19,9 +33,10 @@ echo "Setting timezone to ${TZ}..."
 ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime
 echo ${TZ} > /etc/timezone
 
-# Init
-echo "Init..."
-chown -R nginx. /data
+# Create docker user
+echo "Creating ${USERNAME} user and group (uid=${PUID} ; gid=${PGID})..."
+addgroup -g ${PGID} ${USERNAME}
+adduser -D -s /bin/sh -G ${USERNAME} -u ${PUID} ${USERNAME}
 
 # PHP
 echo "Setting PHP-FPM configuration..."
@@ -58,57 +73,77 @@ fi
 
 # Init Matomo
 echo "Initializing Matomo files / folders..."
-cp -Rf /var/www/config /data/
+mkdir -p /data/config /data/misc /data/plugins /data/session /data/tmp /etc/supervisord /var/log/supervisord
 
-# Upgrade Matomo
-if [ -f /data/config/config.ini.php ]; then
-  echo "Upgrading and setting Matomo configuration..."
-  runas_user "php /var/www/console core:update"
-  runas_user "php /var/www/console config:set --section='General' --key='minimum_memory_limit' --value='-1'"
-fi
+# Sidecar cron container ?
+if [ "$1" == "/usr/local/bin/cron" ]; then
+  echo ">>"
+  echo ">> Sidecar cron container detected for Matomo"
+  echo ">>"
 
-# Matomo log level
-if [ -f /data/config/config.ini.php ]; then
-  echo "Setting Matomo log level to $LOG_LEVEL..."
-  runas_user "php /var/www/console config:set --section='log' --key='log_level' --value='$LOG_LEVEL'"
-fi
+  # Init
+  rm -rf ${CRONTAB_PATH}
+  mkdir -m 0644 -p ${CRONTAB_PATH}
+  touch ${CRONTAB_PATH}/${USERNAME}
 
-# Check plugins
-echo "Checking Matomo plugins..."
-plugins=$(ls -l /data/plugins | egrep '^d' | awk '{print $9}')
-for plugin in ${plugins}; do
-  if [ -d /var/www/plugins/${plugin} ]; then
-    rm -rf /var/www/plugins/${plugin}
+  # GeoIP
+  if [ ! -z "$CRON_GEOIP" ]; then
+    echo "Creating GeoIP cron task with the following period fields : $CRON_GEOIP"
+    echo "${CRON_GEOIP} /usr/local/bin/geoip" >> ${CRONTAB_PATH}/${USERNAME}
+  else
+    echo "CRON_GEOIP env var empty..."
   fi
-  ln -sf /data/plugins/${plugin} /var/www/plugins/${plugin}
-done
 
-# Check user folder
-echo "Checking Matomo user-misc folder..."
-if [ ! -d /data/misc/user ]; then
-  if [[ ! -L /var/www/misc/user && -d /var/www/misc/user ]]; then
-    mv -f /var/www/misc/user /data/misc/
+  # Archive
+  if [ ! -z "$CRON_ARCHIVE" ]; then
+    echo "Creating Matomo archive cron task with the following period fields : $CRON_ARCHIVE"
+    echo "${CRON_ARCHIVE} /usr/local/bin/matomo_archive" >> ${CRONTAB_PATH}/${USERNAME}
+  else
+    echo "CRON_ARCHIVE env var empty..."
   fi
-  ln -sf /data/misc/user /var/www/misc/user
-fi
 
-# Crons
-rm -rf ${CRONTAB_PATH}
-mkdir -m 0644 -p ${CRONTAB_PATH}
-if [ ! -z "$CRON_GEOIP" ]; then
-  echo "Creating GeoIP cron task with the following period fields : $CRON_GEOIP"
-  printf "${CRON_GEOIP} geoip > /proc/1/fd/1 2>/proc/1/fd/2" > ${CRONTAB_PATH}/geoip
-fi
-if [ ! -z "$CRON_ARCHIVE" ]; then
-  echo "Creating Matomo archive cron task with the following period fields : $CRON_ARCHIVE"
-  printf "${CRON_ARCHIVE} matomo_archive > /proc/1/fd/1 2>/proc/1/fd/2" > ${CRONTAB_PATH}/matomo
-fi
-if [ -z "$CRON_GEOIP" -a -z "$CRON_ARCHIVE" ]; then
-  rm -f /etc/supervisord/cron.conf
-fi
+  # Fix perms
+  chmod -R 0644 ${CRONTAB_PATH}
+  fixperms /etc/nginx/geoip /var/lib/nginx /var/tmp/nginx /var/www
+else
+  # Copy global config
+  cp -Rf /var/www/config /data/
 
-# Fix perms
-echo "Fixing permissions..."
-chmod -R 0644 ${CRONTAB_PATH}
+  # Check plugins
+  echo "Checking Matomo plugins..."
+  plugins=$(ls -l /data/plugins | egrep '^d' | awk '{print $9}')
+  for plugin in ${plugins}; do
+    if [ -d /var/www/plugins/${plugin} ]; then
+      rm -rf /var/www/plugins/${plugin}
+    fi
+    ln -sf /data/plugins/${plugin} /var/www/plugins/${plugin}
+  done
+
+  # Check user folder
+  echo "Checking Matomo user-misc folder..."
+  if [ ! -d /data/misc/user ]; then
+    if [[ ! -L /var/www/misc/user && -d /var/www/misc/user ]]; then
+      mv -f /var/www/misc/user /data/misc/
+    fi
+    ln -sf /data/misc/user /var/www/misc/user
+  fi
+
+  # Fix perms
+  fixperms /data/config /data/misc /data/plugins /data/session /data/tmp /etc/nginx/geoip /var/lib/nginx /var/tmp/nginx /var/www
+
+  # Check if already installed
+  if [ -f /data/config/config.ini.php ]; then
+    echo "Setting Matomo log level to $LOG_LEVEL..."
+    runas_user "php /var/www/console config:set --section='log' --key='log_level' --value='$LOG_LEVEL'"
+
+    echo "Upgrading and setting Matomo configuration..."
+    runas_user "php /var/www/console core:update"
+    runas_user "php /var/www/console config:set --section='General' --key='minimum_memory_limit' --value='-1'"
+  else
+    echo ">>"
+    echo ">> Open your browser to install Matomo through the wizard"
+    echo ">>"
+  fi
+fi
 
 exec "$@"
