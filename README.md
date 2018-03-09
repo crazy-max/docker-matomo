@@ -20,7 +20,6 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 ### Included
 
 * Alpine Linux 3.7, Nginx, PHP 7.1
-* Ability to set a custom UID / GID
 * Tarball authenticity checked during building process
 * Config, plugins and user preferences in the same folder
 * GeoLite data created by [MaxMind](http://www.maxmind.com) for geolocation
@@ -41,8 +40,6 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 
 ### Environment variables
 
-* `PUID` : Nextcloud user id (default to `1000`)
-* `PGID` : Nextcloud group id (default to `1000`)
 * `TZ` : The timezone assigned to the container (default to `UTC`)
 * `LOG_LEVEL` : [Log level](https://matomo.org/faq/troubleshooting/faq_115/) of Matomo UI (default to `WARN`)
 * `MEMORY_LIMIT` : PHP memory limit (default to `256M`)

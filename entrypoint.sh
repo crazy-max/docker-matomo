@@ -1,23 +1,9 @@
 #!/bin/sh
 
-function fixperms() {
-  for folder in $@; do
-    if $(find ${folder} ! -user ${PUID} -o ! -group ${PGID} | egrep '.' -q); then
-      echo "Fixing permissions in $folder..."
-      chown -R ${PUID}.${PGID} "${folder}"
-    else
-      echo "Permissions already fixed in ${folder}."
-    fi
-  done
+function runas_nginx() {
+  su - nginx -s /bin/sh -c "$1"
 }
 
-function runas_user() {
-  su - ${USERNAME} -s /bin/sh -c "$1"
-}
-
-USERNAME=${USERNAME:-"docker"}
-PUID=${PUID:-1000}
-PGID=${PGID:-1000}
 TZ=${TZ:-"UTC"}
 LOG_LEVEL=${LOG_LEVEL:-"WARN"}
 MEMORY_LIMIT=${MEMORY_LIMIT:-"256M"}
@@ -32,11 +18,6 @@ SSMTP_TLS=${SSMTP_TLS:-"NO"}
 echo "Setting timezone to ${TZ}..."
 ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime
 echo ${TZ} > /etc/timezone
-
-# Create docker user
-echo "Creating ${USERNAME} user and group (uid=${PUID} ; gid=${PGID})..."
-addgroup -g ${PGID} ${USERNAME}
-adduser -D -s /bin/sh -G ${USERNAME} -u ${PUID} ${USERNAME}
 
 # PHP
 echo "Setting PHP-FPM configuration..."
@@ -84,12 +65,12 @@ if [ "$1" == "/usr/local/bin/cron" ]; then
   # Init
   rm -rf ${CRONTAB_PATH}
   mkdir -m 0644 -p ${CRONTAB_PATH}
-  touch ${CRONTAB_PATH}/${USERNAME}
+  touch ${CRONTAB_PATH}/nginx
 
   # GeoIP
   if [ ! -z "$CRON_GEOIP" ]; then
     echo "Creating GeoIP cron task with the following period fields : $CRON_GEOIP"
-    echo "${CRON_GEOIP} /usr/local/bin/geoip" >> ${CRONTAB_PATH}/${USERNAME}
+    echo "${CRON_GEOIP} /usr/local/bin/geoip" >> ${CRONTAB_PATH}/nginx
   else
     echo "CRON_GEOIP env var empty..."
   fi
@@ -97,14 +78,14 @@ if [ "$1" == "/usr/local/bin/cron" ]; then
   # Archive
   if [ ! -z "$CRON_ARCHIVE" ]; then
     echo "Creating Matomo archive cron task with the following period fields : $CRON_ARCHIVE"
-    echo "${CRON_ARCHIVE} /usr/local/bin/matomo_archive" >> ${CRONTAB_PATH}/${USERNAME}
+    echo "${CRON_ARCHIVE} /usr/local/bin/matomo_archive" >> ${CRONTAB_PATH}/nginx
   else
     echo "CRON_ARCHIVE env var empty..."
   fi
 
   # Fix perms
+  echo "Fixing permissions..."
   chmod -R 0644 ${CRONTAB_PATH}
-  fixperms /etc/nginx/geoip /var/lib/nginx /var/tmp/nginx /var/www
 else
   # Copy global config
   cp -Rf /var/www/config /data/
@@ -129,16 +110,17 @@ else
   fi
 
   # Fix perms
-  fixperms /data/config /data/misc /data/plugins /data/session /data/tmp /etc/nginx/geoip /var/lib/nginx /var/tmp/nginx /var/www
+  echo "Fixing permissions..."
+  chown -R nginx. /data
 
   # Check if already installed
   if [ -f /data/config/config.ini.php ]; then
     echo "Setting Matomo log level to $LOG_LEVEL..."
-    runas_user "php /var/www/console config:set --section='log' --key='log_level' --value='$LOG_LEVEL'"
+    runas_nginx "php /var/www/console config:set --section='log' --key='log_level' --value='$LOG_LEVEL'"
 
     echo "Upgrading and setting Matomo configuration..."
-    runas_user "php /var/www/console core:update"
-    runas_user "php /var/www/console config:set --section='General' --key='minimum_memory_limit' --value='-1'"
+    runas_nginx "php /var/www/console core:update"
+    runas_nginx "php /var/www/console config:set --section='General' --key='minimum_memory_limit' --value='-1'"
   else
     echo ">>"
     echo ">> Open your browser to install Matomo through the wizard"

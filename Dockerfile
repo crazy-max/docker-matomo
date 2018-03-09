@@ -22,9 +22,7 @@ RUN apk --update --no-cache add \
   && rm -rf /var/cache/apk/* /var/www/* /tmp/*
 
 ENV MATOMO_VERSION="3.3.0" \
-  CRONTAB_PATH="/var/spool/cron/crontabs" \
-  USERNAME="docker" \
-  PUID=1000 PGID=1000
+  CRONTAB_PATH="/var/spool/cron/crontabs"
 
 RUN apk --update --no-cache add -t build-dependencies \
     ca-certificates gnupg libressl tar wget \
@@ -48,7 +46,8 @@ RUN apk --update --no-cache add -t build-dependencies \
 ADD entrypoint.sh /entrypoint.sh
 ADD assets /
 
-RUN chmod a+x /entrypoint.sh /usr/local/bin/*
+RUN chmod a+x /entrypoint.sh /usr/local/bin/* \
+  && chown -R nginx. /etc/nginx/geoip /var/lib/nginx /var/log/nginx /var/log/php7 /var/tmp/nginx /var/www
 
 EXPOSE 80
 WORKDIR "/var/www"

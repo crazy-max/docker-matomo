@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.3.0-RC8 (2018/03/09)
+
+* Remove ability to set a custom UID / GID (performance issue with overlay driver)
+
 ## 3.3.0-RC7 (2018/02/28)
 
 * Permissions fix more efficient
