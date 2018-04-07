@@ -99,7 +99,7 @@ docker run -d --name matomo-cron \
   --env-file $(pwd)/matomo.env \
   -e CRON_ARCHIVE=*/15 * * * * \
   -v $(pwd)/data:/data \
-  crazymax/nextcloud:latest /usr/local/bin/cron
+  crazymax/matomo:latest /usr/local/bin/cron
 ```
 
 Then if you have enabled `CRON_ARCHIVE` to automatically archive the reports, you have to disable Matomo archiving to trigger from the browser. Go to **System > General settings** :
