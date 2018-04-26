@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.4.0-RC2 (2018/04/26)
+
+* Use IPv6 GeoIP databases (Issue #4)
+
 ## 3.4.0-RC1 (2018/03/29)
 
 * Upgrade to Matomo 3.4.0

@@ -35,10 +35,10 @@ RUN apk --update --no-cache add -t build-dependencies \
   && tar -xzf piwik-${MATOMO_VERSION}.tar.gz --strip 1 -C /var/www \
   && mkdir -p /etc/nginx/geoip \
   && cd /etc/nginx/geoip \
-  && wget -q https://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz \
-  && gzip -d GeoLiteCity.dat.gz && mv GeoLiteCity.dat GeoIPCity.dat \
-  && wget -q http://geolite.maxmind.com/download/geoip/database/GeoLiteCountry/GeoIP.dat.gz \
-  && gzip -d GeoIP.dat.gz && mv GeoIP.dat GeoIPCountry.dat \
+  && wget -q http://geolite.maxmind.com/download/geoip/database/GeoLiteCityv6-beta/GeoLiteCityv6.dat.gz \
+  && gzip -d GeoLiteCityv6.dat.gz && mv GeoLiteCityv6.dat GeoIPv6City.dat \
+  && wget -q http://geolite.maxmind.com/download/geoip/database/GeoIPv6.dat.gz \
+  && gzip -d GeoIPv6.dat.gz && mv GeoIPv6.dat GeoIPv6Country.dat \
   && cp -f /etc/ssmtp/ssmtp.conf /etc/ssmtp/ssmtp.conf.or \
   && apk del build-dependencies \
   && rm -rf /root/.gnupg /tmp/* /var/cache/apk/*
