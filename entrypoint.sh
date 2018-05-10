@@ -119,7 +119,7 @@ else
     runas_nginx "php /var/www/console config:set --section='log' --key='log_level' --value='$LOG_LEVEL'"
 
     echo "Upgrading and setting Matomo configuration..."
-    runas_nginx "php /var/www/console core:update"
+    runas_nginx "php /var/www/console core:update --yes --no-interaction"
     runas_nginx "php /var/www/console config:set --section='General' --key='minimum_memory_limit' --value='-1'"
   else
     echo ">>"

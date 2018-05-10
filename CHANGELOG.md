@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.5.0-RC2 (2018/05/10)
+
+* No interaction and assume yes during core update
+
 ## 3.5.0-RC1 (2018/05/09)
 
 * Upgrade to Matomo 3.5.0
