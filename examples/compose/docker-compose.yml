@@ -74,7 +74,7 @@ services:
       - ./matomo.env
     environment:
       - CRON_GEOIP=0 2 * * *
-      - CRON_ARCHIVE=*/15 * * * *
+      - CRON_ARCHIVE=0 * * * *
     restart: always
 
 volumes:

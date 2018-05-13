@@ -3,5 +3,5 @@
 if [ -f /data/config/config.ini.php ]; then
   echo "Starting Matomo archiving..."
   php /var/www/console config:set --section='General' --key='enable_browser_archiving_triggering' --value='0'
-  php /var/www/console core:archive
+  php /var/www/console core:archive --no-interaction --concurrent-requests-per-website='@ARCHIVE_CONCURRENT_REQUESTS@'
 fi

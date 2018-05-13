@@ -1,0 +1,13 @@
+#!/bin/sh
+
+echo "Updating GeoLiteCity..."
+wget -q http://geolite.maxmind.com/download/geoip/database/GeoLiteCityv6-beta/GeoLiteCityv6.dat.gz -P /data/geoip/
+gzip -d /data/geoip/GeoLiteCityv6.dat.gz
+mv -f /data/geoip/GeoLiteCityv6.dat /data/geoip/GeoIPv6City.dat
+echo $(date -r /data/geoip/GeoIPv6City.dat)
+
+echo "Updating GeoLiteCountry..."
+wget -q http://geolite.maxmind.com/download/geoip/database/GeoIPv6.dat.gz -P /data/geoip/
+gzip -d /data/geoip/GeoIPv6.dat.gz
+mv -f /data/geoip/GeoIPv6.dat /data/geoip/GeoIPv6Country.dat
+echo $(date -r /data/geoip/GeoIPv6Country.dat)

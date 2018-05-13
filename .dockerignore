@@ -2,9 +2,9 @@
 /.idea
 /*.iml
 
-/.compose
 /.git
 /.res
+/examples
 /.editorconfig
 /.gitignore
 /.travis.yml

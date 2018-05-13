@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.5.0-RC3 (2018/05/13)
+
+* Add option to set number of requests to process in parallel during cron archive
+* Force overwriting GeoIP databases during update
+* Move GeoIP databases to `/data/geoip`
+
 ## 3.5.0-RC2 (2018/05/10)
 
 * No interaction and assume yes during core update

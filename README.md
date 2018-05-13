@@ -40,22 +40,23 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 
 ### Environment variables
 
-* `TZ` : The timezone assigned to the container (default to `UTC`)
-* `LOG_LEVEL` : [Log level](https://matomo.org/faq/troubleshooting/faq_115/) of Matomo UI (default to `WARN`)
-* `MEMORY_LIMIT` : PHP memory limit (default to `256M`)
-* `UPLOAD_MAX_SIZE` : Upload max size (default to `16M`)
-* `OPCACHE_MEM_SIZE` : PHP OpCache memory consumption (default to `128`)
+* `TZ` : The timezone assigned to the container (default: `UTC`)
+* `LOG_LEVEL` : [Log level](https://matomo.org/faq/troubleshooting/faq_115/) of Matomo UI (default: `WARN`)
+* `ARCHIVE_CONCURRENT_REQUESTS` : When processing a website and its segments, number of requests to process in parallel (default: `3`)
+* `MEMORY_LIMIT` : PHP memory limit (default: `256M`)
+* `UPLOAD_MAX_SIZE` : Upload max size (default: `16M`)
+* `OPCACHE_MEM_SIZE` : PHP OpCache memory consumption (default: `128`)
 * `SSMTP_HOST` : SMTP server host
-* `SSMTP_PORT` : SMTP server port (default to `25`)
-* `SSMTP_HOSTNAME` : Full hostname (default to `$(hostname -f)`)
+* `SSMTP_PORT` : SMTP server port (default: `25`)
+* `SSMTP_HOSTNAME` : Full hostname (default: `$(hostname -f)`)
 * `SSMTP_USER` : SMTP username
 * `SSMTP_PASSWORD` : SMTP password
-* `SSMTP_TLS` : SSL/TLS (default to `NO`)
+* `SSMTP_TLS` : SSL/TLS (default: `NO`)
 
 The following environment variables are used only if you run the container as ["sidecar" mode](#cron) :
 
 * `CRON_GEOIP` : Periodically update GeoIP data (disabled if empty ; ex `0 4 * * *`)
-* `CRON_ARCHIVE` : Periodically execute Matomo [archive](https://matomo.org/docs/setup-auto-archiving/#linuxunix-how-to-set-up-a-crontab-to-automatically-archive-the-reports) (disabled if empty ; ex `0 1 * * *`)
+* `CRON_ARCHIVE` : Periodically execute Matomo [archive](https://matomo.org/docs/setup-auto-archiving/#linuxunix-how-to-set-up-a-crontab-to-automatically-archive-the-reports) (disabled if empty ; ex `0 * * * *`)
 
 ### Volumes
 
@@ -69,7 +70,7 @@ The following environment variables are used only if you run the container as ["
 
 ### Docker Compose
 
-Docker compose is the recommended way to run this image. Copy the content of folder [.compose](.compose) in `/var/matomo/` on your host for example. Edit the compose and env files with your preferences and run the following commands :
+Docker compose is the recommended way to run this image. Copy the content of folder [examples/compose](examples/compose) in `/var/matomo/` on your host for example. Edit the compose and env files with your preferences and run the following commands :
 
 ```bash
 touch acme.json
@@ -92,12 +93,12 @@ docker run -d -p 80:80 --name matomo \
 
 ### Cron
 
-If you want to enable the cron job, you have to run a "sidecar" container like in the [docker-compose file](.compose/docker-compose.yml) or run a simple container like this :
+If you want to enable the cron job, you have to run a "sidecar" container like in the [docker-compose file](examples/compose/docker-compose.yml) or run a simple container like this :
 
 ```bash
 docker run -d --name matomo-cron \
   --env-file $(pwd)/matomo.env \
-  -e CRON_ARCHIVE=*/15 * * * * \
+  -e CRON_ARCHIVE=0 * * * * \
   -v $(pwd)/data:/data \
   crazymax/matomo:latest /usr/local/bin/cron
 ```

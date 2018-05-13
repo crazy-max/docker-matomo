@@ -6,6 +6,7 @@ function runas_nginx() {
 
 TZ=${TZ:-"UTC"}
 LOG_LEVEL=${LOG_LEVEL:-"WARN"}
+ARCHIVE_CONCURRENT_REQUESTS=${ARCHIVE_CONCURRENT_REQUESTS:-"3"}
 MEMORY_LIMIT=${MEMORY_LIMIT:-"256M"}
 UPLOAD_MAX_SIZE=${UPLOAD_MAX_SIZE:-"16M"}
 OPCACHE_MEM_SIZE=${OPCACHE_MEM_SIZE:-"128"}
@@ -52,9 +53,15 @@ UseSTARTTLS=${SSMTP_TLS}
 EOL
 fi
 
+# Archive
+echo "Setting Matomo archive configuration..."
+sed -e "s/@ARCHIVE_CONCURRENT_REQUESTS@/$ARCHIVE_CONCURRENT_REQUESTS/g" \
+  /tpls/usr/local/bin/matomo_archive > /usr/local/bin/matomo_archive
+chmod a+x /usr/local/bin/matomo_archive
+
 # Init Matomo
 echo "Initializing Matomo files / folders..."
-mkdir -p /data/config /data/misc /data/plugins /data/session /data/tmp /etc/supervisord /var/log/supervisord
+mkdir -p /data/config /data/geoip /data/misc /data/plugins /data/session /data/tmp /etc/supervisord /var/log/supervisord
 
 # Sidecar cron container ?
 if [ "$1" == "/usr/local/bin/cron" ]; then
@@ -70,7 +77,7 @@ if [ "$1" == "/usr/local/bin/cron" ]; then
   # GeoIP
   if [ ! -z "$CRON_GEOIP" ]; then
     echo "Creating GeoIP cron task with the following period fields : $CRON_GEOIP"
-    echo "${CRON_GEOIP} /usr/local/bin/geoip" >> ${CRONTAB_PATH}/nginx
+    echo "${CRON_GEOIP} /usr/local/bin/update_geoip" >> ${CRONTAB_PATH}/nginx
   else
     echo "CRON_GEOIP env var empty..."
   fi
@@ -107,6 +114,16 @@ else
       mv -f /var/www/misc/user /data/misc/
     fi
     ln -sf /data/misc/user /var/www/misc/user
+  fi
+
+  if [ ! -f /data/geoip/GeoIPv6City.dat ]; then
+    echo "Copying GeoLiteCity..."
+    cp -f /work/GeoIPv6City.dat /data/geoip/GeoIPv6City.dat
+  fi
+
+  if [ ! -f /data/geoip/GeoIPv6Country.dat ]; then
+    echo "Copying GeoLiteCity..."
+    cp -f /work/GeoIPv6Country.dat /data/geoip/GeoIPv6Country.dat
   fi
 
   # Fix perms
