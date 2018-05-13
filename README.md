@@ -42,7 +42,7 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 
 * `TZ` : The timezone assigned to the container (default: `UTC`)
 * `LOG_LEVEL` : [Log level](https://matomo.org/faq/troubleshooting/faq_115/) of Matomo UI (default: `WARN`)
-* `ARCHIVE_CONCURRENT_REQUESTS` : When processing a website and its segments, number of requests to process in parallel (default: `3`)
+* `ARCHIVE_CONCURRENT_REQUESTS` : Number of requests to process in parallel during cron archive (default: `3`)
 * `MEMORY_LIMIT` : PHP memory limit (default: `256M`)
 * `UPLOAD_MAX_SIZE` : Upload max size (default: `16M`)
 * `OPCACHE_MEM_SIZE` : PHP OpCache memory consumption (default: `128`)
