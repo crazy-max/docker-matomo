@@ -11,7 +11,7 @@ services:
       - --docker
       - --docker.exposedbydefault=false
       - --docker.domain=example.com
-      - --acme=false
+      - --acme=true
       - --acme.acmelogging=true
       - --acme.email=webmaster@example.com
       - --acme.storage=acme.json
@@ -37,10 +37,10 @@ services:
     volumes:
       - db:/var/lib/mysql
     environment:
-      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
-      - MYSQL_DATABASE=matomo
-      - MYSQL_USER=matomo
-      - MYSQL_PASSWORD=asupersecretpassword
+      - "MYSQL_ALLOW_EMPTY_PASSWORD=yes"
+      - "MYSQL_DATABASE=matomo"
+      - "MYSQL_USER=matomo"
+      - "MYSQL_PASSWORD=asupersecretpassword"
     restart: always
 
   redis:
@@ -73,8 +73,9 @@ services:
     env_file:
       - ./matomo.env
     environment:
-      - CRON_GEOIP=0 2 * * *
-      - CRON_ARCHIVE=0 * * * *
+      - "CRON_GEOIP=0 2 * * *"
+      - "CRON_ARCHIVE=0 * * * *"
+      - "ARCHIVE_OPTIONS=--concurrent-requests-per-website=3"
     restart: always
 
 volumes:

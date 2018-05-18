@@ -24,6 +24,7 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 * Config, plugins and user preferences in the same folder
 * GeoLite data created by [MaxMind](http://www.maxmind.com) for geolocation
 * Cron tasks to archive Matomo reports and update GeoLite data as a ["sidecar" container](#cron)
+* Ability to pass [additional options](https://matomo.org/docs/setup-auto-archiving/#help-for-corearchive-command) during cron archive
 * Plugins and config are kept across upgrades of this image
 * [SSMTP](https://linux.die.net/man/8/ssmtp) for SMTP relay to send emails
 * OPCache enabled to store precompiled script bytecode in shared memory
@@ -42,7 +43,6 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 
 * `TZ` : The timezone assigned to the container (default: `UTC`)
 * `LOG_LEVEL` : [Log level](https://matomo.org/faq/troubleshooting/faq_115/) of Matomo UI (default: `WARN`)
-* `ARCHIVE_CONCURRENT_REQUESTS` : Number of requests to process in parallel during cron archive (default: `3`)
 * `MEMORY_LIMIT` : PHP memory limit (default: `256M`)
 * `UPLOAD_MAX_SIZE` : Upload max size (default: `16M`)
 * `OPCACHE_MEM_SIZE` : PHP OpCache memory consumption (default: `128`)
@@ -55,12 +55,13 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 
 The following environment variables are used only if you run the container as ["sidecar" mode](#cron) :
 
+* `ARCHIVE_OPTIONS` : Pass [additional options](https://matomo.org/docs/setup-auto-archiving/#help-for-corearchive-command) during cron archive
 * `CRON_GEOIP` : Periodically update GeoIP data (disabled if empty ; ex `0 4 * * *`)
 * `CRON_ARCHIVE` : Periodically execute Matomo [archive](https://matomo.org/docs/setup-auto-archiving/#linuxunix-how-to-set-up-a-crontab-to-automatically-archive-the-reports) (disabled if empty ; ex `0 * * * *`)
 
 ### Volumes
 
-* `/data` : Contains config folder, installed plugins (not core ones), tmp folder and user folder to store your [custom logo](https://matomo.org/faq/new-to-piwik/faq_129/)
+* `/data` : Contains GeoIP databases, configuration, installed plugins (not core ones), tmp and user folders to store your [custom logo](https://matomo.org/faq/new-to-piwik/faq_129/)
 
 ### Ports
 
@@ -98,7 +99,8 @@ If you want to enable the cron job, you have to run a "sidecar" container like i
 ```bash
 docker run -d --name matomo-cron \
   --env-file $(pwd)/matomo.env \
-  -e CRON_ARCHIVE=0 * * * * \
+  -e "ARCHIVE_OPTIONS=--concurrent-requests-per-website=3" \
+  -e "CRON_ARCHIVE=0 * * * *" \
   -v $(pwd)/data:/data \
   crazymax/matomo:latest /usr/local/bin/cron
 ```

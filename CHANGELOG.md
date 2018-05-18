@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.5.0-RC4 (2018/05/18)
+
+* Replace `ARCHIVE_CONCURRENT_REQUESTS` with a generic var `ARCHIVE_OPTIONS`
+
 ## 3.5.0-RC3 (2018/05/13)
 
 * Add option to set number of requests to process in parallel during cron archive

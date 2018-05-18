@@ -6,7 +6,6 @@ function runas_nginx() {
 
 TZ=${TZ:-"UTC"}
 LOG_LEVEL=${LOG_LEVEL:-"WARN"}
-ARCHIVE_CONCURRENT_REQUESTS=${ARCHIVE_CONCURRENT_REQUESTS:-"3"}
 MEMORY_LIMIT=${MEMORY_LIMIT:-"256M"}
 UPLOAD_MAX_SIZE=${UPLOAD_MAX_SIZE:-"16M"}
 OPCACHE_MEM_SIZE=${OPCACHE_MEM_SIZE:-"128"}
@@ -52,12 +51,6 @@ UseTLS=${SSMTP_TLS}
 UseSTARTTLS=${SSMTP_TLS}
 EOL
 fi
-
-# Archive
-echo "Setting Matomo archive configuration..."
-sed -e "s/@ARCHIVE_CONCURRENT_REQUESTS@/$ARCHIVE_CONCURRENT_REQUESTS/g" \
-  /tpls/usr/local/bin/matomo_archive > /usr/local/bin/matomo_archive
-chmod a+x /usr/local/bin/matomo_archive
 
 # Init Matomo
 echo "Initializing Matomo files / folders..."
