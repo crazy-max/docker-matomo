@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.5.1-RC1 (2018/05/25)
+
+* Upgrade to Matomo 3.5.1
+
 ## 3.5.0-RC4 (2018/05/18)
 
 * Replace `ARCHIVE_CONCURRENT_REQUESTS` with a generic var `ARCHIVE_OPTIONS`
