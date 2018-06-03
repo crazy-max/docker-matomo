@@ -91,6 +91,10 @@ docker run -d -p 80:80 --name matomo \
 
 ## Notes
 
+### Sticky sessions
+
+On a HA environment, **enable backend sticky sessions** on your load balancer. It's required while installing plugins for example.
+
 ### Cron
 
 If you want to enable the cron job, you have to run a "sidecar" container like in the [docker-compose file](examples/compose/docker-compose.yml) or run a simple container like this :
