@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.5.1-RC2 (2018/06/03)
+
+* Better handling of plugins on HA environments
+
 ## 3.5.1-RC1 (2018/05/25)
 
 * Upgrade to Matomo 3.5.1
