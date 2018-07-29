@@ -51,6 +51,9 @@ UseTLS=${SSMTP_TLS}
 UseSTARTTLS=${SSMTP_TLS}
 EOL
 fi
+unset SSMTP_HOST
+unset SSMTP_USER
+unset SSMTP_PASSWORD
 
 # Init Matomo
 echo "Initializing Matomo files / folders..."
