@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.6.0-RC1 (2018/08/29)
+
+* Upgrade to Matomo 3.6.0
+* Alpine 3.8
+* PHP 7.2
+
 ## 3.5.1-RC2 (2018/06/03)
 
 * Better handling of plugins on HA environments

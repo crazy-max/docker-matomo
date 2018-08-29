@@ -1,4 +1,4 @@
-FROM alpine:3.7
+FROM alpine:3.8
 MAINTAINER CrazyMax <crazy-max@users.noreply.github.com>
 
 ARG BUILD_DATE
@@ -21,7 +21,7 @@ RUN apk --update --no-cache add \
     php7-opcache php7-openssl php7-pdo php7-pdo_mysql php7-redis php7-session php7-simplexml php7-xml php7-zlib \
   && rm -rf /var/cache/apk/* /var/www/* /tmp/*
 
-ENV MATOMO_VERSION="3.5.1" \
+ENV MATOMO_VERSION="3.6.0" \
   CRONTAB_PATH="/var/spool/cron/crontabs"
 
 RUN apk --update --no-cache add -t build-dependencies \

@@ -18,7 +18,7 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 
 ### Included
 
-* Alpine Linux 3.7, Nginx, PHP 7.1
+* Alpine Linux 3.8, Nginx, PHP 7.2
 * Tarball authenticity checked during building process
 * Config, plugins and user preferences in the same folder
 * GeoLite data created by [MaxMind](http://www.maxmind.com) for geolocation
@@ -93,7 +93,7 @@ docker run -d -p 80:80 --name matomo \
 
 ### Sticky sessions
 
-On a HA environment, **enable backend sticky sessions** on your load balancer. It's required while installing plugins for example.
+On a HA environment, **enable backend sticky sessions** on your load balancer.
 
 ### Cron
 
