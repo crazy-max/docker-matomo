@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.6.0-RC2 (2018/09/16)
+
+* Refactor sidecar cron to handle plugins
+
+> :warning: **UPGRADE NOTES**
+> Sidecar cron container is now handled with `SIDECAR_CRON` environment variable.
+> See docker-compose example and README for more info.
+
 ## 3.6.0-RC1 (2018/08/29)
 
 * Upgrade to Matomo 3.6.0

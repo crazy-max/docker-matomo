@@ -6,16 +6,16 @@ function isPluginInstalled() {
 
 inotifywait -e create,delete,close_write,moved_to,moved_from -m /data/config/ /data/plugins/ |
 while read -r directory events file; do
-  #echo "[$(date +'%Y/%m/%d %H:%M:%S')] === Event(s) '$events' triggered for '$file'"
+  echo "[$(date +'%Y/%m/%d %H:%M:%S')] [watch_plugins] === Event(s) '$events' triggered for '$file'"
 
   # config.ini.php modified
   if [ "$directory" = "/data/config/" -a "$file" = "config.ini.php" -a ${events} = "CLOSE_WRITE,CLOSE" ]; then
     sleep 2
     plugins=$(ls -l /var/www/plugins | egrep '^l' | awk '{print $9}')
     for plugin in ${plugins}; do
-      echo "[$(date +'%Y/%m/%d %H:%M:%S')] Check plugin $plugin"
+      echo "[$(date +'%Y/%m/%d %H:%M:%S')] [watch_plugins] Check plugin $plugin"
       if ! isPluginInstalled ${plugin}; then
-        echo "[$(date +'%Y/%m/%d %H:%M:%S')] Remove orphan plugin $plugin"
+        echo "[$(date +'%Y/%m/%d %H:%M:%S')] [watch_plugins] Remove orphan plugin $plugin"
         rm -f /var/www/plugins/${plugin}
         rm -rf /data/plugins/${plugin}
       fi
@@ -26,14 +26,14 @@ while read -r directory events file; do
   if [ "$directory" = "/data/plugins/" ]; then
     if [ ${events} = "CREATE,ISDIR" -o ${events} = "MOVED_TO,ISDIR" ]; then
       if [ -d /var/www/plugins/${file} ]; then
-        echo "[$(date +'%Y/%m/%d %H:%M:%S')] Remove '/var/www/plugins/${file}'"
+        echo "[$(date +'%Y/%m/%d %H:%M:%S')] [watch_plugins] Remove '/var/www/plugins/${file}'"
         rm -rf /var/www/plugins/${file}
       fi
-      echo "[$(date +'%Y/%m/%d %H:%M:%S')] Create symlink to '/var/www/plugins/${file}'"
+      echo "[$(date +'%Y/%m/%d %H:%M:%S')] [watch_plugins] Create symlink to '/var/www/plugins/${file}'"
       ln -sf /data/plugins/${file} /var/www/plugins/${file}
       sleep 1
     elif [ ${events} == "DELETE,ISDIR" ]; then
-      echo "[$(date +'%Y/%m/%d %H:%M:%S')] Folder '/data/plugins/${file}' has been removed. Disable plugin ${file}"
+      echo "[$(date +'%Y/%m/%d %H:%M:%S')] [watch_plugins] Folder '/data/plugins/${file}' has been removed. Disable plugin ${file}"
       php /var/www/console plugin:deactivate --no-interaction ${file}
       rm -f /var/www/plugins/${file}
       sleep 1

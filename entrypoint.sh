@@ -5,10 +5,13 @@ function runas_nginx() {
 }
 
 TZ=${TZ:-"UTC"}
-LOG_LEVEL=${LOG_LEVEL:-"WARN"}
+
 MEMORY_LIMIT=${MEMORY_LIMIT:-"256M"}
 UPLOAD_MAX_SIZE=${UPLOAD_MAX_SIZE:-"16M"}
 OPCACHE_MEM_SIZE=${OPCACHE_MEM_SIZE:-"128"}
+
+LOG_LEVEL=${LOG_LEVEL:-"WARN"}
+SIDECAR_CRON=${SIDECAR_CRON:-"0"}
 
 SSMTP_PORT=${SSMTP_PORT:-"25"}
 SSMTP_HOSTNAME=${SSMTP_HOSTNAME:-"$(hostname -f)"}
@@ -59,13 +62,51 @@ unset SSMTP_PASSWORD
 echo "Initializing Matomo files / folders..."
 mkdir -p /data/config /data/geoip /data/misc /data/plugins /data/session /data/tmp /etc/supervisord /var/log/supervisord
 
+# Copy global config
+cp -Rf /var/www/config /data/
+
+# Check plugins
+echo "Checking Matomo plugins..."
+plugins=$(ls -l /data/plugins | egrep '^d' | awk '{print $9}')
+for plugin in ${plugins}; do
+  if [ -d /var/www/plugins/${plugin} ]; then
+    rm -rf /var/www/plugins/${plugin}
+  fi
+  echo "  - Adding ${plugin}"
+  ln -sf /data/plugins/${plugin} /var/www/plugins/${plugin}
+done
+
+# Check user folder
+echo "Checking Matomo user-misc folder..."
+if [ ! -d /data/misc/user ]; then
+  if [[ ! -L /var/www/misc/user && -d /var/www/misc/user ]]; then
+    mv -f /var/www/misc/user /data/misc/
+  fi
+  ln -sf /data/misc/user /var/www/misc/user
+fi
+
+if [ ! -f /data/geoip/GeoIPv6City.dat ]; then
+  echo "Copying GeoLiteCity..."
+  cp -f /work/GeoIPv6City.dat /data/geoip/GeoIPv6City.dat
+fi
+
+if [ ! -f /data/geoip/GeoIPv6Country.dat ]; then
+  echo "Copying GeoLiteCity..."
+  cp -f /work/GeoIPv6Country.dat /data/geoip/GeoIPv6Country.dat
+fi
+
+# Fix perms
+echo "Fixing permissions..."
+chown -R nginx. /data
+
 # Sidecar cron container ?
-if [ "$1" == "/usr/local/bin/cron" ]; then
+if [ "$SIDECAR_CRON" = "1" ]; then
   echo ">>"
   echo ">> Sidecar cron container detected for Matomo"
   echo ">>"
 
   # Init
+  rm /etc/supervisord/nginx.conf /etc/supervisord/php.conf
   rm -rf ${CRONTAB_PATH}
   mkdir -m 0644 -p ${CRONTAB_PATH}
   touch ${CRONTAB_PATH}/nginx
@@ -90,41 +131,7 @@ if [ "$1" == "/usr/local/bin/cron" ]; then
   echo "Fixing permissions..."
   chmod -R 0644 ${CRONTAB_PATH}
 else
-  # Copy global config
-  cp -Rf /var/www/config /data/
-
-  # Check plugins
-  echo "Checking Matomo plugins..."
-  plugins=$(ls -l /data/plugins | egrep '^d' | awk '{print $9}')
-  for plugin in ${plugins}; do
-    if [ -d /var/www/plugins/${plugin} ]; then
-      rm -rf /var/www/plugins/${plugin}
-    fi
-    ln -sf /data/plugins/${plugin} /var/www/plugins/${plugin}
-  done
-
-  # Check user folder
-  echo "Checking Matomo user-misc folder..."
-  if [ ! -d /data/misc/user ]; then
-    if [[ ! -L /var/www/misc/user && -d /var/www/misc/user ]]; then
-      mv -f /var/www/misc/user /data/misc/
-    fi
-    ln -sf /data/misc/user /var/www/misc/user
-  fi
-
-  if [ ! -f /data/geoip/GeoIPv6City.dat ]; then
-    echo "Copying GeoLiteCity..."
-    cp -f /work/GeoIPv6City.dat /data/geoip/GeoIPv6City.dat
-  fi
-
-  if [ ! -f /data/geoip/GeoIPv6Country.dat ]; then
-    echo "Copying GeoLiteCity..."
-    cp -f /work/GeoIPv6Country.dat /data/geoip/GeoIPv6Country.dat
-  fi
-
-  # Fix perms
-  echo "Fixing permissions..."
-  chown -R nginx. /data
+  rm /etc/supervisord/cron.conf
 
   # Check if already installed
   if [ -f /data/config/config.ini.php ]; then

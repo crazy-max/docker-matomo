@@ -68,10 +68,10 @@ services:
       - app
     volumes:
       - "matomo:/data"
-    command: "/usr/local/bin/cron"
     env_file:
       - ./matomo.env
     environment:
+      - "SIDECAR_CRON=1"
       - "CRON_GEOIP=0 2 * * *"
       - "CRON_ARCHIVE=0 * * * *"
       - "ARCHIVE_OPTIONS=--concurrent-requests-per-website=3"

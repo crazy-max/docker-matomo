@@ -41,10 +41,11 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 ### Environment variables
 
 * `TZ` : The timezone assigned to the container (default: `UTC`)
-* `LOG_LEVEL` : [Log level](https://matomo.org/faq/troubleshooting/faq_115/) of Matomo UI (default: `WARN`)
 * `MEMORY_LIMIT` : PHP memory limit (default: `256M`)
 * `UPLOAD_MAX_SIZE` : Upload max size (default: `16M`)
 * `OPCACHE_MEM_SIZE` : PHP OpCache memory consumption (default: `128`)
+* `LOG_LEVEL` : [Log level](https://matomo.org/faq/troubleshooting/faq_115/) of Matomo UI (default: `WARN`)
+* `SIDECAR_CRON` : Mark the container as a sidecar cron job (default: `0`)
 * `SSMTP_HOST` : SMTP server host
 * `SSMTP_PORT` : SMTP server port (default: `25`)
 * `SSMTP_HOSTNAME` : Full hostname (default: `$(hostname -f)`)
@@ -52,7 +53,7 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 * `SSMTP_PASSWORD` : SMTP password
 * `SSMTP_TLS` : SSL/TLS (default: `NO`)
 
-The following environment variables are used only if you run the container as ["sidecar" mode](#cron) :
+The following environment variables are only used if you run the container as ["sidecar" mode](#cron) :
 
 * `ARCHIVE_OPTIONS` : Pass [additional options](https://matomo.org/docs/setup-auto-archiving/#help-for-corearchive-command) during cron archive
 * `CRON_GEOIP` : Periodically update GeoIP data (disabled if empty ; ex `0 4 * * *`)
@@ -102,10 +103,11 @@ If you want to enable the cron job, you have to run a "sidecar" container like i
 ```bash
 docker run -d --name matomo-cron \
   --env-file $(pwd)/matomo.env \
-  -e "ARCHIVE_OPTIONS=--concurrent-requests-per-website=3" \
+  -e "SIDECAR_CRON=1" \
   -e "CRON_ARCHIVE=0 * * * *" \
+  -e "ARCHIVE_OPTIONS=--concurrent-requests-per-website=3" \
   -v $(pwd)/data:/data \
-  crazymax/matomo:latest /usr/local/bin/cron
+  crazymax/matomo:latest
 ```
 
 Then if you have enabled `CRON_ARCHIVE` to automatically archive the reports, you have to disable Matomo archiving to trigger from the browser. Go to **System > General settings** :
@@ -152,9 +154,14 @@ database = 14
 
 In case you are using queued tracking: Make sure to configure a different database! Otherwise queued requests will be flushed.
 
+### Plugins
+
+If you are on a [HA environment](https://matomo.org/faq/new-to-piwik/faq_134/), there is no need to set `multi_server_environment = 1` in your config.<br />
+[matomo_watch_plugins](assets/usr/local/bin/matomo_watch_plugins) script will take care of plugins synchronization from `/data/plugins/` to `/var/www/plugins/`.
+
 ## Upgrade
 
-You can upgrade Matomo automatically through the UI, it works well. But i recommend to recreate the container whenever i push an update :
+You can upgrade Matomo automatically through the UI, it works well. But I recommend to recreate the container whenever I push an update :
 
 ```bash
 docker-compose pull
