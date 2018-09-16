@@ -28,7 +28,7 @@ install:
     docker build --build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
     --build-arg VCS_REF=${TRAVIS_COMMIT::8} \
     --build-arg VERSION=${VERSION} \
-    -t $DOCKER_USERNAME/$DOCKER_REPONAME .
+    -t docker_build .
 
 before_script:
   - docker run -d -p 8000:80 --name $DOCKER_REPONAME docker_build
