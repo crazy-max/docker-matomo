@@ -21,7 +21,7 @@ RUN apk --update --no-cache add \
     php7-opcache php7-openssl php7-pdo php7-pdo_mysql php7-redis php7-session php7-simplexml php7-xml php7-zlib \
   && rm -rf /var/cache/apk/* /var/www/* /tmp/*
 
-ENV MATOMO_VERSION="3.6.0" \
+ENV MATOMO_VERSION="3.6.1" \
   CRONTAB_PATH="/var/spool/cron/crontabs"
 
 RUN apk --update --no-cache add -t build-dependencies \

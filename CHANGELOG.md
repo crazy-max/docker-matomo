@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.6.1-RC1 (2018/10/18)
+
+* Upgrade to Matomo 3.6.1
+
 ## 3.6.0-RC2 (2018/09/16)
 
 * Refactor sidecar cron to handle plugins
