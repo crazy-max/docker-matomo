@@ -6,6 +6,7 @@
   <a href="https://hub.docker.com/r/crazymax/matomo/"><img src="https://img.shields.io/docker/stars/crazymax/matomo.svg?style=flat-square" alt="Docker Stars"></a>
   <a href="https://hub.docker.com/r/crazymax/matomo/"><img src="https://img.shields.io/docker/pulls/crazymax/matomo.svg?style=flat-square" alt="Docker Pulls"></a>
   <a href="https://quay.io/repository/crazymax/matomo"><img src="https://quay.io/repository/crazymax/matomo/status?style=flat-square" alt="Docker Repository on Quay"></a>
+  <a href="https://www.codacy.com/app/crazy-max/docker-matomo"><img src="https://img.shields.io/codacy/grade/c6bb409d02314ecf9928750de89d9d8c.svg?style=flat-square" alt="Code Quality"></a>
   <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=JP85E7WHT33FL"><img src="https://img.shields.io/badge/donate-paypal-7057ff.svg?style=flat-square" alt="Donate Paypal"></a>
 </p>
 
