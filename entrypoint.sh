@@ -42,7 +42,6 @@ sed -e "s/@UPLOAD_MAX_SIZE@/$UPLOAD_MAX_SIZE/g" \
 echo "Setting SSMTP configuration..."
 if [ -z "$SSMTP_HOST" ] ; then
   echo "WARNING: SSMTP_HOST must be defined if you want to send emails"
-  cp -f /etc/ssmtp/ssmtp.conf.or /etc/ssmtp/ssmtp.conf
 else
   cat > /etc/ssmtp/ssmtp.conf <<EOL
 mailhub=${SSMTP_HOST}:${SSMTP_PORT}

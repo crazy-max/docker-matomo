@@ -21,7 +21,7 @@ RUN apk --update --no-cache add \
     php7-opcache php7-openssl php7-pdo php7-pdo_mysql php7-redis php7-session php7-simplexml php7-xml php7-zlib \
   && rm -rf /var/cache/apk/* /var/www/* /tmp/*
 
-ENV MATOMO_VERSION="3.6.1" \
+ENV MATOMO_VERSION="3.7.0" \
   CRONTAB_PATH="/var/spool/cron/crontabs"
 
 RUN apk --update --no-cache add -t build-dependencies \
@@ -39,18 +39,17 @@ RUN apk --update --no-cache add -t build-dependencies \
   && gzip -d GeoLiteCityv6.dat.gz && mv GeoLiteCityv6.dat GeoIPv6City.dat \
   && wget -q http://geolite.maxmind.com/download/geoip/database/GeoIPv6.dat.gz \
   && gzip -d GeoIPv6.dat.gz && mv GeoIPv6.dat GeoIPv6Country.dat \
-  && cp -f /etc/ssmtp/ssmtp.conf /etc/ssmtp/ssmtp.conf.or \
   && apk del build-dependencies \
   && rm -rf /root/.gnupg /tmp/* /var/cache/apk/*
 
-ADD entrypoint.sh /entrypoint.sh
-ADD assets /
+COPY entrypoint.sh /entrypoint.sh
+COPY assets /
 
 RUN chmod a+x /entrypoint.sh /usr/local/bin/* \
   && chown -R nginx. /var/lib/nginx /var/log/nginx /var/log/php7 /var/tmp/nginx /var/www /work
 
 EXPOSE 80
-WORKDIR "/var/www"
+WORKDIR /var/www
 VOLUME [ "/data" ]
 
 ENTRYPOINT [ "/entrypoint.sh" ]

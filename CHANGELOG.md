@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.7.0-RC1 (2018/11/19)
+
+* Upgrade to Matomo 3.7.0
+* Coding style
+
 ## 3.6.1-RC1 (2018/10/18)
 
 * Upgrade to Matomo 3.6.1
