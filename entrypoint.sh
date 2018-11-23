@@ -59,7 +59,7 @@ unset SSMTP_PASSWORD
 
 # Init Matomo
 echo "Initializing Matomo files / folders..."
-mkdir -p /data/config /data/geoip /data/misc /data/plugins /data/session /data/tmp /etc/supervisord /var/log/supervisord
+mkdir -p /data/config /data/misc /data/plugins /data/session /data/tmp /etc/supervisord /var/log/supervisord
 
 # Copy global config
 cp -Rf /var/www/config /data/
@@ -82,16 +82,6 @@ if [ ! -d /data/misc/user ]; then
     mv -f /var/www/misc/user /data/misc/
   fi
   ln -sf /data/misc/user /var/www/misc/user
-fi
-
-if [ ! -f /data/geoip/GeoIPv6City.dat ]; then
-  echo "Copying GeoLiteCity..."
-  cp -f /work/GeoIPv6City.dat /data/geoip/GeoIPv6City.dat
-fi
-
-if [ ! -f /data/geoip/GeoIPv6Country.dat ]; then
-  echo "Copying GeoLiteCity..."
-  cp -f /work/GeoIPv6Country.dat /data/geoip/GeoIPv6Country.dat
 fi
 
 # Fix perms

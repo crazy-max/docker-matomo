@@ -115,11 +115,25 @@ Then if you have enabled `CRON_ARCHIVE` to automatically archive the reports, yo
 
 ![Disable Matomo archiving from browser](.res/disable-archive-reports-browser.png)
 
-### Change location provider
+### GeoIP 2
 
-As GeoIP module for Nginx is installed and uses GeoIP data, you have to select **GeoIP (HTTP Server Module)** in **System > Geolocation** :
+This image already uses GeoIP 2 databases of [MaxMind](https://www.maxmind.com/) through Nginx. You just have to install and activate the [GeoIP 2 plugin](https://plugins.matomo.org/GeoIP2).
 
-![Change location provider](.res/location-provider.png)
+After that, you have to select **GeoIP 2 (HTTP Server Module)** in **System > Geolocation** :
+
+![GeoIP 2 location provider](.res/geoip2-location-provider.png)
+
+And activate GeoIP 2 server module for Nginx in **System > General settings > Configuration for server variables used by GeoIP 2 server modules** :
+
+![GeoIP 2 server module](.res/geoip2-server-module.png)
+
+### GeoIP location provider
+
+> :warning: GeoIP (Legacy) is now deprecated. Use GeoIP 2 instead (see above).
+
+As GeoIP module for Nginx is installed and uses GeoIP databases, you have to select **GeoIP Legacy (HTTP Server Module)** in **System > Geolocation** :
+
+![GeoIP location provider](.res/geoip-location-provider.png)
 
 ### Behind a reverse proxy ?
 

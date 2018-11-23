@@ -1,13 +1,38 @@
 #!/bin/sh
 
-echo "Updating GeoLiteCity..."
-wget -q http://geolite.maxmind.com/download/geoip/database/GeoLiteCityv6-beta/GeoLiteCityv6.dat.gz -P /data/geoip/
-gzip -d /data/geoip/GeoLiteCityv6.dat.gz
-mv -f /data/geoip/GeoLiteCityv6.dat /data/geoip/GeoIPv6City.dat
-echo $(date -r /data/geoip/GeoIPv6City.dat)
+mkdir -p /tmp/geoip
+cd /tmp/geoip/
 
-echo "Updating GeoLiteCountry..."
-wget -q http://geolite.maxmind.com/download/geoip/database/GeoIPv6.dat.gz -P /data/geoip/
-gzip -d /data/geoip/GeoIPv6.dat.gz
-mv -f /data/geoip/GeoIPv6.dat /data/geoip/GeoIPv6Country.dat
-echo $(date -r /data/geoip/GeoIPv6Country.dat)
+echo "Updating GeoIPv6-City..."
+wget -q http://geolite.maxmind.com/download/geoip/database/GeoLiteCityv6-beta/GeoLiteCityv6.dat.gz
+gzip -d GeoLiteCityv6.dat.gz
+mv -f GeoLiteCityv6.dat /etc/nginx/geoip/GeoIPv6-City.dat
+rm -f GeoLiteCityv6.dat.gz
+echo $(date -r /etc/nginx/geoip/GeoIPv6-City.dat)
+
+echo "Updating GeoIPv6-Country..."
+wget -q http://geolite.maxmind.com/download/geoip/database/GeoIPv6.dat.gz
+gzip -d GeoIPv6.dat.gz
+mv -f GeoIPv6.dat /etc/nginx/geoip/GeoIPv6-Country.dat
+rm -f GeoIPv6.dat.gz
+echo $(date -r /etc/nginx/geoip/GeoIPv6-Country.dat)
+
+echo "Updating GeoLite2-City..."
+wget -q http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz
+tar -xzf GeoLite2-City.tar.gz --strip-components=1
+mv -f GeoLite2-City.mmdb /etc/nginx/geoip/
+echo $(date -r /etc/nginx/geoip/GeoLite2-City.mmdb)
+
+echo "Updating GeoLite2-Country..."
+wget -q http://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.tar.gz
+tar -xzf GeoLite2-Country.tar.gz --strip-components=1
+mv -f GeoLite2-Country.mmdb /etc/nginx/geoip/
+echo $(date -r /etc/nginx/geoip/GeoLite2-Country.mmdb)
+
+echo "Updating GeoLite2-ASN..."
+wget -q http://geolite.maxmind.com/download/geoip/database/GeoLite2-ASN.tar.gz
+tar -xzf GeoLite2-ASN.tar.gz --strip-components=1
+mv -f GeoLite2-ASN.mmdb /etc/nginx/geoip/
+echo $(date -r /etc/nginx/geoip/GeoLite2-ASN.mmdb)
+
+rm -rf /tmp/geoip/*
