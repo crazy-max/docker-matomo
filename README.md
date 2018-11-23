@@ -22,8 +22,8 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 * Alpine Linux 3.8, Nginx, PHP 7.2
 * Tarball authenticity checked during building process
 * Config, plugins and user preferences in the same folder
-* GeoLite data created by [MaxMind](http://www.maxmind.com) for geolocation
-* Cron tasks to archive Matomo reports and update GeoLite data as a ["sidecar" container](#cron)
+* GeoIP / GeoIP 2 databases created by [MaxMind](http://www.maxmind.com) for geolocation
+* Cron tasks to archive Matomo reports and update GeoIP / GeoIP 2 databases as a ["sidecar" container](#cron)
 * Ability to pass [additional options](https://matomo.org/docs/setup-auto-archiving/#help-for-corearchive-command) during cron archive
 * Plugins and config are kept across upgrades of this image
 * [SSMTP](https://linux.die.net/man/8/ssmtp) for SMTP relay to send emails
