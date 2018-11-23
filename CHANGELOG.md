@@ -2,8 +2,8 @@
 
 ## 3.7.0-RC2 (2018/11/23)
 
-* Add compatibility with [GeoIP2 plugin](https://plugins.matomo.org/GeoIP2) (Issue #7)
-* Add GeoIP2 databases Country, City and ASN
+* Add compatibility with [GeoIP 2 plugin](https://plugins.matomo.org/GeoIP2) (Issue #7)
+* Add GeoIP 2 databases Country, City and ASN
 * Add [ngx_http_geoip2_module](https://github.com/leev/ngx_http_geoip2_module) nginx module
 * Move GeoIP databases to `/etc/nginx/geoip`
 
