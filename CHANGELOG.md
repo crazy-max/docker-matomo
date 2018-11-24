@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.7.0-RC3 (2018/11/24)
+
+* Add `REAL_IP_FROM` and `REAL_IP_HEADER` environment variables
+* Typo for some fastcgi_param
+
 ## 3.7.0-RC2 (2018/11/23)
 
 * Add compatibility with [GeoIP 2 plugin](https://plugins.matomo.org/GeoIP2) (Issue #7)
