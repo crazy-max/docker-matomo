@@ -41,18 +41,20 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 
 ### Environment variables
 
-* `TZ` : The timezone assigned to the container (default: `UTC`)
-* `MEMORY_LIMIT` : PHP memory limit (default: `256M`)
-* `UPLOAD_MAX_SIZE` : Upload max size (default: `16M`)
-* `OPCACHE_MEM_SIZE` : PHP OpCache memory consumption (default: `128`)
-* `LOG_LEVEL` : [Log level](https://matomo.org/faq/troubleshooting/faq_115/) of Matomo UI (default: `WARN`)
-* `SIDECAR_CRON` : Mark the container as a sidecar cron job (default: `0`)
+* `TZ` : The timezone assigned to the container (default `UTC`)
+* `MEMORY_LIMIT` : PHP memory limit (default `256M`)
+* `UPLOAD_MAX_SIZE` : Upload max size (default `16M`)
+* `OPCACHE_MEM_SIZE` : PHP OpCache memory consumption (default `128`)
+* `REAL_IP_FROM` : Trusted addresses that are known to send correct replacement addresses (default `0.0.0.0/32`)
+* `REAL_IP_HEADER` : Request header field whose value will be used to replace the client address (default `X-Forwarded-For`)
+* `LOG_LEVEL` : [Log level](https://matomo.org/faq/troubleshooting/faq_115/) of Matomo UI (default `WARN`)
+* `SIDECAR_CRON` : Mark the container as a sidecar cron job (default `0`)
 * `SSMTP_HOST` : SMTP server host
-* `SSMTP_PORT` : SMTP server port (default: `25`)
-* `SSMTP_HOSTNAME` : Full hostname (default: `$(hostname -f)`)
+* `SSMTP_PORT` : SMTP server port (default `25`)
+* `SSMTP_HOSTNAME` : Full hostname (default `$(hostname -f)`)
 * `SSMTP_USER` : SMTP username
 * `SSMTP_PASSWORD` : SMTP password
-* `SSMTP_TLS` : SSL/TLS (default: `NO`)
+* `SSMTP_TLS` : SSL/TLS (default `NO`)
 
 The following environment variables are only used if you run the container as ["sidecar" mode](#cron) :
 
