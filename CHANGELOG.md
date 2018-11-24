@@ -1,8 +1,12 @@
 # Changelog
 
+## 3.7.0-RC4 (2018/11/24)
+
+* `/js/` tracking codes not working (Issue #11)
+
 ## 3.7.0-RC3 (2018/11/24)
 
-* Add `REAL_IP_FROM` and `REAL_IP_HEADER` environment variables
+* Add `REAL_IP_FROM` and `REAL_IP_HEADER` environment variables (Issue #8)
 * Typo for some fastcgi_param
 
 ## 3.7.0-RC2 (2018/11/23)
