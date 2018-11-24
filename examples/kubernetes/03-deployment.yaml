@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: matomo-deployment
+  namespace: matomo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: matomo
+  template:
+    metadata:
+      name: matomo
+      labels:
+        app: matomo
+    spec:
+      containers:
+          # In production you should set a specific tag
+        - image: crazymax/matomo:latest
+          imagePullPolicy: Always
+          name: matomo
+          env:
+            # To use with ingress-nginx allow nginx RealIP for all IPs @see Issue #8
+          - name: REAL_IP_FROM
+            value: "0.0.0.0/0"
+#          resources:
+#            requests:
+#              memory: "128Mi"
+#              cpu: "100m"
+#            limits:
+#              memory: "256Mi"
+#              cpu: "500m"
+          ports:
+          - containerPort: 80
+            name: web
+          volumeMounts:
+          - name: matomo-data
+            mountPath: /data
+        - image: crazymax/matomo:latest
+          imagePullPolicy: Always
+          name: matomo-cron
+          env:
+          - name: SIDECAR_CRON
+            value: "1"
+          - name: CRON_GEOIP
+            value: "0 4 * * *"
+          - name: CRON_ARCHIVE
+            value: "0 * * * *"
+#          resources:
+#            requests:
+#              memory: "128Mi"
+#              cpu: "150m"
+#            limits:
+#              memory: "256Mi"
+#              cpu: "500m"
+          volumeMounts:
+          - name: matomo-data
+            mountPath: /data
+      volumes:
+      - name: matomo-data
+        persistentVolumeClaim:
+          claimName: matomo-data-pvc
