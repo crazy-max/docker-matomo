@@ -83,6 +83,10 @@ docker-compose up -d
 docker-compose logs -f
 ```
 
+### Kubernetes
+
+Deploy this image in your kubernetes cluster. Detailed instructions [can be found here](examples/kubernetes).
+
 ### Command line
 
 You can also use the following minimal command :
