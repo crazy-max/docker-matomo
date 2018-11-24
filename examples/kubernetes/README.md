@@ -1,16 +1,14 @@
-
 ## Kubernetes
 
 Install and use this Matomo Image within a Kubernetes Cluster.
 
 ### Prerequisites
 
-* Running Kubernetes and access to `kubectl`
-* Some Storage Provider configured
-* Optional: Ingress Controller (i.e. `ingress-nginx`)
+*  Running Kubernetes and access to `kubectl`
+*  Some Storage Provider configured
+*  Optional: Ingress Controller (i.e. `ingress-nginx`)
 
-
-###  Install
+### Install
 To install simply apply all files with `kubectl`. You can use the direct GitHub links without cloning or downloading this repository.
 
 ```bash
