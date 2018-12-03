@@ -4,17 +4,19 @@ set -e
 PROJECT=matomo
 BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 BUILD_TAG=docker_build
+BUILD_WORKINGDIR=${BUILD_WORKINGDIR:-.}
+DOCKERFILE=${DOCKERFILE:-Dockerfile}
 VCS_REF=${TRAVIS_COMMIT::8}
 RUNNING_TIMEOUT=120
 RUNNING_LOG_CHECK="matomo_watch_plugins entered RUNNING state"
 
 PUSH_LATEST=${PUSH_LATEST:-true}
-DOCKER_USERNAME=${DOCKER_USERNAME:="crazymax"}
-DOCKER_LOGIN=${DOCKER_LOGIN:="crazymax"}
-DOCKER_REPONAME=${DOCKER_REPONAME:="matomo"}
-QUAY_USERNAME=${QUAY_USERNAME:="crazymax"}
-QUAY_LOGIN=${QUAY_LOGIN:="crazymax"}
-QUAY_REPONAME=${QUAY_REPONAME:="matomo"}
+DOCKER_USERNAME=${DOCKER_USERNAME:-crazymax}
+DOCKER_LOGIN=${DOCKER_LOGIN:-crazymax}
+DOCKER_REPONAME=${DOCKER_REPONAME:-matomo}
+QUAY_USERNAME=${QUAY_USERNAME:-crazymax}
+QUAY_LOGIN=${QUAY_LOGIN:-crazymax}
+QUAY_REPONAME=${QUAY_REPONAME:-matomo}
 
 # Check local or travis
 BRANCH=${TRAVIS_BRANCH:-local}
@@ -53,7 +55,7 @@ docker build \
   --build-arg BUILD_DATE=${BUILD_DATE} \
   --build-arg VCS_REF=${VCS_REF} \
   --build-arg VERSION=${VERSION} \
-  -t ${BUILD_TAG} .
+  -t ${BUILD_TAG} -f ${DOCKERFILE} ${BUILD_WORKINGDIR}
 echo
 
 echo "### Test"
