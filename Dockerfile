@@ -7,7 +7,7 @@ ARG VERSION
 LABEL maintainer="CrazyMax" \
   org.label-schema.build-date=$BUILD_DATE \
   org.label-schema.name="matomo" \
-  org.label-schema.description="Matomo (formerly Piwik) based on Alpine Linux and Nginx" \
+  org.label-schema.description="Matomo (formerly Piwik)" \
   org.label-schema.version=$VERSION \
   org.label-schema.url="https://github.com/crazy-max/docker-matomo" \
   org.label-schema.vcs-ref=$VCS_REF \
@@ -102,6 +102,7 @@ RUN apk --update --no-cache add -t build-dependencies \
   && gpg --import signature.asc \
   && gpg --verify piwik-${MATOMO_VERSION}.tar.gz.asc piwik-${MATOMO_VERSION}.tar.gz \
   && tar -xzf piwik-${MATOMO_VERSION}.tar.gz --strip 1 -C /var/www \
+  && chown -R nginx. /etc/nginx /usr/lib/nginx /var/cache/nginx /var/log/nginx /var/log/php7 /var/www \
   && apk del build-dependencies \
   && rm -rf /root/.gnupg /tmp/* /var/cache/apk/*
 
@@ -109,7 +110,7 @@ COPY entrypoint.sh /entrypoint.sh
 COPY assets /
 
 RUN chmod a+x /entrypoint.sh /usr/local/bin/* \
-  && chown -R nginx. /etc/nginx /usr/lib/nginx /var/cache/nginx /var/log/nginx /var/log/php7 /var/www
+  && chown nginx. /var/www/bootstrap.php
 
 EXPOSE 80
 WORKDIR /var/www
