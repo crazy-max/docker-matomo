@@ -83,6 +83,10 @@ docker-compose up -d
 docker-compose logs -f
 ```
 
+### Swarm
+
+Deploy this image in your Swarm cluster. Detailed instructions [can be found here](examples/swarm).
+
 ### Kubernetes
 
 Deploy this image in your kubernetes cluster. Detailed instructions [can be found here](examples/kubernetes).
