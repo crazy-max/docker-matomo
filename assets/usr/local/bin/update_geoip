@@ -3,20 +3,6 @@
 mkdir -p /tmp/geoip
 cd /tmp/geoip/
 
-echo "Updating GeoIPv6-City..."
-wget -q http://geolite.maxmind.com/download/geoip/database/GeoLiteCityv6-beta/GeoLiteCityv6.dat.gz
-gzip -d GeoLiteCityv6.dat.gz
-mv -f GeoLiteCityv6.dat /etc/nginx/geoip/GeoIPv6-City.dat
-rm -f GeoLiteCityv6.dat.gz
-echo $(date -r /etc/nginx/geoip/GeoIPv6-City.dat)
-
-echo "Updating GeoIPv6-Country..."
-wget -q http://geolite.maxmind.com/download/geoip/database/GeoIPv6.dat.gz
-gzip -d GeoIPv6.dat.gz
-mv -f GeoIPv6.dat /etc/nginx/geoip/GeoIPv6-Country.dat
-rm -f GeoIPv6.dat.gz
-echo $(date -r /etc/nginx/geoip/GeoIPv6-Country.dat)
-
 echo "Updating GeoLite2-City..."
 wget -q http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz
 tar -xzf GeoLite2-City.tar.gz --strip-components=1

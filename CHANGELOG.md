@@ -4,6 +4,7 @@
 
 * Upgrade to Matomo 3.8.0
 * Bind to unprivileged port : `8000`
+* Remove legacy GeoIP
 
 ## 3.7.0-RC4 (2018/11/24)
 

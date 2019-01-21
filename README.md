@@ -22,8 +22,8 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 * Alpine Linux 3.8, Nginx, PHP 7.2
 * Tarball authenticity checked during building process
 * Config, plugins and user preferences in the same folder
-* GeoIP / GeoIP 2 databases created by [MaxMind](http://www.maxmind.com) for geolocation
-* Cron tasks to archive Matomo reports and update GeoIP / GeoIP 2 databases as a ["sidecar" container](#cron)
+* GeoIP 2 databases created by [MaxMind](http://www.maxmind.com) for geolocation
+* Cron tasks to archive Matomo reports and update GeoIP 2 databases as a ["sidecar" container](#cron)
 * Ability to pass [additional options](https://matomo.org/docs/setup-auto-archiving/#help-for-corearchive-command) during cron archive
 * Plugins and config are kept across upgrades of this image
 * [SSMTP](https://linux.die.net/man/8/ssmtp) for SMTP relay to send emails
@@ -59,12 +59,12 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 The following environment variables are only used if you run the container as ["sidecar" mode](#cron) :
 
 * `ARCHIVE_OPTIONS` : Pass [additional options](https://matomo.org/docs/setup-auto-archiving/#help-for-corearchive-command) during cron archive
-* `CRON_GEOIP` : Periodically update GeoIP data (disabled if empty ; ex `0 4 * * *`)
+* `CRON_GEOIP` : Periodically update GeoIP 2 databases (disabled if empty ; ex `0 4 * * *`)
 * `CRON_ARCHIVE` : Periodically execute Matomo [archive](https://matomo.org/docs/setup-auto-archiving/#linuxunix-how-to-set-up-a-crontab-to-automatically-archive-the-reports) (disabled if empty ; ex `0 * * * *`)
 
 ### Volumes
 
-* `/data` : Contains GeoIP databases, configuration, installed plugins (not core ones), tmp and user folders to store your [custom logo](https://matomo.org/faq/new-to-piwik/faq_129/)
+* `/data` : Contains GeoIP 2 databases, configuration, installed plugins (not core ones), tmp and user folders to store your [custom logo](https://matomo.org/faq/new-to-piwik/faq_129/)
 
 ### Ports
 
@@ -137,13 +137,7 @@ And activate GeoIP 2 server module for Nginx in **System > General settings > Co
 
 ![GeoIP 2 server module](.res/geoip2-server-module.png)
 
-### GeoIP location provider
-
-> :warning: GeoIP (Legacy) is now deprecated. Use GeoIP 2 instead (see above).
-
-As GeoIP module for Nginx is installed and uses GeoIP databases, you have to select **GeoIP Legacy (HTTP Server Module)** in **System > Geolocation** :
-
-![GeoIP location provider](.res/geoip-location-provider.png)
+> :warning: GeoIP (Legacy) is now deprecated and has been removed since 3.8.0 tag.
 
 ### Behind a reverse proxy ?
 

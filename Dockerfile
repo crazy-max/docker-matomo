@@ -35,9 +35,8 @@ RUN apk --update --no-cache add -t build-dependencies \
   && tar zxvf nginx-$NGINX_VERSION.tar.gz \
   && git clone -b master --single-branch https://github.com/leev/ngx_http_geoip2_module.git \
   && cd nginx-$NGINX_VERSION \
-  && ./configure --with-compat --with-http_geoip_module=dynamic --add-dynamic-module=../ngx_http_geoip2_module \
+  && ./configure --with-compat --add-dynamic-module=../ngx_http_geoip2_module \
   && make modules \
-  && cp objs/ngx_http_geoip_module.so /etc/nginx/modules \
   && cp objs/ngx_http_geoip2_module.so /etc/nginx/modules \
   && apk del build-dependencies \
   && rm -rf /usr/src/nginx-* /usr/src/ngx_http_geoip2_module /var/cache/apk/* /var/www/* /tmp/*
@@ -74,12 +73,6 @@ RUN apk --update --no-cache add \
 
 RUN cd /tmp \
   && mkdir -p /etc/nginx/geoip \
-  && wget -q http://geolite.maxmind.com/download/geoip/database/GeoLiteCityv6-beta/GeoLiteCityv6.dat.gz \
-  && gzip -d GeoLiteCityv6.dat.gz \
-  && wget -q http://geolite.maxmind.com/download/geoip/database/GeoIPv6.dat.gz \
-  && gzip -d GeoIPv6.dat.gz \
-  && mv GeoLiteCityv6.dat /etc/nginx/geoip/GeoIPv6-City.dat \
-  && mv GeoIPv6.dat /etc/nginx/geoip/GeoIPv6-Country.dat \
   && wget -q http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz \
   && wget -q http://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.tar.gz \
   && wget -q http://geolite.maxmind.com/download/geoip/database/GeoLite2-ASN.tar.gz \
