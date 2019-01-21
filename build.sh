@@ -6,7 +6,7 @@ BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 BUILD_TAG=docker_build
 BUILD_WORKINGDIR=${BUILD_WORKINGDIR:-.}
 DOCKERFILE=${DOCKERFILE:-Dockerfile}
-VCS_REF=${TRAVIS_COMMIT::8}
+VCS_REF=${TRAVIS_COMMIT::7}
 RUNNING_TIMEOUT=120
 RUNNING_LOG_CHECK="matomo_watch_plugins entered RUNNING state"
 
@@ -62,7 +62,7 @@ echo
 
 echo "### Test"
 docker rm -f ${PROJECT} > /dev/null 2>&1 || true
-docker run -d -p 8000:80 --name ${PROJECT} ${BUILD_TAG}
+docker run -d -p 8000:8000 --name ${PROJECT} ${BUILD_TAG}
 echo
 
 echo "### Waiting for ${PROJECT} to be up..."
