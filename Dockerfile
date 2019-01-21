@@ -112,7 +112,7 @@ COPY assets /
 RUN chmod a+x /entrypoint.sh /usr/local/bin/* \
   && chown nginx. /var/www/bootstrap.php
 
-EXPOSE 80
+EXPOSE 8000
 WORKDIR /var/www
 VOLUME [ "/data" ]
 

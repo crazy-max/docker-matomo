@@ -7,6 +7,6 @@ spec:
   ports:
   - name: matomo
     protocol: TCP
-    port: 80
+    port: 8000
   selector:
     app: matomo

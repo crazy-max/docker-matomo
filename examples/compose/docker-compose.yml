@@ -3,6 +3,7 @@ version: "3.2"
 services:
   traefik:
     image: traefik:1.7-alpine
+    container_name: traefik
     command:
       - "--logLevel=INFO"
       - "--defaultentrypoints=http,https"
@@ -33,6 +34,7 @@ services:
 
   db:
     image: mariadb:10.2
+    container_name: matomo_db
     volumes:
       - "db:/var/lib/mysql"
     environment:
@@ -44,10 +46,12 @@ services:
 
   redis:
     image: redis:4.0-alpine
+    container_name: matomo_redis
     restart: always
 
-  app:
+  matomo:
     image: crazymax/matomo:latest
+    container_name: matomo
     depends_on:
       - db
       - redis
@@ -56,7 +60,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.backend=matomo"
-      - "traefik.port=80"
+      - "traefik.port=8000"
       - "traefik.frontend.rule=Host:matomo.example.com"
     env_file:
       - "./matomo.env"
@@ -64,8 +68,9 @@ services:
 
   cron:
     image: crazymax/matomo:latest
+    container_name: matomo_cron
     depends_on:
-      - app
+      - matomo
     volumes:
       - "matomo:/data"
     env_file:

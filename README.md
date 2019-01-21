@@ -68,7 +68,7 @@ The following environment variables are only used if you run the container as ["
 
 ### Ports
 
-* `80` : HTTP port
+* `8000` : HTTP port
 
 ## Use this image
 
@@ -96,7 +96,7 @@ Deploy this image in your kubernetes cluster. Detailed instructions [can be foun
 You can also use the following minimal command :
 
 ```bash
-docker run -d -p 80:80 --name matomo \
+docker run -d -p 8000:8000 --name matomo \
   -v $(pwd)/data:/data \
   crazymax/matomo:latest
 ```
@@ -112,7 +112,7 @@ On a HA environment, **enable backend sticky sessions** on your load balancer.
 If you want to enable the cron job, you have to run a "sidecar" container like in the [docker-compose file](examples/compose/docker-compose.yml) or run a simple container like this :
 
 ```bash
-docker run -d --name matomo-cron \
+docker run -d --name matomo_cron \
   --env-file $(pwd)/matomo.env \
   -e "SIDECAR_CRON=1" \
   -e "CRON_ARCHIVE=0 * * * *" \

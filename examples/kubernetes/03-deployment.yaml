@@ -31,7 +31,7 @@ spec:
 #              memory: "256Mi"
 #              cpu: "500m"
           ports:
-          - containerPort: 80
+          - containerPort: 8000
             name: web
           volumeMounts:
           - name: matomo-data

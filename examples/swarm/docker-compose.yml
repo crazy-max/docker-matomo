@@ -84,7 +84,7 @@ services:
         - "traefik.enable=true"
         - "traefik.backend=matomo"
         - "traefik.backend.loadbalancer.stickiness=true"
-        - "traefik.port=80"
+        - "traefik.port=8000"
         - "traefik.frontend.rule=Host:${FQDN}"
         - "traefik.frontend.passHostHeader=true"
       placement:
