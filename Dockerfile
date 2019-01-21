@@ -89,7 +89,7 @@ RUN cd /tmp \
   && mv *.mmdb /etc/nginx/geoip \
   && rm -rf /tmp/*
 
-ENV MATOMO_VERSION="3.7.0" \
+ENV MATOMO_VERSION="3.8.0" \
   CRONTAB_PATH="/var/spool/cron/crontabs"
 
 RUN apk --update --no-cache add -t build-dependencies \
@@ -100,7 +100,7 @@ RUN apk --update --no-cache add -t build-dependencies \
   && wget -q https://builds.matomo.org/piwik-${MATOMO_VERSION}.tar.gz.asc \
   && wget -q https://builds.matomo.org/signature.asc \
   && gpg --import signature.asc \
-  && gpg --verify piwik-${MATOMO_VERSION}.tar.gz.asc piwik-${MATOMO_VERSION}.tar.gz \
+  && gpg --verify --batch --no-tty piwik-${MATOMO_VERSION}.tar.gz.asc piwik-${MATOMO_VERSION}.tar.gz \
   && tar -xzf piwik-${MATOMO_VERSION}.tar.gz --strip 1 -C /var/www \
   && chown -R nginx. /etc/nginx /usr/lib/nginx /var/cache/nginx /var/log/nginx /var/log/php7 /var/www \
   && apk del build-dependencies \
