@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://microbadger.com/images/crazymax/matomo"><img src="https://images.microbadger.com/badges/version/crazymax/matomo.svg?style=flat-square" alt="Version"></a>
-  <a href="https://travis-ci.org/crazy-max/docker-matomo"><img src="https://img.shields.io/travis/crazy-max/docker-matomo/master.svg?style=flat-square" alt="Build Status"></a>
+  <a href="https://travis-ci.com/crazy-max/docker-matomo"><img src="https://img.shields.io/travis/com/crazy-max/docker-matomo/master.svg?style=flat-square" alt="Build Status"></a>
   <a href="https://hub.docker.com/r/crazymax/matomo/"><img src="https://img.shields.io/docker/stars/crazymax/matomo.svg?style=flat-square" alt="Docker Stars"></a>
   <a href="https://hub.docker.com/r/crazymax/matomo/"><img src="https://img.shields.io/docker/pulls/crazymax/matomo.svg?style=flat-square" alt="Docker Pulls"></a>
   <a href="https://quay.io/repository/crazymax/matomo"><img src="https://quay.io/repository/crazymax/matomo/status?style=flat-square" alt="Docker Repository on Quay"></a>
@@ -19,7 +19,7 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 
 ### Included
 
-* Alpine Linux 3.8, Nginx, PHP 7.2
+* Alpine Linux 3.9, Nginx, PHP 7.2
 * Tarball authenticity checked during building process
 * Config, plugins and user preferences in the same folder
 * GeoIP 2 databases created by [MaxMind](http://www.maxmind.com) for geolocation
