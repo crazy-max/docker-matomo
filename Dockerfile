@@ -95,6 +95,9 @@ RUN apk --update --no-cache add -t build-dependencies \
   && gpg --import signature.asc \
   && gpg --verify --batch --no-tty piwik-${MATOMO_VERSION}.tar.gz.asc piwik-${MATOMO_VERSION}.tar.gz \
   && tar -xzf piwik-${MATOMO_VERSION}.tar.gz --strip 1 -C /var/www \
+  && wget -q https://matomo.org/wp-content/uploads/unifont.ttf.zip \
+  && unzip unifont.ttf.zip -d /var/www/plugins/ImageGraph/fonts/ \
+  && rm unifont.ttf.zip \
   && chown -R nginx. /etc/nginx /usr/lib/nginx /var/cache/nginx /var/log/nginx /var/log/php7 /var/www \
   && apk del build-dependencies \
   && rm -rf /root/.gnupg /tmp/* /var/cache/apk/*

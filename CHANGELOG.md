@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.8.1-RC2 (2019/02/10)
+
+* Add unifont for languages using [unicode characters](https://matomo.org/faq/how-to-install/faq_142/)
+
 ## 3.8.1-RC1 (2019/01/28)
 
 * Upgrade to Matomo 3.8.1
