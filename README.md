@@ -23,6 +23,7 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 * Tarball authenticity checked during building process
 * Config, plugins and user preferences in the same folder
 * GeoIP 2 databases created by [MaxMind](http://www.maxmind.com) for geolocation
+* Unifont for languages using [unicode characters](https://matomo.org/faq/how-to-install/faq_142/)
 * Cron tasks to archive Matomo reports and update GeoIP 2 databases as a ["sidecar" container](#cron)
 * Ability to pass [additional options](https://matomo.org/docs/setup-auto-archiving/#help-for-corearchive-command) during cron archive
 * Plugins and config are kept across upgrades of this image
