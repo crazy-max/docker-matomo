@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.8.1-RC3 (2019/03/06)
+
+* Fix GeoIP2 autonomous system key (PR #16)
+
 ## 3.8.1-RC2 (2019/02/10)
 
 * Add unifont for languages using [unicode characters](https://matomo.org/faq/how-to-install/faq_142/)
