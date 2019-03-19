@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.9.0-RC1 (2019/03/19)
+
+* Upgrade to Matomo 3.9.0
+* Enable gzip for type application/javascript (PR #17)
+
 ## 3.8.1-RC3 (2019/03/06)
 
 * Fix GeoIP2 autonomous system key (PR #16)
