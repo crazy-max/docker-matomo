@@ -5,7 +5,7 @@ services:
 
 env:
   global:
-    - VERSION=3.8.1
+    - VERSION=3.9.0
     - DOCKER_LOGIN=crazymax
     - DOCKER_USERNAME=crazymax
     - DOCKER_REPONAME=matomo
@@ -20,7 +20,7 @@ before_install:
   - sudo apt-get update
   - docker --version
 
-script: ./build.sh
+script: bash build
 
 notifications:
   webhooks:
