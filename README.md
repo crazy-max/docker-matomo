@@ -59,8 +59,9 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 
 The following environment variables are only used if you run the container as ["sidecar" mode](#cron) :
 
+* `SIDECAR_CRON` : Set to `1` to enable sidecar cron mode (default `0`)
 * `ARCHIVE_OPTIONS` : Pass [additional options](https://matomo.org/docs/setup-auto-archiving/#help-for-corearchive-command) during cron archive
-* `CRON_GEOIP` : Periodically update GeoIP 2 databases (disabled if empty ; ex `0 4 * * *`)
+* `CRON_GEOIP` : Periodically update GeoIP 2 databases (disabled if empty ; eg. `0 4 * * *`)
 * `CRON_ARCHIVE` : Periodically execute Matomo [archive](https://matomo.org/docs/setup-auto-archiving/#linuxunix-how-to-set-up-a-crontab-to-automatically-archive-the-reports) (disabled if empty ; ex `0 * * * *`)
 
 ### Volumes
