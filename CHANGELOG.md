@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.9.1-RC1 (2019/03/21)
+
+* Upgrade to Matomo 3.9.1
+
 ## 3.9.0-RC1 (2019/03/19)
 
 * Upgrade to Matomo 3.9.0

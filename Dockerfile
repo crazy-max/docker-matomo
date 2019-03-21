@@ -82,7 +82,7 @@ RUN cd /tmp \
   && mv *.mmdb /etc/nginx/geoip \
   && rm -rf /tmp/*
 
-ENV MATOMO_VERSION="3.9.0" \
+ENV MATOMO_VERSION="3.9.1" \
   CRONTAB_PATH="/var/spool/cron/crontabs"
 
 RUN apk --update --no-cache add -t build-dependencies \
