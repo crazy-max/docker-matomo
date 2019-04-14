@@ -1,12 +1,16 @@
 # Changelog
 
+## 3.9.1-RC2 (2019/04/14)
+
+* Add `LOG_IP_VAR` environment variable
+
 ## 3.9.1-RC1 (2019/03/21)
 
-* Upgrade to Matomo 3.9.1
+* Matomo 3.9.1
 
 ## 3.9.0-RC1 (2019/03/19)
 
-* Upgrade to Matomo 3.9.0
+* Matomo 3.9.0
 * Enable gzip for type application/javascript (PR #17)
 
 ## 3.8.1-RC3 (2019/03/06)
@@ -19,11 +23,11 @@
 
 ## 3.8.1-RC1 (2019/01/28)
 
-* Upgrade to Matomo 3.8.1
+* Matomo 3.8.1
 
 ## 3.8.0-RC1 (2019/01/21)
 
-* Upgrade to Matomo 3.8.0
+* Matomo 3.8.0
 * Bind to unprivileged port : `8000`
 * Remove legacy GeoIP
 
@@ -48,12 +52,12 @@
 
 ## 3.7.0-RC1 (2018/11/19)
 
-* Upgrade to Matomo 3.7.0
+* Matomo 3.7.0
 * Coding style
 
 ## 3.6.1-RC1 (2018/10/18)
 
-* Upgrade to Matomo 3.6.1
+* Matomo 3.6.1
 
 ## 3.6.0-RC2 (2018/09/16)
 
@@ -65,7 +69,7 @@
 
 ## 3.6.0-RC1 (2018/08/29)
 
-* Upgrade to Matomo 3.6.0
+* Matomo 3.6.0
 * Alpine 3.8
 * PHP 7.2
 
@@ -75,7 +79,7 @@
 
 ## 3.5.1-RC1 (2018/05/25)
 
-* Upgrade to Matomo 3.5.1
+* Matomo 3.5.1
 
 ## 3.5.0-RC4 (2018/05/18)
 
@@ -93,7 +97,7 @@
 
 ## 3.5.0-RC1 (2018/05/09)
 
-* Upgrade to Matomo 3.5.0
+* Matomo 3.5.0
 
 ## 3.4.0-RC2 (2018/04/26)
 
@@ -101,7 +105,7 @@
 
 ## 3.4.0-RC1 (2018/03/29)
 
-* Upgrade to Matomo 3.4.0
+* Matomo 3.4.0
 
 ## 3.3.0-RC8 (2018/03/09)
 

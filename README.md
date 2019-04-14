@@ -48,6 +48,7 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 * `OPCACHE_MEM_SIZE` : PHP OpCache memory consumption (default `128`)
 * `REAL_IP_FROM` : Trusted addresses that are known to send correct replacement addresses (default `0.0.0.0/32`)
 * `REAL_IP_HEADER` : Request header field whose value will be used to replace the client address (default `X-Forwarded-For`)
+* `VAR_IP_LOG` : Use another variable to retrieve the remote IP address in Nginx. If you use a reverse proxy you can set `http_x_forwarded_for` example. (default `remote_addr`)
 * `LOG_LEVEL` : [Log level](https://matomo.org/faq/troubleshooting/faq_115/) of Matomo UI (default `WARN`)
 * `SIDECAR_CRON` : Mark the container as a sidecar cron job (default `0`)
 * `SSMTP_HOST` : SMTP server host
