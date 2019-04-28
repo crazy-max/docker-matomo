@@ -30,6 +30,7 @@ RUN apk --update --no-cache add -t build-dependencies \
     pcre-dev \
     perl-dev \
     zlib-dev \
+  && mkdir -p /usr/src \
   && cd /usr/src \
   && wget http://nginx.org/download/nginx-$NGINX_VERSION.tar.gz \
   && tar zxvf nginx-$NGINX_VERSION.tar.gz \
