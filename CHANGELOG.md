@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.9.1-RC3 (2019/04/28)
+
+* Add `large_client_header_buffers` Nginx config
+
 ## 3.9.1-RC2 (2019/04/14)
 
 * Add `LOG_IP_VAR` environment variable
