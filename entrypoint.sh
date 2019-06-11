@@ -23,6 +23,9 @@ SSMTP_TLS=${SSMTP_TLS:-NO}
 SESSION_SAVE_HANDLER=${SESSION_SAVE_HANDLER:-files}
 SESSION_SAVE_PATH=${SESSION_SAVE_PATH:-/tmp}
 
+REDIS_HOST=${REDIS_HOST:-matomo_redis}
+REDIS_PORT=${REDIS_PORT:-6379}
+
 # Timezone
 echo "Setting timezone to ${TZ}..."
 ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime
@@ -150,6 +153,14 @@ else
     echo "Upgrading and setting Matomo configuration..."
     runas_nginx "php /var/www/console core:update --yes --no-interaction"
     runas_nginx "php /var/www/console config:set --section='General' --key='minimum_memory_limit' --value='-1'"
+    runas_nginx "php /var/www/console config:set --section='Cache' --key='backend' --value='chained'"
+    runas_nginx "php /var/www/console config:set --section='ChainedCache' --key='backends[]' --value='array'"
+    runas_nginx "php /var/www/console config:set --section='ChainedCache' --key='backends[]' --value='redis'"
+    runas_nginx "php /var/www/console config:set --section='RedisCache' --key='host' --value='$REDIS_HOST'"
+    runas_nginx "php /var/www/console config:set --section='RedisCache' --key='port' --value='$REDIS_PORT'"
+    runas_nginx "php /var/www/console config:set --section='RedisCache' --key='timeout' --value='0'"
+    runas_nginx "php /var/www/console config:set --section='RedisCache' --key='password' --value=''"
+    runas_nginx "php /var/www/console config:set --section='RedisCache' --key='database' --value='42'"
   else
     echo ">>"
     echo ">> Open your browser to install Matomo through the wizard"
