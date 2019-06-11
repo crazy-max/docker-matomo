@@ -20,6 +20,9 @@ SSMTP_PORT=${SSMTP_PORT:-25}
 SSMTP_HOSTNAME=${SSMTP_HOSTNAME:-$(hostname -f)}
 SSMTP_TLS=${SSMTP_TLS:-NO}
 
+SESSION_SAVE_HANDLER=${SESSION_SAVE_HANDLER:-files}
+SESSION_SAVE_PATH=${SESSION_SAVE_PATH:-/tmp}
+
 # Timezone
 echo "Setting timezone to ${TZ}..."
 ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime
@@ -35,6 +38,17 @@ sed -e "s/@MEMORY_LIMIT@/$MEMORY_LIMIT/g" \
 echo "Setting OpCache configuration..."
 sed -e "s/@OPCACHE_MEM_SIZE@/$OPCACHE_MEM_SIZE/g" \
   /tpls/etc/php7/conf.d/opcache.ini > /etc/php7/conf.d/opcache.ini
+
+# Redis
+# session.save_handler = redis 
+# session.save_path    = tcp://127.0.0.1:6379?database=10
+if [ -z "$SESSION_SAVE_HANDLER" ] ; then
+  echo "Setting Redis configuration for session handler..."
+  sed -e "s/@SESSION_SAVE_HANDLER@/$SESSION_SAVE_HANDLER/g" \
+    /tpls/etc/php7/conf.d/session.ini > /etc/php7/conf.d/session.ini
+  sed -e "s/@SESSION_SAVE_PATH@/$SESSION_SAVE_PATH/g" \
+    /tpls/etc/php7/conf.d/session.ini > /etc/php7/conf.d/session.ini
+fi
 
 # Nginx
 echo "Setting Nginx configuration..."

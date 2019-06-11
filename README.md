@@ -57,6 +57,8 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 * `SSMTP_USER` : SMTP username
 * `SSMTP_PASSWORD` : SMTP password
 * `SSMTP_TLS` : SSL/TLS (default `NO`)
+* `SESSION_SAVE_HANDLER` : PHP Session handler (default: `files`)
+* `SESSION_SAVE_PATH` : URI for session management (default: `/tmp`)
 
 The following environment variables are only used if you run the container as ["sidecar" mode](#cron) :
 
