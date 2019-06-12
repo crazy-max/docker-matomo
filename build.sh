@@ -3,7 +3,7 @@ set -e
 
 PROJECT=matomo
 BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-BUILD_TAG=docker_build
+BUILD_TAG=rdlu/matomo
 BUILD_WORKINGDIR=${BUILD_WORKINGDIR:-.}
 DOCKERFILE=${DOCKERFILE:-Dockerfile}
 VCS_REF=${TRAVIS_COMMIT::7}

@@ -45,11 +45,10 @@ sed -e "s/@OPCACHE_MEM_SIZE@/$OPCACHE_MEM_SIZE/g" \
 # Redis
 # session.save_handler = redis 
 # session.save_path    = tcp://127.0.0.1:6379?database=10
-if [ -z "$SESSION_SAVE_HANDLER" ] ; then
+if [ "$SESSION_SAVE_HANDLER" != 'files' ] ; then
   echo "Setting Redis configuration for session handler..."
   sed -e "s/@SESSION_SAVE_HANDLER@/$SESSION_SAVE_HANDLER/g" \
-    /tpls/etc/php7/conf.d/session.ini > /etc/php7/conf.d/session.ini
-  sed -e "s/@SESSION_SAVE_PATH@/$SESSION_SAVE_PATH/g" \
+    -e "s/@SESSION_SAVE_PATH@/$SESSION_SAVE_PATH/g" \
     /tpls/etc/php7/conf.d/session.ini > /etc/php7/conf.d/session.ini
 fi
 
@@ -153,6 +152,7 @@ else
     echo "Upgrading and setting Matomo configuration..."
     runas_nginx "php /var/www/console core:update --yes --no-interaction"
     runas_nginx "php /var/www/console config:set --section='General' --key='minimum_memory_limit' --value='-1'"
+    echo "Changing Matomo cache to redis@$REDIS_HOST:$REDIS_PORT"
     runas_nginx "php /var/www/console config:set --section='Cache' --key='backend' --value='chained'"
     runas_nginx "php /var/www/console config:set --section='ChainedCache' --key='backends[]' --value='array'"
     runas_nginx "php /var/www/console config:set --section='ChainedCache' --key='backends[]' --value='redis'"
