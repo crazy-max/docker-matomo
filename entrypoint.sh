@@ -40,7 +40,7 @@ sed -e "s/@MEMORY_LIMIT@/$MEMORY_LIMIT/g" \
 # OpCache
 echo "Setting OpCache configuration..."
 sed -e "s/@OPCACHE_MEM_SIZE@/$OPCACHE_MEM_SIZE/g" \
-  /tpls/etc/php7/conf.d/opcache.ini > /etc/php7/conf.d/opcache.ini
+  /tpls/etc/php7/conf.d/opcache.ini > /etc/php7/conf.d/90-opcache.ini
 
 # Redis
 # session.save_handler = redis 
@@ -49,7 +49,7 @@ if [ "$SESSION_SAVE_HANDLER" != 'files' ] ; then
   echo "Setting Redis configuration for session handler..."
   sed -e "s/@SESSION_SAVE_HANDLER@/$SESSION_SAVE_HANDLER/g" \
     -e "s/@SESSION_SAVE_PATH@/$SESSION_SAVE_PATH/g" \
-    /tpls/etc/php7/conf.d/session.ini > /etc/php7/conf.d/session.ini
+    /tpls/etc/php7/conf.d/session.ini > /etc/php7/conf.d/99-session.ini
 fi
 
 # Nginx
@@ -152,15 +152,15 @@ else
     echo "Upgrading and setting Matomo configuration..."
     runas_nginx "php /var/www/console core:update --yes --no-interaction"
     runas_nginx "php /var/www/console config:set --section='General' --key='minimum_memory_limit' --value='-1'"
-    echo "Changing Matomo cache to redis@$REDIS_HOST:$REDIS_PORT"
-    runas_nginx "php /var/www/console config:set --section='Cache' --key='backend' --value='chained'"
-    runas_nginx "php /var/www/console config:set --section='ChainedCache' --key='backends[]' --value='array'"
-    runas_nginx "php /var/www/console config:set --section='ChainedCache' --key='backends[]' --value='redis'"
-    runas_nginx "php /var/www/console config:set --section='RedisCache' --key='host' --value='$REDIS_HOST'"
-    runas_nginx "php /var/www/console config:set --section='RedisCache' --key='port' --value='$REDIS_PORT'"
+    # echo "Changing Matomo cache to redis@$REDIS_HOST:$REDIS_PORT"
     runas_nginx "php /var/www/console config:set --section='RedisCache' --key='timeout' --value='0'"
     runas_nginx "php /var/www/console config:set --section='RedisCache' --key='password' --value=''"
     runas_nginx "php /var/www/console config:set --section='RedisCache' --key='database' --value='42'"
+    runas_nginx "php /var/www/console config:set --section='RedisCache' --key='host' --value='$REDIS_HOST'"
+    runas_nginx "php /var/www/console config:set --section='RedisCache' --key='port' --value='$REDIS_PORT'"
+    runas_nginx "php /var/www/console config:set --section='ChainedCache' --key='backends[]' --value='array'"
+    runas_nginx "php /var/www/console config:set --section='ChainedCache' --key='backends[]' --value='redis'"
+    runas_nginx "php /var/www/console config:set --section='Cache' --key='backend' --value='chained'"
   else
     echo ">>"
     echo ">> Open your browser to install Matomo through the wizard"
