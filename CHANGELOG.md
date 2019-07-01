@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.10.0-RC1 (2019/07/01)
+
+* Matomo 3.10.0
+
 ## 3.9.1-RC3 (2019/04/28)
 
 * Add `large_client_header_buffers` Nginx config
