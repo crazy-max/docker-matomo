@@ -19,7 +19,7 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 
 ### Included
 
-* Alpine Linux 3.9, Nginx, PHP 7.2
+* Alpine Linux 3.10, Nginx, PHP 7.3
 * Tarball authenticity checked during building process
 * Config, plugins and user preferences in the same folder
 * GeoIP 2 databases created by [MaxMind](http://www.maxmind.com) for geolocation
