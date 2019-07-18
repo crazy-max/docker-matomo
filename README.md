@@ -104,7 +104,7 @@ docker run -d -p 8000:8000 --name matomo \
   crazymax/matomo:latest
 ```
 
-Note though that this only runs Matomo. You will need to have your own database server to connect to.
+> :warning: You will need to have your own database server to connect to as this only runs Matomo.
 
 ## Notes
 
