@@ -186,11 +186,19 @@ If you are on a [HA environment](https://matomo.org/faq/new-to-piwik/faq_134/), 
 
 ## Upgrade
 
-You can upgrade Matomo automatically through the UI, it works well. But I recommend to recreate the container whenever I push an update :
+You can upgrade Matomo automatically through the UI, it works well. But I recommend to recreate the container whenever I push an update. If you're using `docker-compose` you can do:
 
 ```bash
 docker-compose pull
 docker-compose up -d
+```
+
+If you're using docker with `--compose-file`, you can do:
+
+```bash
+# Get the name of the relevant services
+docker service ls
+docker service update [your-service-code] --image crazymax/matomo
 ```
 
 ## How can I help ?
