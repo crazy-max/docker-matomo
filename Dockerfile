@@ -43,6 +43,7 @@ RUN apk --update --no-cache add -t build-dependencies \
   && rm -rf /usr/src/nginx-* /usr/src/ngx_http_geoip2_module /var/cache/apk/* /var/www/* /tmp/*
 
 RUN apk --update --no-cache add \
+    curl \
     geoip \
     inotify-tools \
     libmaxminddb \
@@ -115,3 +116,6 @@ VOLUME [ "/data" ]
 
 ENTRYPOINT [ "/entrypoint.sh" ]
 CMD [ "/usr/bin/supervisord", "-c", "/etc/supervisord.conf" ]
+
+HEALTHCHECK --interval=10s --timeout=5s \
+  CMD curl --fail http://127.0.0.1:12345/ping || exit 1

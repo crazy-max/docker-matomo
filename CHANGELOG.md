@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.11.0-RC2 (2019/08/04)
+
+* Add healthcheck
+* Remove php-fpm access log (already mirrored by nginx)
+
 ## 3.11.0-RC1 (2019/07/24)
 
 * Matomo 3.11.0
