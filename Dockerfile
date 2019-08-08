@@ -118,4 +118,4 @@ ENTRYPOINT [ "/entrypoint.sh" ]
 CMD [ "/usr/bin/supervisord", "-c", "/etc/supervisord.conf" ]
 
 HEALTHCHECK --interval=10s --timeout=5s \
-  CMD curl --fail http://127.0.0.1:12345/ping || exit 1
+  CMD /usr/local/bin/healthcheck
