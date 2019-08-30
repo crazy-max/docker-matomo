@@ -19,10 +19,10 @@ kubectl apply -f https://raw.githubusercontent.com/crazy-max/docker-matomo/maste
 kubectl apply -f https://raw.githubusercontent.com/crazy-max/docker-matomo/master/examples/kubernetes/02-volume.yaml
 
 # Deployment
-kubectl apply -f https://raw.githubusercontent.com/crazy-max/docker-matomo/master/examples/kubernetes/03-deployment.yml
+kubectl apply -f https://raw.githubusercontent.com/crazy-max/docker-matomo/master/examples/kubernetes/03-deployment.yaml
 
 # Service
-kubectl apply -f https://raw.githubusercontent.com/crazy-max/docker-matomo/master/examples/kubernetes/04-service.yml
+kubectl apply -f https://raw.githubusercontent.com/crazy-max/docker-matomo/master/examples/kubernetes/04-service.yaml
 ```
 
 If u can't use a persistent volume, then skip the Volume and edit the `04-deployment.yaml` to use some other storage implementations like emptyDir or hostPath. 
