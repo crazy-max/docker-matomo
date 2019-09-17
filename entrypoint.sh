@@ -62,6 +62,7 @@ EOL
 AuthUser=${SSMTP_USER}
 AuthPass=${SSMTP_PASSWORD}
 EOL
+  fi
 fi
 unset SSMTP_HOST
 unset SSMTP_USER
