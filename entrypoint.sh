@@ -53,10 +53,14 @@ else
 mailhub=${SSMTP_HOST}:${SSMTP_PORT}
 hostname=${SSMTP_HOSTNAME}
 FromLineOverride=YES
-AuthUser=${SSMTP_USER}
-AuthPass=${SSMTP_PASSWORD}
 UseTLS=${SSMTP_TLS}
 UseSTARTTLS=${SSMTP_TLS}
+EOL
+  # Authentication to SMTP server is optional.
+  if [ -n "$SSMTP_USER" ] ; then
+    cat >> /etc/ssmtp/ssmtp.conf <<EOL
+AuthUser=${SSMTP_USER}
+AuthPass=${SSMTP_PASSWORD}
 EOL
 fi
 unset SSMTP_HOST
