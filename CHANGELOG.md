@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.11.0-RC4 (2019/09/17)
+
+* Fix `/var/lib/nginx/`
+* Only populate AuthUser/Pass in ssmtp.conf if defined
+
 ## 3.11.0-RC3 (2019/08/08)
 
 * Fix healthcheck for cron
