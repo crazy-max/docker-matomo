@@ -30,7 +30,7 @@ RUN apk --update --no-cache add -t build-dependencies \
     pcre-dev \
     perl-dev \
     zlib-dev \
-  && mkdir -p /usr/src \
+  && mkdir -p /usr/src /var/lib/nginx/body /var/lib/nginx/fastcgi \
   && cd /usr/src \
   && wget http://nginx.org/download/nginx-$NGINX_VERSION.tar.gz \
   && tar zxvf nginx-$NGINX_VERSION.tar.gz \
@@ -100,7 +100,7 @@ RUN apk --update --no-cache add -t build-dependencies \
   && wget -q https://matomo.org/wp-content/uploads/unifont.ttf.zip \
   && unzip unifont.ttf.zip -d /var/www/plugins/ImageGraph/fonts/ \
   && rm unifont.ttf.zip \
-  && chown -R nginx. /etc/nginx /usr/lib/nginx /var/cache/nginx /var/log/nginx /var/log/php7 /var/www \
+  && chown -R nginx. /etc/nginx /usr/lib/nginx /var/cache/nginx /var/lib/nginx /var/log/nginx /var/log/php7 /var/www \
   && apk del build-dependencies \
   && rm -rf /root/.gnupg /tmp/* /var/cache/apk/*
 
