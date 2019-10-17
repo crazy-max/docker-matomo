@@ -106,6 +106,8 @@ services:
       - "${ROOT_DIR}/app:/data"
     env_file:
       - "${ROOT_DIR}/matomo.env"
+    healthcheck:
+      disable: true
     deploy:
       labels:
         - "swarm.cronjob.enable=true"
@@ -128,6 +130,8 @@ services:
       - "${ROOT_DIR}/app:/data"
     env_file:
       - "${ROOT_DIR}/matomo.env"
+    healthcheck:
+      disable: true
     deploy:
       labels:
         - "swarm.cronjob.enable=true"

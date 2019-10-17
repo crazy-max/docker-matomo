@@ -122,6 +122,7 @@ If you want to enable the cron job, you have to run a "sidecar" container like i
 ```bash
 docker run -d --name matomo_cron \
   --env-file $(pwd)/matomo.env \
+  --no-healthcheck \
   -e "SIDECAR_CRON=1" \
   -e "CRON_ARCHIVE=0 * * * *" \
   -e "ARCHIVE_OPTIONS=--concurrent-requests-per-website=3" \
