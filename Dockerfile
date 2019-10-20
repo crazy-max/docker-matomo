@@ -1,4 +1,5 @@
-FROM nginx:mainline-alpine
+# syntax=docker/dockerfile:experimental
+FROM --platform=${TARGETPLATFORM:-linux/amd64} nginx:mainline-alpine
 
 ARG BUILD_DATE
 ARG VCS_REF
