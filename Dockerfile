@@ -86,7 +86,8 @@ RUN cd /tmp \
   && rm -rf /tmp/*
 
 ENV MATOMO_VERSION="3.11.0" \
-  CRONTAB_PATH="/var/spool/cron/crontabs"
+  CRONTAB_PATH="/var/spool/cron/crontabs" \
+  TZ="UTC"
 
 RUN apk --update --no-cache add -t build-dependencies \
     ca-certificates gnupg libressl tar \
