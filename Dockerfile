@@ -1,4 +1,4 @@
-FROM nginx:stable-alpine
+FROM nginx:mainline-alpine
 
 ARG BUILD_DATE
 ARG VCS_REF
