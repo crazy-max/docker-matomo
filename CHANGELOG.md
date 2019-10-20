@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.11.0-RC5 (2019/10/20)
+
+* Multi-platform Docker image
+* Switch to GitHub Actions
+* :warning: Stop publishing Docker image on Quay
+* Set timezone through tzdata
+* Use alpine mainline
+
 ## 3.11.0-RC4 (2019/09/17)
 
 * Fix `/var/lib/nginx/`
