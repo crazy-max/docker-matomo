@@ -19,6 +19,7 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 
 ## Features
 
+* Multi-platform image
 * Tarball authenticity checked during building process
 * Config, plugins and user preferences in the same folder
 * GeoIP 2 databases created by [MaxMind](http://www.maxmind.com) for geolocation
