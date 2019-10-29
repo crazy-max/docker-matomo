@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.12.0-RC1 (2019/10/20)
+
+* Matomo 3.12.0
+
 ## 3.11.0-RC5 (2019/10/20)
 
 * Multi-platform Docker image
