@@ -1,4 +1,4 @@
-<p align="center"><a href="https://github.com/crazy-max/docker-matomo" target="_blank"><img height="128"src="https://raw.githubusercontent.com/crazy-max/docker-matomo/master/.res/docker-matomo.jpg"></a></p>
+<p align="center"><a href="https://github.com/crazy-max/docker-matomo" target="_blank"><img height="128" src="https://raw.githubusercontent.com/crazy-max/docker-matomo/master/.res/docker-matomo.jpg"></a></p>
 
 <p align="center">
   <a href="https://hub.docker.com/r/crazymax/matomo/tags?page=1&ordering=last_updated"><img src="https://img.shields.io/github/v/tag/crazy-max/docker-matomo?label=version&style=flat-square" alt="Latest Version"></a>
