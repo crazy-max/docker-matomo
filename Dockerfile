@@ -85,7 +85,7 @@ RUN cd /tmp \
   && mv *.mmdb /etc/nginx/geoip \
   && rm -rf /tmp/*
 
-ENV MATOMO_VERSION="3.12.0" \
+ENV MATOMO_VERSION="3.13.0" \
   CRONTAB_PATH="/var/spool/cron/crontabs" \
   TZ="UTC"
 
