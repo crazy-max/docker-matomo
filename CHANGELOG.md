@@ -1,6 +1,6 @@
 # Changelog
 
-## 3.13.0-RC1 (2019/12/02)
+## 3.13.0-RC2 (2019/12/02)
 
 * Fix user misc data persistence (#31)
 
