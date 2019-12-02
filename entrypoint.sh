@@ -85,8 +85,11 @@ if [ ! -d /data/misc/user ]; then
   if [[ ! -L /var/www/misc/user && -d /var/www/misc/user ]]; then
     mv -f /var/www/misc/user /data/misc/
   fi
-  ln -sf /data/misc/user /var/www/misc/user
+elif [[ ! -L /var/www/misc/user && -d /var/www/misc/user ]]; then
+  rm -rf /var/www/misc/user
 fi
+mkdir -p /data/misc/user
+ln -sf /data/misc/user /var/www/misc/user
 
 # Fix perms
 echo "Fixing permissions..."
@@ -106,7 +109,7 @@ if [ "$SIDECAR_CRON" = "1" ]; then
 
   # GeoIP
   if [ ! -z "$CRON_GEOIP" ]; then
-    echo "Creating GeoIP cron task with the following period fields : $CRON_GEOIP"
+    echo "Creating GeoIP cron task with the following period fields: $CRON_GEOIP"
     echo "${CRON_GEOIP} /usr/local/bin/update_geoip" >> ${CRONTAB_PATH}/nginx
   else
     echo "CRON_GEOIP env var empty..."
@@ -114,7 +117,7 @@ if [ "$SIDECAR_CRON" = "1" ]; then
 
   # Archive
   if [ ! -z "$CRON_ARCHIVE" ]; then
-    echo "Creating Matomo archive cron task with the following period fields : $CRON_ARCHIVE"
+    echo "Creating Matomo archive cron task with the following period fields: $CRON_ARCHIVE"
     echo "${CRON_ARCHIVE} /usr/local/bin/matomo_archive" >> ${CRONTAB_PATH}/nginx
   else
     echo "CRON_ARCHIVE env var empty..."

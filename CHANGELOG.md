@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.13.0-RC1 (2019/12/02)
+
+* Fix user misc data persistence (#31)
+
 ## 3.13.0-RC1 (2019/11/27)
 
 * Matomo 3.13.0
@@ -53,11 +57,11 @@
 ## 3.9.0-RC1 (2019/03/19)
 
 * Matomo 3.9.0
-* Enable gzip for type application/javascript (PR #17)
+* Enable gzip for type application/javascript (#17)
 
 ## 3.8.1-RC3 (2019/03/06)
 
-* Fix GeoIP2 autonomous system key (PR #16)
+* Fix GeoIP2 autonomous system key (#16)
 
 ## 3.8.1-RC2 (2019/02/10)
 
@@ -75,16 +79,16 @@
 
 ## 3.7.0-RC4 (2018/11/24)
 
-* `/js/` tracking codes not working (Issue #11)
+* `/js/` tracking codes not working (#11)
 
 ## 3.7.0-RC3 (2018/11/24)
 
-* Add `REAL_IP_FROM` and `REAL_IP_HEADER` environment variables (Issue #8)
+* Add `REAL_IP_FROM` and `REAL_IP_HEADER` environment variables (#8)
 * Typo for some fastcgi_param
 
 ## 3.7.0-RC2 (2018/11/23)
 
-* Add compatibility with [GeoIP 2 plugin](https://plugins.matomo.org/GeoIP2) (Issue #7)
+* Add compatibility with [GeoIP 2 plugin](https://plugins.matomo.org/GeoIP2) (#7)
 * Add GeoIP 2 databases Country, City and ASN
 * Add [ngx_http_geoip2_module](https://github.com/leev/ngx_http_geoip2_module) nginx module
 * Move GeoIP databases to `/etc/nginx/geoip`
@@ -143,7 +147,7 @@
 
 ## 3.4.0-RC2 (2018/04/26)
 
-* Use IPv6 GeoIP databases (Issue #4)
+* Use IPv6 GeoIP databases (#4)
 
 ## 3.4.0-RC1 (2018/03/29)
 
@@ -167,7 +171,7 @@
 ## 3.3.0-RC6 (2018/02/26)
 
 * Add php7-ldap extension
-* Check config file (Issue #2)
+* Check config file (#2)
 * Fix permission issues
 
 ## 3.3.0-RC5 (2018/02/05)
