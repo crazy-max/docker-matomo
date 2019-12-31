@@ -64,7 +64,6 @@ Image: crazymax/matomo:latest
 * `REAL_IP_HEADER`: Request header field whose value will be used to replace the client address (default `X-Forwarded-For`)
 * `LOG_IP_VAR`: Use another variable to retrieve the remote IP address for access [log_format](http://nginx.org/en/docs/http/ngx_http_log_module.html#log_format) on Nginx. (default `remote_addr`)
 * `LOG_LEVEL`: [Log level](https://matomo.org/faq/troubleshooting/faq_115/) of Matomo UI (default `WARN`)
-* `MAXMIND_LICENSE_KEY`: MaxMind [license key in order to download GeoLite2 databases](https://blog.maxmind.com/2019/12/18/significant-changes-to-accessing-and-using-geolite2-databases/)
 * `SIDECAR_CRON`: Mark the container as a sidecar cron job (default `0`)
 * `SSMTP_HOST`: SMTP server host
 * `SSMTP_PORT`: SMTP server port (default `25`)
@@ -77,6 +76,7 @@ The following environment variables are only used if you run the container as ["
 
 * `SIDECAR_CRON`: Set to `1` to enable sidecar cron mode (default `0`)
 * `ARCHIVE_OPTIONS`: Pass [additional options](https://matomo.org/docs/setup-auto-archiving/#help-for-corearchive-command) during cron archive
+* `MAXMIND_LICENSE_KEY`: MaxMind [license key in order to download GeoLite2 databases](https://blog.maxmind.com/2019/12/18/significant-changes-to-accessing-and-using-geolite2-databases/)
 * `CRON_GEOIP`: Periodically update GeoIP 2 databases (disabled if empty ; eg. `0 0 * * 0`)
 * `CRON_ARCHIVE`: Periodically execute Matomo [archive](https://matomo.org/docs/setup-auto-archiving/#linuxunix-how-to-set-up-a-crontab-to-automatically-archive-the-reports) (disabled if empty ; ex `0 * * * *`)
 

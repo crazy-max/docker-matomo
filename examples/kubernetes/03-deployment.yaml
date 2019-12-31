@@ -46,6 +46,8 @@ spec:
             value: "0 0 * * 0"
           - name: CRON_ARCHIVE
             value: "0 * * * *"
+          - name: MAXMIND_LICENSE_KEY
+            value: ""
 #          resources:
 #            requests:
 #              memory: "128Mi"

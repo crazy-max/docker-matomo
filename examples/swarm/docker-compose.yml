@@ -130,6 +130,8 @@ services:
       - "${ROOT_DIR}/app:/data"
     env_file:
       - "${ROOT_DIR}/matomo.env"
+    environment:
+      - "MAXMIND_LICENSE_KEY="
     healthcheck:
       disable: true
     deploy:

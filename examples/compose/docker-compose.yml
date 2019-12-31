@@ -80,6 +80,7 @@ services:
       - "CRON_GEOIP=0 0 * * 0"
       - "CRON_ARCHIVE=0 * * * *"
       - "ARCHIVE_OPTIONS=--concurrent-requests-per-website=3"
+      - "MAXMIND_LICENSE_KEY="
     healthcheck:
       disable: true
     restart: always
