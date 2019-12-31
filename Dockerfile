@@ -74,16 +74,10 @@ RUN apk --update --no-cache add \
     wget \
   && rm -rf /var/cache/apk/* /var/www/* /tmp/*
 
-RUN cd /tmp \
-  && mkdir -p /etc/nginx/geoip \
-  && wget -q http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz \
-  && wget -q http://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.tar.gz \
-  && wget -q http://geolite.maxmind.com/download/geoip/database/GeoLite2-ASN.tar.gz \
-  && tar -xvzf GeoLite2-City.tar.gz --strip-components=1 \
-  && tar -xvzf GeoLite2-Country.tar.gz --strip-components=1 \
-  && tar -xvzf GeoLite2-ASN.tar.gz --strip-components=1 \
-  && mv *.mmdb /etc/nginx/geoip \
-  && rm -rf /tmp/*
+RUN mkdir -p /var/mmdb \
+  && wget -q https://github.com/crazy-max/docker-matomo/raw/mmdb/GeoLite2-ASN.mmdb -qO /var/mmdb/GeoLite2-ASN.mmdb \
+  && wget -q https://github.com/crazy-max/docker-matomo/raw/mmdb/GeoLite2-City.mmdb -qO /var/mmdb/GeoLite2-City.mmdb \
+  && wget -q https://github.com/crazy-max/docker-matomo/raw/mmdb/GeoLite2-Country.mmdb -qO /var/mmdb/GeoLite2-Country.mmdb
 
 ENV MATOMO_VERSION="3.13.0" \
   CRONTAB_PATH="/var/spool/cron/crontabs" \

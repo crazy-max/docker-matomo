@@ -56,42 +56,43 @@ Image: crazymax/matomo:latest
 
 ### Environment variables
 
-* `TZ` : The timezone assigned to the container (default `UTC`)
-* `MEMORY_LIMIT` : PHP memory limit (default `256M`)
-* `UPLOAD_MAX_SIZE` : Upload max size (default `16M`)
-* `OPCACHE_MEM_SIZE` : PHP OpCache memory consumption (default `128`)
-* `REAL_IP_FROM` : Trusted addresses that are known to send correct replacement addresses (default `0.0.0.0/32`)
-* `REAL_IP_HEADER` : Request header field whose value will be used to replace the client address (default `X-Forwarded-For`)
-* `LOG_IP_VAR` : Use another variable to retrieve the remote IP address for access [log_format](http://nginx.org/en/docs/http/ngx_http_log_module.html#log_format) on Nginx. (default `remote_addr`)
-* `LOG_LEVEL` : [Log level](https://matomo.org/faq/troubleshooting/faq_115/) of Matomo UI (default `WARN`)
-* `SIDECAR_CRON` : Mark the container as a sidecar cron job (default `0`)
-* `SSMTP_HOST` : SMTP server host
-* `SSMTP_PORT` : SMTP server port (default `25`)
-* `SSMTP_HOSTNAME` : Full hostname (default `$(hostname -f)`)
-* `SSMTP_USER` : SMTP username
-* `SSMTP_PASSWORD` : SMTP password
-* `SSMTP_TLS` : SSL/TLS (default `NO`)
+* `TZ`: The timezone assigned to the container (default `UTC`)
+* `MEMORY_LIMIT`: PHP memory limit (default `256M`)
+* `UPLOAD_MAX_SIZE`: Upload max size (default `16M`)
+* `OPCACHE_MEM_SIZE`: PHP OpCache memory consumption (default `128`)
+* `REAL_IP_FROM`: Trusted addresses that are known to send correct replacement addresses (default `0.0.0.0/32`)
+* `REAL_IP_HEADER`: Request header field whose value will be used to replace the client address (default `X-Forwarded-For`)
+* `LOG_IP_VAR`: Use another variable to retrieve the remote IP address for access [log_format](http://nginx.org/en/docs/http/ngx_http_log_module.html#log_format) on Nginx. (default `remote_addr`)
+* `LOG_LEVEL`: [Log level](https://matomo.org/faq/troubleshooting/faq_115/) of Matomo UI (default `WARN`)
+* `MAXMIND_LICENSE_KEY`: MaxMind [license key in order to download GeoLite2 databases](https://blog.maxmind.com/2019/12/18/significant-changes-to-accessing-and-using-geolite2-databases/)
+* `SIDECAR_CRON`: Mark the container as a sidecar cron job (default `0`)
+* `SSMTP_HOST`: SMTP server host
+* `SSMTP_PORT`: SMTP server port (default `25`)
+* `SSMTP_HOSTNAME`: Full hostname (default `$(hostname -f)`)
+* `SSMTP_USER`: SMTP username
+* `SSMTP_PASSWORD`: SMTP password
+* `SSMTP_TLS`: SSL/TLS (default `NO`)
 
-The following environment variables are only used if you run the container as ["sidecar" mode](#cron) :
+The following environment variables are only used if you run the container as ["sidecar" mode](#cron):
 
-* `SIDECAR_CRON` : Set to `1` to enable sidecar cron mode (default `0`)
-* `ARCHIVE_OPTIONS` : Pass [additional options](https://matomo.org/docs/setup-auto-archiving/#help-for-corearchive-command) during cron archive
-* `CRON_GEOIP` : Periodically update GeoIP 2 databases (disabled if empty ; eg. `0 4 * * *`)
-* `CRON_ARCHIVE` : Periodically execute Matomo [archive](https://matomo.org/docs/setup-auto-archiving/#linuxunix-how-to-set-up-a-crontab-to-automatically-archive-the-reports) (disabled if empty ; ex `0 * * * *`)
+* `SIDECAR_CRON`: Set to `1` to enable sidecar cron mode (default `0`)
+* `ARCHIVE_OPTIONS`: Pass [additional options](https://matomo.org/docs/setup-auto-archiving/#help-for-corearchive-command) during cron archive
+* `CRON_GEOIP`: Periodically update GeoIP 2 databases (disabled if empty ; eg. `0 0 * * 0`)
+* `CRON_ARCHIVE`: Periodically execute Matomo [archive](https://matomo.org/docs/setup-auto-archiving/#linuxunix-how-to-set-up-a-crontab-to-automatically-archive-the-reports) (disabled if empty ; ex `0 * * * *`)
 
 ### Volumes
 
-* `/data` : Contains GeoIP 2 databases, configuration, installed plugins (not core ones), tmp and user folders to store your [custom logo](https://matomo.org/faq/new-to-piwik/faq_129/)
+* `/data`: Contains GeoIP 2 databases, configuration, installed plugins (not core ones), tmp and user folders to store your [custom logo](https://matomo.org/faq/new-to-piwik/faq_129/)
 
 ### Ports
 
-* `8000` : HTTP port
+* `8000`: HTTP port
 
 ## Usage
 
 ### Docker Compose
 
-Docker compose is the recommended way to run this image. Copy the content of folder [examples/compose](examples/compose) in `/var/matomo/` on your host for example. Edit the compose and env files with your preferences and run the following commands :
+Docker compose is the recommended way to run this image. Copy the content of folder [examples/compose](examples/compose) in `/var/matomo/` on your host for example. Edit the compose and env files with your preferences and run the following commands:
 
 ```bash
 touch acme.json
@@ -110,7 +111,7 @@ Deploy this image in your kubernetes cluster. Detailed instructions [can be foun
 
 ### Command line
 
-You can also use the following minimal command :
+You can also use the following minimal command:
 
 ```bash
 docker run -d -p 8000:8000 --name matomo \
@@ -118,7 +119,7 @@ docker run -d -p 8000:8000 --name matomo \
   crazymax/matomo:latest
 ```
 
-> :warning: You will need to have your own database server to connect to as this only runs Matomo.
+>:warning: You will need to have your own database server to connect to as this only runs Matomo.
 
 ## Notes
 
@@ -128,7 +129,7 @@ On a HA environment, **enable backend sticky sessions** on your load balancer.
 
 ### Cron
 
-If you want to enable the cron job, you have to run a "sidecar" container like in the [docker-compose file](examples/compose/docker-compose.yml) or run a simple container like this :
+If you want to enable the cron job, you have to run a "sidecar" container like in the [docker-compose file](examples/compose/docker-compose.yml) or run a simple container like this:
 
 ```bash
 docker run -d --name matomo_cron \
@@ -141,7 +142,7 @@ docker run -d --name matomo_cron \
   crazymax/matomo:latest
 ```
 
-Then if you have enabled `CRON_ARCHIVE` to automatically archive the reports, you have to disable Matomo archiving to trigger from the browser. Go to **System > General settings** :
+Then if you have enabled `CRON_ARCHIVE` to automatically archive the reports, you have to disable Matomo archiving to trigger from the browser. Go to **System > General settings**:
 
 ![Disable Matomo archiving from browser](.res/disable-archive-reports-browser.png)
 
@@ -149,11 +150,11 @@ Then if you have enabled `CRON_ARCHIVE` to automatically archive the reports, yo
 
 This image already uses GeoIP 2 databases of [MaxMind](https://www.maxmind.com/) through Nginx. You just have to install and activate the [GeoIP 2 plugin](https://plugins.matomo.org/GeoIP2).
 
-After that, you have to select **GeoIP 2 (HTTP Server Module)** in **System > Geolocation** :
+After that, you have to select **GeoIP 2 (HTTP Server Module)** in **System > Geolocation**:
 
 ![GeoIP 2 location provider](.res/geoip2-location-provider.png)
 
-And activate GeoIP 2 server module for Nginx in **System > General settings > Configuration for server variables used by GeoIP 2 server modules** :
+And activate GeoIP 2 server module for Nginx in **System > General settings > Configuration for server variables used by GeoIP 2 server modules**:
 
 ![GeoIP 2 server module](.res/geoip2-server-module.png)
 
@@ -161,7 +162,7 @@ And activate GeoIP 2 server module for Nginx in **System > General settings > Co
 
 ### Behind a reverse proxy ?
 
-If you are running Matomo [behind a reverse proxy](https://matomo.org/faq/how-to-install/faq_98/), add this to your config.ini.php :
+If you are running Matomo [behind a reverse proxy](https://matomo.org/faq/how-to-install/faq_98/), add this to your config.ini.php:
 
 ```
 [General]
@@ -173,7 +174,7 @@ proxy_host_headers[] = HTTP_X_FORWARDED_HOST
 
 ### Redis cache
 
-To use [Redis as a cache](https://matomo.org/faq/how-to/faq_20511/) (useful if your Matomo environment consists of multiple servers), add this to your config.ini.php :
+To use [Redis as a cache](https://matomo.org/faq/how-to/faq_20511/) (useful if your Matomo environment consists of multiple servers), add this to your config.ini.php:
 
 ```
 [Cache]
@@ -200,7 +201,7 @@ If you are on a [HA environment](https://matomo.org/faq/new-to-piwik/faq_134/), 
 
 ## Upgrade
 
-You can upgrade Matomo automatically through the UI, it works well. But I recommend to recreate the container whenever I push an update :
+You can upgrade Matomo automatically through the UI, it works well. But I recommend to recreate the container whenever I push an update:
 
 ```bash
 docker-compose pull

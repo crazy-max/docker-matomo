@@ -63,7 +63,7 @@ unset SSMTP_PASSWORD
 
 # Init Matomo
 echo "Initializing Matomo files / folders..."
-mkdir -p /data/config /data/misc /data/plugins /data/session /data/tmp /etc/supervisord /var/log/supervisord
+mkdir -p /data/config /data/geoip /data/misc /data/plugins /data/session /data/tmp /etc/supervisord /var/log/supervisord
 
 # Copy global config
 cp -Rf /var/www/config /data/
@@ -128,6 +128,23 @@ if [ "$SIDECAR_CRON" = "1" ]; then
   chmod -R 0644 ${CRONTAB_PATH}
 else
   rm /etc/supervisord/cron.conf
+
+  # Fallback on old GeoLite2 databases
+  if [ ! "$(ls -A /data/geoip)" ]; then
+    cp -f /var/mmdb/*.mmdb /data/geoip/
+    chown -R nginx. /data/geoip
+  fi
+
+  # Empty GeoIP2 Nginx config if no databases found
+  if [ ! -f "/data/geoip/GeoLite2-ASN.mmdb" ]; then
+    cat /dev/null > /etc/nginx/geoip2-asn.conf
+  fi
+  if [ ! -f "/data/geoip/GeoLite2-City.mmdb" ]; then
+    cat /dev/null > /etc/nginx/geoip2-city.conf
+  fi
+  if [ ! -f "/data/geoip/GeoLite2-Country.mmdb" ]; then
+    cat /dev/null > /etc/nginx/geoip2-country.conf
+  fi
 
   # Check if already installed
   if [ -f /data/config/config.ini.php ]; then

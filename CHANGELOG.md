@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.13.0-RC3 (2019/12/31)
+
+* Add `MAXMIND_LICENSE_KEY` env var in order to [download GeoLite2 databases](https://blog.maxmind.com/2019/12/18/significant-changes-to-accessing-and-using-geolite2-databases/)
+* Move GeoLite2 databases to `/data/geoip` folder
+* Fix remote ip for `MM_ADDR` and `MMDB_ADDR` fastcgi params
+
 ## 3.13.0-RC2 (2019/12/02)
 
 * Fix user misc data persistence (#31)

@@ -43,7 +43,7 @@ spec:
           - name: SIDECAR_CRON
             value: "1"
           - name: CRON_GEOIP
-            value: "0 4 * * *"
+            value: "0 0 * * 0"
           - name: CRON_ARCHIVE
             value: "0 * * * *"
 #          resources:
