@@ -3,7 +3,6 @@ version: "3.2"
 services:
   traefik:
     image: traefik:1.7-alpine
-    container_name: traefik
     command:
       - "--logLevel=INFO"
       - "--defaultentrypoints=http,https"
@@ -34,7 +33,6 @@ services:
 
   db:
     image: mariadb:10.2
-    container_name: matomo_db
     volumes:
       - "db:/var/lib/mysql"
     environment:
@@ -46,17 +44,24 @@ services:
 
   redis:
     image: redis:4.0-alpine
-    container_name: matomo_redis
+    restart: always
+
+  geoip-updater:
+    image: crazymax/geoip-updater:latest
+    volumes:
+      - "geoip-updater:/data"
+    env_file:
+      - "./geoip-updater.env"
     restart: always
 
   matomo:
     image: crazymax/matomo:latest
-    container_name: matomo
     depends_on:
       - db
       - redis
     volumes:
       - "matomo:/data"
+      - "geoip-updater:/data/geoip"
     labels:
       - "traefik.enable=true"
       - "traefik.backend=matomo"
@@ -68,23 +73,22 @@ services:
 
   cron:
     image: crazymax/matomo:latest
-    container_name: matomo_cron
     depends_on:
       - matomo
     volumes:
       - "matomo:/data"
+      - "geoip-updater:/data/geoip"
     env_file:
       - "./matomo.env"
     environment:
       - "SIDECAR_CRON=1"
-      - "CRON_GEOIP=0 0 * * 0"
       - "CRON_ARCHIVE=0 * * * *"
       - "ARCHIVE_OPTIONS=--concurrent-requests-per-website=3"
-      - "MAXMIND_LICENSE_KEY="
     healthcheck:
       disable: true
     restart: always
 
 volumes:
   db:
+  geoip-updater:
   matomo:

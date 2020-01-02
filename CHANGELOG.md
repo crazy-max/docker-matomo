@@ -1,10 +1,20 @@
 # Changelog
 
+## 3.13.0-RC4 (2019/01/02)
+
+* Use [geoip-updater](https://github.com/crazy-max/geoip-updater) Docker image to download MaxMind's GeoIP2 databases
+
+> :warning: **UPGRADE NOTES**
+> `MAXMIND_LICENSE_KEY` and `CRON_GEOIP` env vars not used anymore.
+
 ## 3.13.0-RC3 (2019/12/31)
 
 * Add `MAXMIND_LICENSE_KEY` env var in order to [download GeoLite2 databases](https://blog.maxmind.com/2019/12/18/significant-changes-to-accessing-and-using-geolite2-databases/)
 * Move GeoLite2 databases to `/data/geoip` folder
 * Fix remote ip for `MM_ADDR` and `MMDB_ADDR` fastcgi params
+
+> :warning: **UPGRADE NOTES**
+> GeoIP2 databases moved to `/data/geoip`.
 
 ## 3.13.0-RC2 (2019/12/02)
 
@@ -94,8 +104,8 @@
 
 ## 3.7.0-RC2 (2018/11/23)
 
-* Add compatibility with [GeoIP 2 plugin](https://plugins.matomo.org/GeoIP2) (#7)
-* Add GeoIP 2 databases Country, City and ASN
+* Add compatibility with [GeoIP2 plugin](https://plugins.matomo.org/GeoIP2) (#7)
+* Add GeoIP2 databases Country, City and ASN
 * Add [ngx_http_geoip2_module](https://github.com/leev/ngx_http_geoip2_module) nginx module
 * Move GeoIP databases to `/etc/nginx/geoip`
 

@@ -22,17 +22,17 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 * Multi-platform image
 * Tarball authenticity checked during building process
 * Config, plugins and user preferences in the same folder
-* GeoIP 2 databases created by [MaxMind](http://www.maxmind.com) for geolocation
 * Unifont for languages using [unicode characters](https://matomo.org/faq/how-to-install/faq_142/)
-* Cron tasks to archive Matomo reports and update GeoIP 2 databases as a ["sidecar" container](#cron)
+* Cron tasks to archive Matomo reports as a ["sidecar" container](#cron)
 * Ability to pass [additional options](https://matomo.org/docs/setup-auto-archiving/#help-for-corearchive-command) during cron archive
 * Plugins and config are kept across upgrades of this image
 * [SSMTP](https://linux.die.net/man/8/ssmtp) for SMTP relay to send emails
 * OPCache enabled to store precompiled script bytecode in shared memory
 * Redis enabled and ready to enhance server performance
-* [Traefik](https://github.com/containous/traefik-library-image) as reverse proxy and creation/renewal of Let's Encrypt certificates
-* [Redis](https://github.com/docker-library/redis) image ready to use as [Redis cache](https://matomo.org/faq/how-to/faq_20511/) or [QueuedTracking plugin](https://matomo.org/faq/how-to/faq_19738) for better scalability
-* [MariaDB](https://github.com/docker-library/mariadb) image as database instance
+* [Traefik](https://github.com/containous/traefik-library-image) Docker image as reverse proxy and creation/renewal of Let's Encrypt certificates
+* [Redis](https://github.com/docker-library/redis) Docker image ready to use as [Redis cache](https://matomo.org/faq/how-to/faq_20511/) or [QueuedTracking plugin](https://matomo.org/faq/how-to/faq_19738) for better scalability
+* [MariaDB](https://github.com/docker-library/mariadb) Docker image as database instance
+* [geoip-updater](https://github.com/crazy-max/geoip-updater) Docker image to download MaxMind's GeoIP2 databases on a time-based schedule for geolocation
 * Cron jobs as a ["sidecar" container](#cron)
 
 ## Docker
@@ -76,13 +76,11 @@ The following environment variables are only used if you run the container as ["
 
 * `SIDECAR_CRON`: Set to `1` to enable sidecar cron mode (default `0`)
 * `ARCHIVE_OPTIONS`: Pass [additional options](https://matomo.org/docs/setup-auto-archiving/#help-for-corearchive-command) during cron archive
-* `MAXMIND_LICENSE_KEY`: MaxMind [license key in order to download GeoLite2 databases](https://blog.maxmind.com/2019/12/18/significant-changes-to-accessing-and-using-geolite2-databases/)
-* `CRON_GEOIP`: Periodically update GeoIP 2 databases (disabled if empty ; eg. `0 0 * * 0`)
 * `CRON_ARCHIVE`: Periodically execute Matomo [archive](https://matomo.org/docs/setup-auto-archiving/#linuxunix-how-to-set-up-a-crontab-to-automatically-archive-the-reports) (disabled if empty ; ex `0 * * * *`)
 
 ### Volumes
 
-* `/data`: Contains GeoIP 2 databases, configuration, installed plugins (not core ones), tmp and user folders to store your [custom logo](https://matomo.org/faq/new-to-piwik/faq_129/)
+* `/data`: Contains GeoIP2 databases, configuration, installed plugins (not core ones), tmp and user folders to store your [custom logo](https://matomo.org/faq/new-to-piwik/faq_129/)
 
 ### Ports
 
@@ -146,9 +144,9 @@ Then if you have enabled `CRON_ARCHIVE` to automatically archive the reports, yo
 
 ![Disable Matomo archiving from browser](.res/disable-archive-reports-browser.png)
 
-### GeoIP 2
+### GeoIP2
 
-This image already uses GeoIP 2 databases of [MaxMind](https://www.maxmind.com/) through Nginx. You just have to install and activate the [GeoIP 2 plugin](https://plugins.matomo.org/GeoIP2).
+This image already uses GeoIP2 databases of [MaxMind](https://www.maxmind.com/) through Nginx and are updated with [geoip-updater](https://github.com/crazy-max/geoip-updater). You just have to install and activate the [GeoIP 2 plugin](https://plugins.matomo.org/GeoIP2).
 
 After that, you have to select **GeoIP 2 (HTTP Server Module)** in **System > Geolocation**:
 

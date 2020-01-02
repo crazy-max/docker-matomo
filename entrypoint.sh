@@ -107,14 +107,6 @@ if [ "$SIDECAR_CRON" = "1" ]; then
   mkdir -m 0644 -p ${CRONTAB_PATH}
   touch ${CRONTAB_PATH}/nginx
 
-  # GeoIP
-  if [ ! -z "$CRON_GEOIP" ]; then
-    echo "Creating GeoIP cron task with the following period fields: $CRON_GEOIP"
-    echo "${CRON_GEOIP} /usr/local/bin/update_geoip" >> ${CRONTAB_PATH}/nginx
-  else
-    echo "CRON_GEOIP env var empty..."
-  fi
-
   # Archive
   if [ ! -z "$CRON_ARCHIVE" ]; then
     echo "Creating Matomo archive cron task with the following period fields: $CRON_ARCHIVE"
@@ -129,11 +121,11 @@ if [ "$SIDECAR_CRON" = "1" ]; then
 else
   rm /etc/supervisord/cron.conf
 
-  # Fallback on old GeoLite2 databases
+  # GeoIP2 databases
   if [ ! "$(ls -A /data/geoip)" ]; then
     cp -f /var/mmdb/*.mmdb /data/geoip/
-    chown -R nginx. /data/geoip
   fi
+  chown -R nginx. /data/geoip
 
   # Empty GeoIP2 Nginx config if no databases found
   if [ ! -f "/data/geoip/GeoLite2-ASN.mmdb" ]; then

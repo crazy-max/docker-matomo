@@ -68,6 +68,16 @@ services:
       placement:
         constraints: [node.role == worker]
 
+  geoip-updater:
+    image: crazymax/geoip-updater:${GEOIP_UPDATER_VERSION}
+    volumes:
+      - "${ROOT_DIR}/app/geoip:/data"
+    env_file:
+      - "${ROOT_DIR}/geoip-updater.env"
+    deploy:
+      placement:
+        constraints: [node.role == worker]
+
   matomo:
     image: crazymax/matomo:${MATOMO_VERSION}
     depends_on:
@@ -90,7 +100,7 @@ services:
       placement:
         constraints: [node.role == worker]
 
-  cron_archive:
+  archive:
     image: crazymax/matomo:${MATOMO_VERSION}
     command:
       - "php"
@@ -119,37 +129,10 @@ services:
       restart_policy:
         condition: none
 
-  cron_geoip:
-    image: crazymax/matomo:${MATOMO_VERSION}
-    command:
-      - "/usr/local/bin/update_geoip"
-    user: nginx
-    depends_on:
-      - matomo
-    volumes:
-      - "${ROOT_DIR}/app:/data"
-    env_file:
-      - "${ROOT_DIR}/matomo.env"
-    environment:
-      - "MAXMIND_LICENSE_KEY="
-    healthcheck:
-      disable: true
-    deploy:
-      labels:
-        - "swarm.cronjob.enable=true"
-        - "swarm.cronjob.schedule=${MATOMO_CRON_GEOIP}"
-        - "swarm.cronjob.skip-running=true"
-      replicas: 0
-      placement:
-        constraints: [node.role == worker]
-      restart_policy:
-        condition: none
-
   scheduler:
     image: crazymax/swarm-cronjob:${SWARM_CRONJOB_VERSION}
     depends_on:
-      - cron_archive
-      - cron_geoip
+      - archive
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
     environment:
