@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.13.1-RC1 (2019/01/17)
+
+* Matomo 3.13.1
+
 ## 3.13.0-RC4 (2019/01/02)
 
 * Use [geoip-updater](https://github.com/crazy-max/geoip-updater) Docker image to download MaxMind's GeoIP2 databases
