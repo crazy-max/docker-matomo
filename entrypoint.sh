@@ -122,19 +122,25 @@ else
   rm /etc/supervisord/cron.conf
 
   # GeoIP2 databases
-  if [ ! "$(ls -A /data/geoip)" ]; then
-    cp -f /var/mmdb/*.mmdb /data/geoip/
+  if [ ! -s "/data/geoip/GeoLite2-ASN.mmdb" ]; then
+    cp -f /var/mmdb/GeoLite2-ASN.mmdb /data/geoip/
+  fi
+  if [ ! -s "/data/geoip/GeoLite2-City.mmdb" ]; then
+    cp -f /var/mmdb/GeoLite2-City.mmdb /data/geoip/
+  fi
+  if [ ! -s "/data/geoip/GeoLite2-Country.mmdb" ]; then
+    cp -f /var/mmdb/GeoLite2-Country.mmdb /data/geoip/
   fi
   chown -R nginx. /data/geoip
 
   # Empty GeoIP2 Nginx config if no databases found
-  if [ ! -f "/data/geoip/GeoLite2-ASN.mmdb" ]; then
+  if [ ! -s "/data/geoip/GeoLite2-ASN.mmdb" ]; then
     cat /dev/null > /etc/nginx/geoip2-asn.conf
   fi
-  if [ ! -f "/data/geoip/GeoLite2-City.mmdb" ]; then
+  if [ ! -s "/data/geoip/GeoLite2-City.mmdb" ]; then
     cat /dev/null > /etc/nginx/geoip2-city.conf
   fi
-  if [ ! -f "/data/geoip/GeoLite2-Country.mmdb" ]; then
+  if [ ! -s "/data/geoip/GeoLite2-Country.mmdb" ]; then
     cat /dev/null > /etc/nginx/geoip2-country.conf
   fi
 
