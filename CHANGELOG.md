@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.13.2-RC1 (2020/02/10)
+
+* Matomo 3.13.2
+
 ## 3.13.1-RC6 (2020/01/24)
 
 * Move Nginx temp folders to `/tmp`
