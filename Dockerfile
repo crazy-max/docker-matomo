@@ -79,7 +79,7 @@ RUN mkdir -p /var/mmdb \
   && wget -q https://github.com/crazy-max/docker-matomo/raw/mmdb/GeoLite2-City.mmdb -qO /var/mmdb/GeoLite2-City.mmdb \
   && wget -q https://github.com/crazy-max/docker-matomo/raw/mmdb/GeoLite2-Country.mmdb -qO /var/mmdb/GeoLite2-Country.mmdb
 
-ENV MATOMO_VERSION="3.13.2" \
+ENV MATOMO_VERSION="3.13.3" \
   CRONTAB_PATH="/var/spool/cron/crontabs" \
   TZ="UTC"
 
