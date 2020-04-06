@@ -47,7 +47,6 @@ services:
       - "--innodb-buffer-pool-instances=${MYSQL_IDB_BUFFER_POOL_INSTANCES}"
     volumes:
       - "${ROOT_DIR}/db:/var/lib/mysql"
-      - "/etc/localtime:/etc/localtime:ro"
     environment:
       - "TZ=${TZ}"
       - "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}"
@@ -60,8 +59,6 @@ services:
 
   redis:
     image: redis:${REDIS_VERSION}
-    volumes:
-      - "/etc/localtime:/etc/localtime:ro"
     environment:
       - "TZ=${TZ}"
     deploy:
