@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.13.4-RC2 (2020/04/23)
+
+* Fix `MM_REGION_CODE` (#37)
+
 ## 3.13.4-RC1 (2020/03/24)
 
 * Matomo 3.13.4
