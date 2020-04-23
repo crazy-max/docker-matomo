@@ -3,6 +3,7 @@
 ## 3.13.4-RC2 (2020/04/23)
 
 * Fix `MM_REGION_CODE` (#37)
+* Switch to Open Container Specification labels as label-schema.org ones are deprecated
 
 ## 3.13.4-RC1 (2020/03/24)
 
