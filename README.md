@@ -17,6 +17,30 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 
 💡 Want to be notified of new releases? Check out 🔔 [Diun (Docker Image Update Notifier)](https://github.com/crazy-max/diun) project!
 
+___
+
+* [Features](#features)
+* [Docker](#docker)
+  * [Multi-platform image](#multi-platform-image)
+  * [Environment variables](#environment-variables)
+  * [Volumes](#volumes)
+  * [Ports](#ports)
+* [Usage](#usage)
+  * [Docker Compose](#docker-compose)
+  * [Swarm](#swarm)
+  * [Kubernetes](#kubernetes)
+  * [Command line](#command-line)
+* [Upgrade](#upgrade)
+* [Notes](#notes)
+  * [Sticky sessions](#sticky-sessions)
+  * [Cron](#cron)
+  * [GeoIP2](#geoip2)
+  * [Behind a reverse proxy?](#behind-a-reverse-proxy)
+  * [Redis cache](#redis-cache)
+  * [Plugins](#plugins)
+* [How can I help?](#how-can-i-help)
+* [License](#license)
+
 ## Features
 
 * Multi-platform image
@@ -119,6 +143,15 @@ docker run -d -p 8000:8000 --name matomo \
 
 >:warning: You will need to have your own database server to connect to as this only runs Matomo.
 
+## Upgrade
+
+You can upgrade Matomo automatically through the UI, it works well. But I recommend to recreate the container whenever I push an update:
+
+```bash
+docker-compose pull
+docker-compose up -d
+```
+
 ## Notes
 
 ### Sticky sessions
@@ -158,7 +191,7 @@ And activate GeoIP 2 server module for Nginx in **System > General settings > Co
 
 > :warning: GeoIP (Legacy) is now deprecated and has been removed since 3.8.0 tag.
 
-### Behind a reverse proxy ?
+### Behind a reverse proxy?
 
 If you are running Matomo [behind a reverse proxy](https://matomo.org/faq/how-to-install/faq_98/), add this to your config.ini.php:
 
@@ -197,16 +230,7 @@ In case you are using queued tracking: Make sure to configure a different databa
 If you are on a [HA environment](https://matomo.org/faq/new-to-piwik/faq_134/), there is no need to set `multi_server_environment = 1` in your config.<br />
 [matomo_watch_plugins](rootfs/usr/local/bin/matomo_watch_plugins) script will take care of plugins synchronization from `/data/plugins/` to `/var/www/plugins/`.
 
-## Upgrade
-
-You can upgrade Matomo automatically through the UI, it works well. But I recommend to recreate the container whenever I push an update:
-
-```bash
-docker-compose pull
-docker-compose up -d
-```
-
-## How can I help ?
+## How can I help?
 
 All kinds of contributions are welcome :raised_hands:! The most basic way to show your support is to star :star2: the project, or to raise issues :speech_balloon: You can also support this project by [**becoming a sponsor on GitHub**](https://github.com/sponsors/crazy-max) :clap: or by making a [Paypal donation](https://www.paypal.me/crazyws) to ensure this journey continues indefinitely! :rocket:
 
