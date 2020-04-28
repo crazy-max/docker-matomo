@@ -195,7 +195,7 @@ In case you are using queued tracking: Make sure to configure a different databa
 ### Plugins
 
 If you are on a [HA environment](https://matomo.org/faq/new-to-piwik/faq_134/), there is no need to set `multi_server_environment = 1` in your config.<br />
-[matomo_watch_plugins](assets/usr/local/bin/matomo_watch_plugins) script will take care of plugins synchronization from `/data/plugins/` to `/var/www/plugins/`.
+[matomo_watch_plugins](rootfs/usr/local/bin/matomo_watch_plugins) script will take care of plugins synchronization from `/data/plugins/` to `/var/www/plugins/`.
 
 ## Upgrade
 

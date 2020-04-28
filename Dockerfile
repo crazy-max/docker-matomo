@@ -101,7 +101,7 @@ RUN apk --update --no-cache add -t build-dependencies \
   && rm -rf /root/.gnupg /tmp/* /var/cache/apk/*
 
 COPY entrypoint.sh /entrypoint.sh
-COPY assets /
+COPY rootfs /
 
 RUN chmod a+x /entrypoint.sh /usr/local/bin/* \
   && chown nginx. /var/www/bootstrap.php
