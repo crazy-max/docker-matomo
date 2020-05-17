@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.13.5-RC2 (2020/05/17)
+
+* Add `LISTEN_IPV6` env var
+
 ## 3.13.5-RC1 (2020/04/28)
 
 * Matomo 3.13.5
