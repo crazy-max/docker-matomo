@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.13.5-RC3 (2020/05/19)
+
+* Switch to [msmtpd SMTP relay](https://github.com/crazy-max/docker-msmtpd) Docker image
+
+> :warning: **UPGRADE NOTES**
+> `SSMTP_*` env vars not used anymore.
+
 ## 3.13.5-RC2 (2020/05/17)
 
 * Add `LISTEN_IPV6` env var
