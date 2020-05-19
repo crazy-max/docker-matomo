@@ -68,7 +68,6 @@ RUN apk --update --no-cache add \
     php7-simplexml \
     php7-xml \
     php7-zlib \
-    ssmtp \
     supervisor \
     tzdata \
     wget \

@@ -50,10 +50,10 @@ ___
 * Cron tasks to archive Matomo reports as a ["sidecar" container](#cron)
 * Ability to pass [additional options](https://matomo.org/docs/setup-auto-archiving/#help-for-corearchive-command) during cron archive
 * Plugins and config are kept across upgrades of this image
-* [SSMTP](https://linux.die.net/man/8/ssmtp) for SMTP relay to send emails
 * OPCache enabled to store precompiled script bytecode in shared memory
 * Redis enabled and ready to enhance server performance
 * [Traefik](https://github.com/containous/traefik-library-image) Docker image as reverse proxy and creation/renewal of Let's Encrypt certificates
+* [msmtpd SMTP relay](https://github.com/crazy-max/docker-msmtpd) image to send emails
 * [Redis](https://github.com/docker-library/redis) Docker image ready to use as [Redis cache](https://matomo.org/faq/how-to/faq_20511/) or [QueuedTracking plugin](https://matomo.org/faq/how-to/faq_19738) for better scalability
 * [MariaDB](https://github.com/docker-library/mariadb) Docker image as database instance
 * [geoip-updater](https://github.com/crazy-max/geoip-updater) Docker image to download MaxMind's GeoIP2 databases on a time-based schedule for geolocation
@@ -90,12 +90,6 @@ Image: crazymax/matomo:latest
 * `LOG_IP_VAR`: Use another variable to retrieve the remote IP address for access [log_format](http://nginx.org/en/docs/http/ngx_http_log_module.html#log_format) on Nginx. (default `remote_addr`)
 * `LOG_LEVEL`: [Log level](https://matomo.org/faq/troubleshooting/faq_115/) of Matomo UI (default `WARN`)
 * `SIDECAR_CRON`: Mark the container as a sidecar cron job (default `0`)
-* `SSMTP_HOST`: SMTP server host
-* `SSMTP_PORT`: SMTP server port (default `25`)
-* `SSMTP_HOSTNAME`: Full hostname (default `$(hostname -f)`)
-* `SSMTP_USER`: SMTP username
-* `SSMTP_PASSWORD`: SMTP password
-* `SSMTP_TLS`: SSL/TLS (default `NO`)
 
 The following environment variables are only used if you run the container as ["sidecar" mode](#cron):
 

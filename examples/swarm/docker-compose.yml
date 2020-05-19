@@ -48,7 +48,7 @@ services:
     volumes:
       - "${ROOT_DIR}/db:/var/lib/mysql"
     environment:
-      - "TZ=${TZ}"
+      - "TZ"
       - "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}"
       - "MYSQL_DATABASE=${MYSQL_DATABASE}"
       - "MYSQL_USER=${MYSQL_USER}"
@@ -60,7 +60,7 @@ services:
   redis:
     image: redis:${REDIS_VERSION}
     environment:
-      - "TZ=${TZ}"
+      - "TZ"
     deploy:
       placement:
         constraints: [node.role == worker]
@@ -71,6 +71,18 @@ services:
       - "${ROOT_DIR}/app/geoip:/data"
     env_file:
       - "${ROOT_DIR}/geoip-updater.env"
+    environment:
+      - "TZ"
+    deploy:
+      placement:
+        constraints: [node.role == worker]
+
+  msmtpd:
+    image: crazymax/msmtpd:${MSMTPD_VERSION}
+    env_file:
+      - "${ROOT_DIR}/msmtpd.env"
+    environment:
+      - "TZ"
     deploy:
       placement:
         constraints: [node.role == worker]
@@ -80,10 +92,13 @@ services:
     depends_on:
       - db
       - redis
+      - msmtpd
     volumes:
       - "${ROOT_DIR}/app:/data"
     env_file:
       - "${ROOT_DIR}/matomo.env"
+    environment:
+      - "TZ"
     deploy:
       mode: replicated
       replicas: ${MATOMO_REPLICAS}
@@ -113,6 +128,8 @@ services:
       - "${ROOT_DIR}/app:/data"
     env_file:
       - "${ROOT_DIR}/matomo.env"
+    environment:
+      - "TZ"
     healthcheck:
       disable: true
     deploy:
@@ -133,7 +150,7 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
     environment:
-      - "TZ=${TZ}"
+      - "TZ"
       - "LOG_LEVEL=info"
       - "LOG_NOCOLOR=true"
     deploy:

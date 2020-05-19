@@ -52,6 +52,16 @@ services:
       - "geoip-updater:/data"
     env_file:
       - "./geoip-updater.env"
+    environment:
+      - "TZ"
+    restart: always
+
+  msmtpd:
+    image: crazymax/msmtpd:latest
+    env_file:
+      - "./msmtpd.env"
+    environment:
+      - "TZ"
     restart: always
 
   matomo:
@@ -69,6 +79,8 @@ services:
       - "traefik.frontend.rule=Host:matomo.example.com"
     env_file:
       - "./matomo.env"
+    environment:
+      - "TZ"
     restart: always
 
   cron:
@@ -81,6 +93,7 @@ services:
     env_file:
       - "./matomo.env"
     environment:
+      - "TZ"
       - "SIDECAR_CRON=1"
       - "CRON_ARCHIVE=0 * * * *"
       - "ARCHIVE_OPTIONS=--concurrent-requests-per-website=3"

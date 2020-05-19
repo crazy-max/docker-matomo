@@ -15,10 +15,6 @@ LOG_IP_VAR=${LOG_IP_VAR:-remote_addr}
 LOG_LEVEL=${LOG_LEVEL:-WARN}
 SIDECAR_CRON=${SIDECAR_CRON:-0}
 
-SSMTP_PORT=${SSMTP_PORT:-25}
-SSMTP_HOSTNAME=${SSMTP_HOSTNAME:-$(hostname -f)}
-SSMTP_TLS=${SSMTP_TLS:-NO}
-
 # PHP
 echo "Setting PHP-FPM configuration..."
 sed -e "s/@MEMORY_LIMIT@/$MEMORY_LIMIT/g" \
@@ -41,30 +37,6 @@ sed -e "s#@UPLOAD_MAX_SIZE@#$UPLOAD_MAX_SIZE#g" \
 if [ "$LISTEN_IPV6" != "true" ]; then
   sed -e '/listen \[::\]:/d' -i /etc/nginx/nginx.conf
 fi
-
-# SSMTP
-echo "Setting SSMTP configuration..."
-if [ -z "$SSMTP_HOST" ] ; then
-  echo "WARNING: SSMTP_HOST must be defined if you want to send emails"
-else
-  cat > /etc/ssmtp/ssmtp.conf <<EOL
-mailhub=${SSMTP_HOST}:${SSMTP_PORT}
-hostname=${SSMTP_HOSTNAME}
-FromLineOverride=YES
-UseTLS=${SSMTP_TLS}
-UseSTARTTLS=${SSMTP_TLS}
-EOL
-  # Authentication to SMTP server is optional.
-  if [ -n "$SSMTP_USER" ] ; then
-    cat >> /etc/ssmtp/ssmtp.conf <<EOL
-AuthUser=${SSMTP_USER}
-AuthPass=${SSMTP_PASSWORD}
-EOL
-  fi
-fi
-unset SSMTP_HOST
-unset SSMTP_USER
-unset SSMTP_PASSWORD
 
 # Init Matomo
 echo "Initializing Matomo files / folders..."

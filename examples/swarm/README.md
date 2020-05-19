@@ -6,7 +6,7 @@ Install and use this Matomo Docker image within a Docker Swarm cluster.
 
 Create a running Swarm cluster environment and use a storage volume driver of your choice. Here I use a simple NFS server with binded volumes.
 
-Then edit [.env](.env) and [matomo.env](matomo.env) files with your preferences.
+Then edit all `*.env` files with your preferences.
 
 ```bash
 mkdir -p ${ROOT_DIR}
