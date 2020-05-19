@@ -32,6 +32,7 @@ ___
   * [Command line](#command-line)
 * [Upgrade](#upgrade)
 * [Notes](#notes)
+  * [Email server settings](#email-server-settings)
   * [Sticky sessions](#sticky-sessions)
   * [Cron](#cron)
   * [GeoIP2](#geoip2)
@@ -148,6 +149,12 @@ docker-compose up -d
 ```
 
 ## Notes
+
+### Email server settings
+
+You can use our SMTP relay `msmtpd` service published on port `2500` and declared in our [`docker-compose.yml`](examples/compose/docker-compose.yml):
+
+![Email server settings](.res/email-server-settings.png)
 
 ### Sticky sessions
 
