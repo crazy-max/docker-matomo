@@ -65,22 +65,22 @@ services:
       placement:
         constraints: [node.role == worker]
 
-  geoip-updater:
-    image: crazymax/geoip-updater:${GEOIP_UPDATER_VERSION}
-    volumes:
-      - "${ROOT_DIR}/app/geoip:/data"
+  msmtpd:
+    image: crazymax/msmtpd:${MSMTPD_VERSION}
     env_file:
-      - "${ROOT_DIR}/geoip-updater.env"
+      - "${ROOT_DIR}/msmtpd.env"
     environment:
       - "TZ"
     deploy:
       placement:
         constraints: [node.role == worker]
 
-  msmtpd:
-    image: crazymax/msmtpd:${MSMTPD_VERSION}
+  geoip-updater:
+    image: crazymax/geoip-updater:${GEOIP_UPDATER_VERSION}
+    volumes:
+      - "${ROOT_DIR}/app/geoip:/data"
     env_file:
-      - "${ROOT_DIR}/msmtpd.env"
+      - "${ROOT_DIR}/geoip-updater.env"
     environment:
       - "TZ"
     deploy:

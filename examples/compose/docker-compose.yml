@@ -46,6 +46,14 @@ services:
     image: redis:4.0-alpine
     restart: always
 
+  msmtpd:
+    image: crazymax/msmtpd:latest
+    env_file:
+      - "./msmtpd.env"
+    environment:
+      - "TZ"
+    restart: always
+
   geoip-updater:
     image: crazymax/geoip-updater:latest
     volumes:
@@ -56,19 +64,12 @@ services:
       - "TZ"
     restart: always
 
-  msmtpd:
-    image: crazymax/msmtpd:latest
-    env_file:
-      - "./msmtpd.env"
-    environment:
-      - "TZ"
-    restart: always
-
   matomo:
     image: crazymax/matomo:latest
     depends_on:
       - db
       - redis
+      - msmtpd
     volumes:
       - "matomo:/data"
       - "geoip-updater:/data/geoip"
