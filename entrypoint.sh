@@ -11,6 +11,7 @@ LISTEN_IPV6=${LISTEN_IPV6:-true}
 REAL_IP_FROM=${REAL_IP_FROM:-0.0.0.0/32}
 REAL_IP_HEADER=${REAL_IP_HEADER:-X-Forwarded-For}
 LOG_IP_VAR=${LOG_IP_VAR:-remote_addr}
+SHORTCODE_DOMAIN=${SHORTCODE_DOMAIN:-invalid}
 
 LOG_LEVEL=${LOG_LEVEL:-WARN}
 SIDECAR_CRON=${SIDECAR_CRON:-0}
@@ -32,6 +33,7 @@ sed -e "s#@UPLOAD_MAX_SIZE@#$UPLOAD_MAX_SIZE#g" \
   -e "s#@REAL_IP_FROM@#$REAL_IP_FROM#g" \
   -e "s#@REAL_IP_HEADER@#$REAL_IP_HEADER#g" \
   -e "s#@LOG_IP_VAR@#$LOG_IP_VAR#g" \
+  -e "s#@SHORTCODE_DOMAIN@#$SHORTCODE_DOMAIN#g" \
   /tpls/etc/nginx/nginx.conf > /etc/nginx/nginx.conf
 
 if [ "$LISTEN_IPV6" != "true" ]; then
