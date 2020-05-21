@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.13.5-RC4 (2020/05/21)
+
+* Add support for ShortcodeTracker plugin (#38)
+
 ## 3.13.5-RC3 (2020/05/19)
 
 * Switch to [msmtpd SMTP relay](https://github.com/crazy-max/docker-msmtpd) Docker image
