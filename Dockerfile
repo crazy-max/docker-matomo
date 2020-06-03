@@ -1,4 +1,3 @@
-# syntax=docker/dockerfile:experimental
 FROM --platform=${TARGETPLATFORM:-linux/amd64} nginx:mainline-alpine
 
 ARG BUILD_DATE

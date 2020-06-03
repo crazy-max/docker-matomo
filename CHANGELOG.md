@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.13.5-RC5 (2020/06/03)
+
+* Update nginx configuration
+* Publish edge image
+
 ## 3.13.5-RC4 (2020/05/21)
 
 * Add support for ShortcodeTracker plugin (#38)
