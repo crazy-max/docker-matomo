@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.13.6-RC1 (2020/06/05)
+
+* Matomo 3.13.6
+
 ## 3.13.5-RC5 (2020/06/03)
 
 * Update nginx configuration
