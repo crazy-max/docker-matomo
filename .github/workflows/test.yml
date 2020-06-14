@@ -1,20 +1,17 @@
 name: test
 
 on:
-  pull_request:
-    branches: master
-    paths:
-      - '.github/workflows/test.yml'
-      - 'rootfs/**'
-      - 'Dockerfile'
-      - 'entrypoint.sh'
   push:
-    branches: master
-    paths:
-      - '.github/workflows/test.yml'
-      - 'rootfs/**'
-      - 'Dockerfile'
-      - 'entrypoint.sh'
+    branches:
+      - '**'
+      - '!dependabot/**'
+    paths-ignore:
+      - '**.md'
+  pull_request:
+    branches:
+      - '**'
+    paths-ignore:
+      - '**.md'
 
 jobs:
   test:
