@@ -48,6 +48,7 @@ RUN apk --update --no-cache add \
     inotify-tools \
     libmaxminddb \
     php7 \
+    php7-bcmath \
     php7-cli \
     php7-ctype \
     php7-curl \
@@ -55,6 +56,7 @@ RUN apk --update --no-cache add \
     php7-iconv \
     php7-fpm \
     php7-gd \
+    php7-gmp \
     php7-json \
     php7-ldap \
     php7-mbstring \
