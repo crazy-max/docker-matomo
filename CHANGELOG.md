@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.14.1-RC1 (2020/09/12)
+
+* Matomo 3.14.1
+
 ## 3.14.0-RC2 (2020/08/10)
 
 * Missing PHP extenions
