@@ -1,18 +1,17 @@
-<p align="center"><a href="https://github.com/crazy-max/docker-matomo" target="_blank"><img height="128" src="https://raw.githubusercontent.com/crazy-max/docker-matomo/master/.res/docker-matomo.jpg"></a></p>
+<p align="center"><a href="https://github.com/crazy-max/docker-matomo" target="_blank"><img height="128" src="https://raw.githubusercontent.com/crazy-max/docker-matomo/master/.github/docker-matomo.jpg"></a></p>
 
 <p align="center">
   <a href="https://hub.docker.com/r/crazymax/matomo/tags?page=1&ordering=last_updated"><img src="https://img.shields.io/github/v/tag/crazy-max/docker-matomo?label=version&style=flat-square" alt="Latest Version"></a>
   <a href="https://github.com/crazy-max/docker-matomo/actions?workflow=build"><img src="https://img.shields.io/github/workflow/status/crazy-max/docker-matomo/build?label=build&logo=github&style=flat-square" alt="Build Status"></a>
   <a href="https://hub.docker.com/r/crazymax/matomo/"><img src="https://img.shields.io/docker/stars/crazymax/matomo.svg?style=flat-square&logo=docker" alt="Docker Stars"></a>
   <a href="https://hub.docker.com/r/crazymax/matomo/"><img src="https://img.shields.io/docker/pulls/crazymax/matomo.svg?style=flat-square&logo=docker" alt="Docker Pulls"></a>
-  <a href="https://www.codacy.com/app/crazy-max/docker-matomo"><img src="https://img.shields.io/codacy/grade/c6bb409d02314ecf9928750de89d9d8c.svg?style=flat-square" alt="Code Quality"></a>
   <br /><a href="https://github.com/sponsors/crazy-max"><img src="https://img.shields.io/badge/sponsor-crazy--max-181717.svg?logo=github&style=flat-square" alt="Become a sponsor"></a>
   <a href="https://www.paypal.me/crazyws"><img src="https://img.shields.io/badge/donate-paypal-00457c.svg?logo=paypal&style=flat-square" alt="Donate Paypal"></a>
 </p>
 
 ## About
 
-🐳 [Matomo](https://matomo.org/) (formerly Piwik) Docker image based on Alpine Linux and Nginx.<br />
+[Matomo](https://matomo.org/) (formerly Piwik) Docker image based on Alpine Linux and Nginx.<br />
 If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other Docker images!
 
 💡 Want to be notified of new releases? Check out 🔔 [Diun (Docker Image Update Notifier)](https://github.com/crazy-max/diun) project!
@@ -155,7 +154,7 @@ docker-compose up -d
 
 You can use our SMTP relay `msmtpd` service published on port `2500` and declared in our [`docker-compose.yml`](examples/compose/docker-compose.yml):
 
-![Email server settings](.res/email-server-settings.png)
+![Email server settings](.github/email-server-settings.png)
 
 ### Sticky sessions
 
@@ -178,7 +177,7 @@ docker run -d --name matomo_cron \
 
 Then if you have enabled `CRON_ARCHIVE` to automatically archive the reports, you have to disable Matomo archiving to trigger from the browser. Go to **System > General settings**:
 
-![Disable Matomo archiving from browser](.res/disable-archive-reports-browser.png)
+![Disable Matomo archiving from browser](.github/disable-archive-reports-browser.png)
 
 ### GeoIP2
 
@@ -186,11 +185,11 @@ This image already uses GeoIP2 databases of [MaxMind](https://www.maxmind.com/) 
 
 After that, you have to select **GeoIP 2 (HTTP Server Module)** in **System > Geolocation**:
 
-![GeoIP 2 location provider](.res/geoip2-location-provider.png)
+![GeoIP 2 location provider](.github/geoip2-location-provider.png)
 
 And activate GeoIP 2 server module for Nginx in **System > General settings > Configuration for server variables used by GeoIP 2 server modules**:
 
-![GeoIP 2 server module](.res/geoip2-server-module.png)
+![GeoIP 2 server module](.github/geoip2-server-module.png)
 
 > :warning: GeoIP (Legacy) is now deprecated and has been removed since 3.8.0 tag.
 

@@ -4,23 +4,25 @@ services:
   traefik:
     image: traefik:${TRAEFIK_VERSION}
     command:
-      - "--loglevel=${TRAEFIK_LOG_LEVEL}"
-      - "--accesslog=true"
-      - "--defaultentrypoints=http,https"
-      - "--entryPoints=Name:http Address::80 Redirect.EntryPoint:https"
-      - "--entryPoints=Name:https Address::443 TLS"
-      - "--docker"
-      - "--docker.exposedbydefault=false"
-      - "--docker.swarmmode=true"
-      - "--docker.domain=${FQDN}"
-      - "--acme=true"
-      - "--acme.acmelogging=true"
-      - "--acme.email=webmaster@example.com"
-      - "--acme.storage=acme.json"
-      - "--acme.entryPoint=https"
-      - "--acme.onhostrule=true"
-      - "--acme.httpchallenge=true"
-      - "--acme.httpchallenge.entrypoint=http"
+      - "--global.checknewversion=false"
+      - "--global.sendanonymoususage=false"
+      - "--log=true"
+      - "--log.level=${TRAEFIK_LOG_LEVEL}"
+      - "--entrypoints.http=true"
+      - "--entrypoints.http.address=:80"
+      - "--entrypoints.http.http.redirections.entrypoint.to=https"
+      - "--entrypoints.http.http.redirections.entrypoint.scheme=https"
+      - "--entrypoints.https=true"
+      - "--entrypoints.https.address=:443"
+      - "--certificatesresolvers.letsencrypt"
+      - "--certificatesresolvers.letsencrypt.acme.storage=acme.json"
+      - "--certificatesresolvers.letsencrypt.acme.email=webmaster@example.com"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=http"
+      - "--providers.docker"
+      - "--providers.docker.watch=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--providers.docker.swarmmode=true"
     ports:
       - target: 80
         published: 80
@@ -104,11 +106,14 @@ services:
       replicas: ${MATOMO_REPLICAS}
       labels:
         - "traefik.enable=true"
-        - "traefik.backend=matomo"
-        - "traefik.backend.loadbalancer.stickiness=true"
-        - "traefik.port=8000"
-        - "traefik.frontend.rule=Host:${FQDN}"
-        - "traefik.frontend.passHostHeader=true"
+        - "traefik.http.routers.matomo.entrypoints=https"
+        - "traefik.http.routers.matomo.rule=Host(`matomo.example.com`)"
+        - "traefik.http.routers.matomo.tls=true"
+        - "traefik.http.routers.matomo.tls.certresolver=letsencrypt"
+        - "traefik.http.routers.matomo.tls.domains[0].main=matomo.example.com"
+        - "traefik.http.services.matomo.loadbalancer.server.port=8000"
+        - "traefik.http.services.matomo.loadbalancer.sticky=true"
+        - "traefik.http.services.matomo.loadbalancer.passhostheader=true"
       placement:
         constraints: [node.role == worker]
 
