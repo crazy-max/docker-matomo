@@ -6,6 +6,7 @@ function runas_nginx() {
 
 MEMORY_LIMIT=${MEMORY_LIMIT:-256M}
 UPLOAD_MAX_SIZE=${UPLOAD_MAX_SIZE:-16M}
+CLEAR_ENV=${CLEAR_ENV:-yes}
 OPCACHE_MEM_SIZE=${OPCACHE_MEM_SIZE:-128}
 LISTEN_IPV6=${LISTEN_IPV6:-true}
 REAL_IP_FROM=${REAL_IP_FROM:-0.0.0.0/32}
@@ -20,6 +21,7 @@ SIDECAR_CRON=${SIDECAR_CRON:-0}
 echo "Setting PHP-FPM configuration..."
 sed -e "s/@MEMORY_LIMIT@/$MEMORY_LIMIT/g" \
   -e "s/@UPLOAD_MAX_SIZE@/$UPLOAD_MAX_SIZE/g" \
+  -e "s/@CLEAR_ENV@/$CLEAR_ENV/g" \
   /tpls/etc/php7/php-fpm.d/www.conf > /etc/php7/php-fpm.d/www.conf
 
 # OpCache

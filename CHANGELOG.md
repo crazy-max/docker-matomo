@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.14.1-RC1 (2020/10/16)
+
+* Add env var to clear environment in FPM workers
+
 ## 3.14.1-RC1 (2020/09/12)
 
 * Matomo 3.14.1
