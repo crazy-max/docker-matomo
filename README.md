@@ -20,7 +20,7 @@ ___
 
 * [Features](#features)
 * [Docker](#docker)
-  * [Multi-platform image](#multi-platform-image)
+  * [Image](#image)
   * [Environment variables](#environment-variables)
   * [Volumes](#volumes)
   * [Ports](#ports)
@@ -61,7 +61,12 @@ ___
 
 ## Docker
 
-### Multi-platform image
+### Image
+
+| Registry                                                                                         | Image                           |
+|--------------------------------------------------------------------------------------------------|---------------------------------|
+| [Docker Hub](https://hub.docker.com/r/crazymax/matomo/)                                            | `crazymax/matomo`                 |
+| [GitHub Container Registry](https://github.com/users/crazy-max/packages/container/package/matomo)  | `ghcr.io/crazy-max/matomo`        |
 
 Following platforms for this image are available:
 
@@ -101,7 +106,8 @@ The following environment variables are only used if you run the container as ["
 
 ### Volumes
 
-* `/data`: Contains GeoIP2 databases, configuration, installed plugins (not core ones), tmp and user folders to store your [custom logo](https://matomo.org/faq/new-to-piwik/faq_129/)
+* `/data`: Contains GeoIP2 databases, configuration, installed plugins (not core ones), tmp and user folders to store
+your [custom logo](https://matomo.org/faq/new-to-piwik/faq_129/)
 
 ### Ports
 
@@ -111,7 +117,9 @@ The following environment variables are only used if you run the container as ["
 
 ### Docker Compose
 
-Docker compose is the recommended way to run this image. Copy the content of folder [examples/compose](examples/compose) in `/var/matomo/` on your host for example. Edit the compose and env files with your preferences and run the following commands:
+Docker compose is the recommended way to run this image. Copy the content of folder [examples/compose](examples/compose)
+in `/var/matomo/` on your host for example. Edit the compose and env files with your preferences and run the following
+commands:
 
 ```bash
 touch acme.json
@@ -142,7 +150,8 @@ docker run -d -p 8000:8000 --name matomo \
 
 ## Upgrade
 
-You can upgrade Matomo automatically through the UI, it works well. But I recommend to recreate the container whenever I push an update:
+You can upgrade Matomo automatically through the UI, it works well. But I recommend to recreate the container
+whenever I push an update:
 
 ```bash
 docker-compose pull
@@ -153,7 +162,8 @@ docker-compose up -d
 
 ### Email server settings
 
-You can use our SMTP relay `msmtpd` service published on port `2500` and declared in our [`docker-compose.yml`](examples/compose/docker-compose.yml):
+You can use our SMTP relay `msmtpd` service published on port `2500` and declared in our
+[`docker-compose.yml`](examples/compose/docker-compose.yml):
 
 ![Email server settings](.github/email-server-settings.png)
 
@@ -163,7 +173,8 @@ On a HA environment, **enable backend sticky sessions** on your load balancer.
 
 ### Cron
 
-If you want to enable the cron job, you have to run a "sidecar" container like in the [docker-compose file](examples/compose/docker-compose.yml) or run a simple container like this:
+If you want to enable the cron job, you have to run a "sidecar" container like in the
+[docker-compose file](examples/compose/docker-compose.yml) or run a simple container like this:
 
 ```bash
 docker run -d --name matomo_cron \
@@ -176,19 +187,23 @@ docker run -d --name matomo_cron \
   crazymax/matomo:latest
 ```
 
-Then if you have enabled `CRON_ARCHIVE` to automatically archive the reports, you have to disable Matomo archiving to trigger from the browser. Go to **System > General settings**:
+Then if you have enabled `CRON_ARCHIVE` to automatically archive the reports, you have to disable Matomo archiving
+to trigger from the browser. Go to **System > General settings**:
 
 ![Disable Matomo archiving from browser](.github/disable-archive-reports-browser.png)
 
 ### GeoIP2
 
-This image already uses GeoIP2 databases of [MaxMind](https://www.maxmind.com/) through Nginx and are updated with [geoip-updater](https://github.com/crazy-max/geoip-updater). You just have to install and activate the [GeoIP 2 plugin](https://plugins.matomo.org/GeoIP2).
+This image already uses GeoIP2 databases of [MaxMind](https://www.maxmind.com/) through Nginx and are updated with
+[geoip-updater](https://github.com/crazy-max/geoip-updater). You just have to install and activate the
+[GeoIP 2 plugin](https://plugins.matomo.org/GeoIP2).
 
 After that, you have to select **GeoIP 2 (HTTP Server Module)** in **System > Geolocation**:
 
 ![GeoIP 2 location provider](.github/geoip2-location-provider.png)
 
-And activate GeoIP 2 server module for Nginx in **System > General settings > Configuration for server variables used by GeoIP 2 server modules**:
+And activate GeoIP 2 server module for Nginx in
+**System > General settings > Configuration for server variables used by GeoIP 2 server modules**:
 
 ![GeoIP 2 server module](.github/geoip2-server-module.png)
 
@@ -196,7 +211,8 @@ And activate GeoIP 2 server module for Nginx in **System > General settings > Co
 
 ### Behind a reverse proxy?
 
-If you are running Matomo [behind a reverse proxy](https://matomo.org/faq/how-to-install/faq_98/), add this to your config.ini.php:
+If you are running Matomo [behind a reverse proxy](https://matomo.org/faq/how-to-install/faq_98/), add this to your
+config.ini.php:
 
 ```
 [General]
@@ -208,7 +224,8 @@ proxy_host_headers[] = HTTP_X_FORWARDED_HOST
 
 ### Redis cache
 
-To use [Redis as a cache](https://matomo.org/faq/how-to/faq_20511/) (useful if your Matomo environment consists of multiple servers), add this to your config.ini.php:
+To use [Redis as a cache](https://matomo.org/faq/how-to/faq_20511/) (useful if your Matomo environment consists of
+multiple servers), add this to your config.ini.php:
 
 ```
 [Cache]
@@ -235,7 +252,10 @@ If you are on a [HA environment](https://matomo.org/faq/new-to-piwik/faq_134/), 
 
 ## How can I help?
 
-All kinds of contributions are welcome :raised_hands:! The most basic way to show your support is to star :star2: the project, or to raise issues :speech_balloon: You can also support this project by [**becoming a sponsor on GitHub**](https://github.com/sponsors/crazy-max) :clap: or by making a [Paypal donation](https://www.paypal.me/crazyws) to ensure this journey continues indefinitely! :rocket:
+All kinds of contributions are welcome :raised_hands:! The most basic way to show your support is to star :star2:
+the project, or to raise issues :speech_balloon: You can also support this project by
+[**becoming a sponsor on GitHub**](https://github.com/sponsors/crazy-max) :clap: or by making a
+[Paypal donation](https://www.paypal.me/crazyws) to ensure this journey continues indefinitely! :rocket:
 
 Thanks again for your support, it is much appreciated! :pray:
 
