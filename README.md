@@ -31,6 +31,7 @@ ___
   * [Command line](#command-line)
 * [Upgrade](#upgrade)
 * [Notes](#notes)
+  * [Console command](#console-command)
   * [Email server settings](#email-server-settings)
   * [Sticky sessions](#sticky-sessions)
   * [Cron](#cron)
@@ -159,6 +160,14 @@ docker-compose up -d
 ```
 
 ## Notes
+
+## Console command
+
+If you want to use the `console` command to perform common server operations, type:
+
+```
+$ docker-compose exec matomo console
+```
 
 ### Email server settings
 

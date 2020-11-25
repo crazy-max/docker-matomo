@@ -42,6 +42,8 @@ services:
     command:
       - "mysqld"
       - "--log-warnings=2"
+      - "--character-set-server=utf8mb4"
+      - "--collation-server=utf8mb4_unicode_ci"
       - "--max-connections=${MYSQL_MAX_CONNECTIONS}"
       - "--max_allowed_packet=${MYSQL_MAX_ALLOWED_PACKET}"
       - "--wait-timeout=${MYSQL_WAIT_TIMEOUT}"
