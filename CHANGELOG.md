@@ -5,10 +5,9 @@
 * Matomo 4.0.0
 * Add `console` command
 
-> You may need to [convert the database to utf8mb4 charset](https://matomo.org/faq/how-to-update/how-to-convert-the-database-to-utf8mb4-charset/)
-> before upgrading:
+> You may need to [convert the database to utf8mb4 charset](https://matomo.org/faq/how-to-update/how-to-convert-the-database-to-utf8mb4-charset/):
 > 
-> `docker-compose exec matomo php /var/www/console core:convert-to-utf8mb4`
+> `docker-compose exec matomo console core:convert-to-utf8mb4`
 
 ## 3.14.1-RC1 (2020/10/16)
 
