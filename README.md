@@ -161,7 +161,7 @@ docker-compose up -d
 
 ## Notes
 
-## Console command
+### Console command
 
 If you want to use the `console` command to perform common server operations, type:
 
