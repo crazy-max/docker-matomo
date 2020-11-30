@@ -62,9 +62,9 @@ RUN apk --update --no-cache add \
   && rm -rf /var/cache/apk/* /var/www/* /tmp/*
 
 RUN mkdir -p /var/mmdb \
-  && wget -q https://github.com/crazy-max/docker-matomo/raw/mmdb/GeoLite2-ASN.mmdb -qO /var/mmdb/GeoLite2-ASN.mmdb \
-  && wget -q https://github.com/crazy-max/docker-matomo/raw/mmdb/GeoLite2-City.mmdb -qO /var/mmdb/GeoLite2-City.mmdb \
-  && wget -q https://github.com/crazy-max/docker-matomo/raw/mmdb/GeoLite2-Country.mmdb -qO /var/mmdb/GeoLite2-Country.mmdb
+  && wget -q https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-ASN.mmdb -qO /var/mmdb/GeoLite2-ASN.mmdb \
+  && wget -q https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-City.mmdb -qO /var/mmdb/GeoLite2-City.mmdb \
+  && wget -q https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-Country.mmdb -qO /var/mmdb/GeoLite2-Country.mmdb
 
 ENV MATOMO_VERSION="4.0.3" \
   CRONTAB_PATH="/var/spool/cron/crontabs" \
