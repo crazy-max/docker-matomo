@@ -65,7 +65,7 @@ RUN mkdir -p /var/mmdb \
   && wget -q https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-City.mmdb -qO /var/mmdb/GeoLite2-City.mmdb \
   && wget -q https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-Country.mmdb -qO /var/mmdb/GeoLite2-Country.mmdb
 
-ENV MATOMO_VERSION="4.1.0" \
+ENV MATOMO_VERSION="4.1.1" \
   CRONTAB_PATH="/var/spool/cron/crontabs" \
   TZ="UTC"
 

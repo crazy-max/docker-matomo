@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.1.1-r0 (2021/01/15)
+
+* Matomo 4.1.1
+* Switch to buildx bake
+
 ## 4.1.0-RC1 (2020/12/22)
 
 * Matomo 4.1.0
