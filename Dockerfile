@@ -1,5 +1,4 @@
 FROM --platform=${TARGETPLATFORM:-linux/amd64} nginx:mainline-alpine
-
 LABEL maintainer="CrazyMax"
 
 RUN apk --update --no-cache add -t build-dependencies \

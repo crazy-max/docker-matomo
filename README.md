@@ -20,6 +20,7 @@ ___
 
 * [Features](#features)
 * [Docker](#docker)
+  * [Build locally](#build-locally)
   * [Image](#image)
   * [Environment variables](#environment-variables)
   * [Volumes](#volumes)
@@ -61,6 +62,19 @@ ___
 * Cron jobs as a ["sidecar" container](#cron)
 
 ## Docker
+
+### Build locally
+
+```shell
+git clone https://github.com/crazy-max/docker-matomo.git
+cd docker-matomo
+
+# Build image and output to docker (default)
+docker buildx bake
+
+# Build multi-platform image
+docker buildx bake image-all
+```
 
 ### Image
 
