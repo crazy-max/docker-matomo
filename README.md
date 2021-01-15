@@ -19,12 +19,11 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 ___
 
 * [Features](#features)
-* [Docker](#docker)
-  * [Build locally](#build-locally)
-  * [Image](#image)
-  * [Environment variables](#environment-variables)
-  * [Volumes](#volumes)
-  * [Ports](#ports)
+* [Build locally](#build-locally)
+* [Image](#image)
+* [Environment variables](#environment-variables)
+* [Volumes](#volumes)
+* [Ports](#ports)
 * [Usage](#usage)
   * [Docker Compose](#docker-compose)
   * [Swarm](#swarm)
@@ -61,9 +60,7 @@ ___
 * [geoip-updater](https://github.com/crazy-max/geoip-updater) Docker image to download MaxMind's GeoIP2 databases on a time-based schedule for geolocation
 * Cron jobs as a ["sidecar" container](#cron)
 
-## Docker
-
-### Build locally
+## Build locally
 
 ```shell
 git clone https://github.com/crazy-max/docker-matomo.git
@@ -76,7 +73,7 @@ docker buildx bake
 docker buildx bake image-all
 ```
 
-### Image
+## Image
 
 | Registry                                                                                         | Image                           |
 |--------------------------------------------------------------------------------------------------|---------------------------------|
@@ -98,7 +95,7 @@ Image: crazymax/matomo:latest
    - linux/s390x
 ```
 
-### Environment variables
+## Environment variables
 
 * `TZ`: The timezone assigned to the container (default `UTC`)
 * `MEMORY_LIMIT`: PHP memory limit (default `256M`)
@@ -119,12 +116,12 @@ The following environment variables are only used if you run the container as ["
 * `ARCHIVE_OPTIONS`: Pass [additional options](https://matomo.org/docs/setup-auto-archiving/#help-for-corearchive-command) during cron archive
 * `CRON_ARCHIVE`: Periodically execute Matomo [archive](https://matomo.org/docs/setup-auto-archiving/#linuxunix-how-to-set-up-a-crontab-to-automatically-archive-the-reports) (disabled if empty ; ex `0 * * * *`)
 
-### Volumes
+## Volumes
 
 * `/data`: Contains GeoIP2 databases, configuration, installed plugins (not core ones), tmp and user folders to store
 your [custom logo](https://matomo.org/faq/new-to-piwik/faq_129/)
 
-### Ports
+## Ports
 
 * `8000`: HTTP port
 
