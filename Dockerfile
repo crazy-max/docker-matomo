@@ -1,3 +1,5 @@
+ARG MATOMO_VERSION="4.1.1"
+
 FROM --platform=${TARGETPLATFORM:-linux/amd64} nginx:mainline-alpine
 LABEL maintainer="CrazyMax"
 
@@ -65,10 +67,10 @@ RUN mkdir -p /var/mmdb \
   && wget -q https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-City.mmdb -qO /var/mmdb/GeoLite2-City.mmdb \
   && wget -q https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-Country.mmdb -qO /var/mmdb/GeoLite2-Country.mmdb
 
-ENV MATOMO_VERSION="4.1.1" \
-  CRONTAB_PATH="/var/spool/cron/crontabs" \
+ENV CRONTAB_PATH="/var/spool/cron/crontabs" \
   TZ="UTC"
 
+ARG MATOMO_VERSION
 RUN apk --update --no-cache add -t build-dependencies \
     ca-certificates gnupg libressl tar \
   && mkdir -p /var/www \
