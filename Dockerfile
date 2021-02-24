@@ -1,4 +1,4 @@
-ARG MATOMO_VERSION=4.1.1
+ARG MATOMO_VERSION=4.2.0
 
 FROM --platform=${BUILDPLATFORM:-linux/amd64} crazymax/alpine-s6:3.12-2.1.0.2 AS download
 RUN apk --update --no-cache add curl tar unzip xz
