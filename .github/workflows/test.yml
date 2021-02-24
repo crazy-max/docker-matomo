@@ -26,7 +26,7 @@ jobs:
           echo ::set-output name=build_tag::test
           echo ::set-output name=container_name::matomo
           echo ::set-output name=running_timeout::120
-          echo ::set-output name=running_log_check::matomo_watch_plugins entered RUNNING state
+          echo ::set-output name=running_log_check::ready to handle connections
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v1
