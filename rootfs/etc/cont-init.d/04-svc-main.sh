@@ -9,7 +9,7 @@ fi
 LOG_LEVEL=${LOG_LEVEL:-WARN}
 
 # Check if already installed
-if [ -f /data/config.ini.php ]; then
+if [ -f "/data/config/config.ini.php" ]; then
   echo "Setting Matomo log level to $LOG_LEVEL..."
   console config:set --section=log --key=log_level --value="$LOG_LEVEL"
 

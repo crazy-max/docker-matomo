@@ -1,7 +1,8 @@
 #!/usr/bin/with-contenv sh
 
 echo "Fixing perms..."
-mkdir -p /data/geoip \
+mkdir -p /data/config \
+  /data/geoip \
   /data/misc \
   /data/plugins \
   /data/session \
@@ -13,6 +14,7 @@ mkdir -p /data/geoip \
   /var/run/php-fpm
 chown matomo. \
   /data \
+  /data/config \
   /data/geoip \
   /data/misc \
   /data/plugins \
