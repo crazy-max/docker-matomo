@@ -30,4 +30,5 @@ chown -R matomo. \
   /var/log/php7 \
   /var/run/nginx \
   /var/run/php-fpm \
-  /var/www/matomo/config
+  /var/www/matomo/config \
+  /var/www/matomo/js
