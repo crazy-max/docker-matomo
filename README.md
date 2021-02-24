@@ -44,8 +44,8 @@ ___
 
 ## Features
 
+* Run as non-root user
 * Multi-platform image
-* Tarball authenticity checked during building process
 * Config, plugins and user preferences in the same folder
 * Unifont for languages using [unicode characters](https://matomo.org/faq/how-to-install/faq_142/)
 * Cron tasks to archive Matomo reports as a ["sidecar" container](#cron)
@@ -53,6 +53,7 @@ ___
 * Plugins and config are kept across upgrades of this image
 * OPCache enabled to store precompiled script bytecode in shared memory
 * Redis enabled and ready to enhance server performance
+* [s6-overlay](https://github.com/just-containers/s6-overlay/) as process supervisor
 * [Traefik](https://github.com/containous/traefik-library-image) Docker image as reverse proxy and creation/renewal of Let's Encrypt certificates
 * [msmtpd SMTP relay](https://github.com/crazy-max/docker-msmtpd) image to send emails
 * [Redis](https://github.com/docker-library/redis) Docker image ready to use as [Redis cache](https://matomo.org/faq/how-to/faq_20511/) or [QueuedTracking plugin](https://matomo.org/faq/how-to/faq_19738) for better scalability
@@ -98,6 +99,8 @@ Image: crazymax/matomo:latest
 ## Environment variables
 
 * `TZ`: The timezone assigned to the container (default `UTC`)
+* `PUID`: Matomo user id (default `1000`)
+* `PGID`: Matomo group id (default `1000`)
 * `MEMORY_LIMIT`: PHP memory limit (default `256M`)
 * `UPLOAD_MAX_SIZE`: Upload max size (default `16M`)
 * `CLEAR_ENV`: Clear environment in FPM workers (default `yes`)
@@ -108,7 +111,6 @@ Image: crazymax/matomo:latest
 * `LOG_IP_VAR`: Use another variable to retrieve the remote IP address for access [log_format](http://nginx.org/en/docs/http/ngx_http_log_module.html#log_format) on Nginx. (default `remote_addr`)
 * `LOG_LEVEL`: [Log level](https://matomo.org/faq/troubleshooting/faq_115/) of Matomo UI (default `WARN`)
 * `SHORTCODE_DOMAIN`: Domain that you use for [ShortcodeTracker plugin](https://plugins.matomo.org/shortcodetracker) (default `invalid`)
-* `SIDECAR_CRON`: Mark the container as a sidecar cron job (default `0`)
 
 The following environment variables are only used if you run the container as ["sidecar" mode](#cron):
 
@@ -120,6 +122,9 @@ The following environment variables are only used if you run the container as ["
 
 * `/data`: Contains GeoIP2 databases, configuration, installed plugins (not core ones), tmp and user folders to store
 your [custom logo](https://matomo.org/faq/new-to-piwik/faq_129/)
+
+> :warning: Note that the volume should be owned by the user/group with the specified `PUID` and `PGID`. If you
+> don't give the volume correct permissions, the container may not start.
 
 ## Ports
 
@@ -133,7 +138,7 @@ Docker compose is the recommended way to run this image. Copy the content of fol
 in `/var/matomo/` on your host for example. Edit the compose and env files with your preferences and run the following
 commands:
 
-```bash
+```shell
 touch acme.json
 chmod 600 acme.json
 docker-compose up -d
@@ -152,7 +157,7 @@ Deploy this image in your kubernetes cluster. Detailed instructions [can be foun
 
 You can also use the following minimal command:
 
-```bash
+```shell
 docker run -d -p 8000:8000 --name matomo \
   -v $(pwd)/data:/data \
   crazymax/matomo:latest
@@ -165,7 +170,7 @@ docker run -d -p 8000:8000 --name matomo \
 You can upgrade Matomo automatically through the UI, it works well. But I recommend to recreate the container
 whenever I push an update:
 
-```bash
+```shell
 docker-compose pull
 docker-compose up -d
 ```
@@ -176,8 +181,8 @@ docker-compose up -d
 
 If you want to use the `console` command to perform common server operations, type:
 
-```
-$ docker-compose exec matomo console
+```shell
+docker-compose exec matomo console
 ```
 
 ### Email server settings
@@ -214,20 +219,13 @@ to trigger from the browser. Go to **System > General settings**:
 
 ### GeoIP2
 
-This image already uses GeoIP2 databases of [MaxMind](https://www.maxmind.com/) through Nginx and are updated with
-[geoip-updater](https://github.com/crazy-max/geoip-updater). You just have to install and activate the
-[GeoIP 2 plugin](https://plugins.matomo.org/GeoIP2).
+This image already uses GeoIP2 databases of [MaxMind](https://www.maxmind.com/) with their PHP extension
+and are updated with [geoip-updater](https://github.com/crazy-max/geoip-updater). You just have to install
+and activate the [GeoIP 2 plugin](https://plugins.matomo.org/GeoIP2).
 
-After that, you have to select **GeoIP 2 (HTTP Server Module)** in **System > Geolocation**:
+Also make sure to select **DBIP / GeoIP 2 (Php)** in **System > Geolocation**:
 
-![GeoIP 2 location provider](.github/geoip2-location-provider.png)
-
-And activate GeoIP 2 server module for Nginx in
-**System > General settings > Configuration for server variables used by GeoIP 2 server modules**:
-
-![GeoIP 2 server module](.github/geoip2-server-module.png)
-
-> :warning: GeoIP (Legacy) is now deprecated and has been removed since 3.8.0 tag.
+![DBIP / GeoIP 2 (Php)](.github/geoip2-dbip-php.jpg)
 
 ### Behind a reverse proxy?
 
@@ -263,12 +261,13 @@ password = ""
 database = 14
 ```
 
-In case you are using queued tracking: Make sure to configure a different database! Otherwise queued requests will be flushed.
+In case you are using queued tracking: Make sure to configure a different database! Otherwise queued requests will
+be flushed.
 
 ### Plugins
 
-If you are on a [HA environment](https://matomo.org/faq/new-to-piwik/faq_134/), there is no need to set `multi_server_environment = 1` in your config.<br />
-[matomo_watch_plugins](rootfs/usr/local/bin/matomo_watch_plugins) script will take care of plugins synchronization from `/data/plugins/` to `/var/www/plugins/`.
+If you are on a [HA environment](https://matomo.org/faq/new-to-piwik/faq_134/), there is no need to set
+`multi_server_environment = 1` in your config.
 
 ## How can I help?
 
