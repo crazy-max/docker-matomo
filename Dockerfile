@@ -1,40 +1,39 @@
-ARG MATOMO_VERSION="4.1.1"
+ARG MATOMO_VERSION=4.1.1
 
-FROM --platform=${TARGETPLATFORM:-linux/amd64} nginx:mainline-alpine
+FROM --platform=${BUILDPLATFORM:-linux/amd64} crazymax/alpine-s6:3.12-2.1.0.2 AS download
+RUN apk --update --no-cache add curl tar unzip xz
+
+ARG MATOMO_VERSION
+WORKDIR /dist/matomo
+RUN curl -sSL "https://builds.matomo.org/matomo-${MATOMO_VERSION}.tar.gz" | tar xz matomo --strip 1
+RUN curl -sSL "https://matomo.org/wp-content/uploads/unifont.ttf.zip" -o "unifont.ttf.zip"
+RUN unzip "unifont.ttf.zip" -d "./plugins/ImageGraph/fonts/"
+RUN rm -f "unifont.ttf.zip"
+
+WORKDIR /dist/mmdb
+RUN curl -SsOL "https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-ASN.mmdb" \
+  && curl -SsOL "https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-City.mmdb" \
+  && curl -SsOL "https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-Country.mmdb"
+
+ARG TARGETPLATFORM
+FROM --platform=${TARGETPLATFORM:-linux/amd64} crazymax/alpine-s6:3.12-2.1.0.2
 LABEL maintainer="CrazyMax"
 
-RUN apk --update --no-cache add -t build-dependencies \
-    gcc \
-    gd-dev \
-    geoip-dev \
-    git \
-    gnupg \
-    libc-dev \
-    libmaxminddb-dev \
-    libxslt-dev \
-    linux-headers \
-    make \
-    openssl-dev \
-    pcre-dev \
-    perl-dev \
-    zlib-dev \
-  && mkdir -p /usr/src /var/lib/nginx/body /var/lib/nginx/fastcgi \
-  && cd /usr/src \
-  && wget http://nginx.org/download/nginx-$NGINX_VERSION.tar.gz \
-  && tar zxvf nginx-$NGINX_VERSION.tar.gz \
-  && git clone -b master --single-branch https://github.com/leev/ngx_http_geoip2_module.git \
-  && cd nginx-$NGINX_VERSION \
-  && ./configure --with-compat --add-dynamic-module=../ngx_http_geoip2_module \
-  && make modules \
-  && cp objs/ngx_http_geoip2_module.so /etc/nginx/modules \
-  && apk del build-dependencies \
-  && rm -rf /usr/src/nginx-* /usr/src/ngx_http_geoip2_module /var/cache/apk/* /var/www/* /tmp/*
+COPY --from=download --chown=nobody:nogroup /dist/matomo /var/www/matomo
+COPY --from=download --chown=nobody:nogroup /dist/mmdb /var/mmdb
+
+ENV S6_BEHAVIOUR_IF_STAGE2_FAILS="2" \
+  TZ="UTC" \
+  PUID="1000" \
+  PGID="1000"
 
 RUN apk --update --no-cache add \
+    bash \
+    ca-certificates \
     curl \
-    geoip \
-    inotify-tools \
     libmaxminddb \
+    libressl \
+    nginx \
     php7 \
     php7-bcmath \
     php7-cli \
@@ -47,6 +46,7 @@ RUN apk --update --no-cache add \
     php7-gmp \
     php7-json \
     php7-ldap \
+    php7-maxminddb \
     php7-mbstring \
     php7-opcache \
     php7-openssl \
@@ -57,49 +57,19 @@ RUN apk --update --no-cache add \
     php7-simplexml \
     php7-xml \
     php7-zlib \
-    supervisor \
+    shadow \
+    su-exec \
     tzdata \
-    wget \
-  && rm -rf /var/cache/apk/* /var/www/* /tmp/*
+  && addgroup -g ${PGID} matomo \
+  && adduser -D -H -u ${PUID} -G matomo -h /var/www/matomo  -s /bin/sh matomo \
+  && rm -rf /tmp/* /var/cache/apk/*
 
-RUN mkdir -p /var/mmdb \
-  && wget -q https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-ASN.mmdb -qO /var/mmdb/GeoLite2-ASN.mmdb \
-  && wget -q https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-City.mmdb -qO /var/mmdb/GeoLite2-City.mmdb \
-  && wget -q https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-Country.mmdb -qO /var/mmdb/GeoLite2-Country.mmdb
-
-ENV CRONTAB_PATH="/var/spool/cron/crontabs" \
-  TZ="UTC"
-
-ARG MATOMO_VERSION
-RUN apk --update --no-cache add -t build-dependencies \
-    ca-certificates gnupg libressl tar \
-  && mkdir -p /var/www \
-  && cd /tmp \
-  && wget -q https://builds.matomo.org/piwik-${MATOMO_VERSION}.tar.gz \
-  && wget -q https://builds.matomo.org/piwik-${MATOMO_VERSION}.tar.gz.asc \
-  && wget -q https://builds.matomo.org/signature.asc \
-  && gpg --import signature.asc \
-  && gpg --verify --batch --no-tty piwik-${MATOMO_VERSION}.tar.gz.asc piwik-${MATOMO_VERSION}.tar.gz \
-  && tar -xzf piwik-${MATOMO_VERSION}.tar.gz --strip 1 -C /var/www \
-  && wget -q https://matomo.org/wp-content/uploads/unifont.ttf.zip \
-  && unzip unifont.ttf.zip -d /var/www/plugins/ImageGraph/fonts/ \
-  && rm unifont.ttf.zip \
-  && chown -R nginx. /etc/nginx /usr/lib/nginx /var/cache/nginx /var/lib/nginx /var/log/nginx /var/log/php7 /var/www \
-  && apk del build-dependencies \
-  && rm -rf /root/.gnupg /tmp/* /var/cache/apk/*
-
-COPY entrypoint.sh /entrypoint.sh
 COPY rootfs /
 
-RUN chmod a+x /entrypoint.sh /usr/local/bin/* \
-  && chown nginx. /var/www/bootstrap.php
-
 EXPOSE 8000
-WORKDIR /var/www
 VOLUME [ "/data" ]
 
-ENTRYPOINT [ "/entrypoint.sh" ]
-CMD [ "/usr/bin/supervisord", "-c", "/etc/supervisord.conf" ]
+ENTRYPOINT [ "/init" ]
 
-HEALTHCHECK --interval=10s --timeout=5s \
+HEALTHCHECK --interval=30s --timeout=20s --start-period=10s \
   CMD /usr/local/bin/healthcheck

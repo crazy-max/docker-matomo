@@ -4,11 +4,12 @@ Install and use this Matomo Docker image within a Docker Swarm cluster.
 
 ### Prerequisites
 
-Create a running Swarm cluster environment and use a storage volume driver of your choice. Here I use a simple NFS server with binded volumes.
+Create a running Swarm cluster environment and use a storage volume driver of your choice. Here I use a simple NFS
+server with binded volumes.
 
 Then edit all `*.env` files with your preferences.
 
-```bash
+```shell
 mkdir -p ${ROOT_DIR}
 cp .env ${ROOT_DIR}/
 cp matomo.env ${ROOT_DIR}/
@@ -20,9 +21,8 @@ chmod 600 ${ROOT_DIR}/acme.json
 
 ### Deploy
 
-And deploy [the stack](docker-compose.yml) with this command :
+And deploy [the stack](docker-compose.yml) with this command:
 
-```
-# Create matomo stack
+```shell
 docker stack deploy matomo -c docker-compose.yml
 ```
