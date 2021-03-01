@@ -77,6 +77,16 @@ if [ ! -f "/data/config/config.ini.php" ] && [ -f "/var/www/matomo/config/config
 fi
 ln -sf "/data/config/config.ini.php" "/var/www/matomo/config/config.ini.php"
 
+# Check data-plugins folder
+echo "Checking Matomo plugins folder..."
+if [ ! -d /data/plugins ]; then
+  runas_user mkdir -p /data/plugins
+fi
+if [ ! -L /var/www/matomo/data-plugins ] && [ -d /var/www/matomo/data-plugins ]; then
+  rm -rf /var/www/matomo/data-plugins
+fi
+ln -sf /data/plugins /var/www/matomo/data-plugins
+
 # Check user folder
 echo "Checking Matomo user-misc folder..."
 if [ ! -d /data/misc/user ]; then
