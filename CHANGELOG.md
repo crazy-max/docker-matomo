@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.2.1-r0 (2021/03/01)
+
+* Matomo 4.2.1
+* Fix custom plugins folder path
+
 ## 4.2.0-r0 (2021/02/24)
 
 * Matomo 4.2.0
