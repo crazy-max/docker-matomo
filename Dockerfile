@@ -1,6 +1,6 @@
 ARG MATOMO_VERSION=4.2.1
 
-FROM --platform=${TARGETPLATFORM:-linux/amd64} crazymax/gosu:latest AS gosu
+FROM crazymax/gosu:latest AS gosu
 FROM --platform=${BUILDPLATFORM:-linux/amd64} crazymax/alpine-s6:3.12-2.1.0.2 AS download
 RUN apk --update --no-cache add curl tar unzip xz
 
@@ -16,8 +16,7 @@ RUN curl -SsOL "https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-ASN
   && curl -SsOL "https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-City.mmdb" \
   && curl -SsOL "https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-Country.mmdb"
 
-ARG TARGETPLATFORM
-FROM --platform=${TARGETPLATFORM:-linux/amd64} crazymax/alpine-s6:3.12-2.1.0.2
+FROM crazymax/alpine-s6:3.12-2.1.0.2
 LABEL maintainer="CrazyMax"
 
 COPY --from=gosu / /
