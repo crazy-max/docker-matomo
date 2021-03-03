@@ -1,5 +1,6 @@
 ARG MATOMO_VERSION=4.2.1
 
+FROM --platform=${TARGETPLATFORM:-linux/amd64} crazymax/gosu:latest AS gosu
 FROM --platform=${BUILDPLATFORM:-linux/amd64} crazymax/alpine-s6:3.12-2.1.0.2 AS download
 RUN apk --update --no-cache add curl tar unzip xz
 
@@ -19,6 +20,7 @@ ARG TARGETPLATFORM
 FROM --platform=${TARGETPLATFORM:-linux/amd64} crazymax/alpine-s6:3.12-2.1.0.2
 LABEL maintainer="CrazyMax"
 
+COPY --from=gosu / /
 COPY --from=download --chown=nobody:nogroup /dist/matomo /var/www/matomo
 COPY --from=download --chown=nobody:nogroup /dist/mmdb /var/mmdb
 
@@ -58,7 +60,6 @@ RUN apk --update --no-cache add \
     php7-xml \
     php7-zlib \
     shadow \
-    su-exec \
     tzdata \
   && addgroup -g ${PGID} matomo \
   && adduser -D -H -u ${PUID} -G matomo -h /var/www/matomo  -s /bin/sh matomo \
