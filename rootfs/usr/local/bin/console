@@ -1,7 +1,7 @@
 #!/bin/sh
 
 if [ "$(id -u)" -eq 0 ]; then
-  gosu matomo:matomo php /var/www/matomo/console "$@"
+  yasu matomo:matomo php /var/www/matomo/console "$@"
 else
   php /var/www/matomo/console "$@"
 fi

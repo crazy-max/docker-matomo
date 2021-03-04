@@ -1,7 +1,7 @@
 #!/usr/bin/with-contenv sh
 
 runas_user() {
-  gosu matomo:matomo "$@"
+  yasu matomo:matomo "$@"
 }
 
 TZ=${TZ:-UTC}
