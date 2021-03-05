@@ -26,7 +26,9 @@ COPY --from=download --chown=nobody:nogroup /dist/mmdb /var/mmdb
 ENV S6_BEHAVIOUR_IF_STAGE2_FAILS="2" \
   TZ="UTC" \
   PUID="1000" \
-  PGID="1000"
+  PGID="1000" \
+  MATOMO_PLUGIN_DIRS="/var/www/matomo/data-plugins/;data-plugins" \
+  MATOMO_PLUGIN_COPY_DIR="/var/www/matomo/data-plugins/"
 
 RUN apk --update --no-cache add \
     bash \

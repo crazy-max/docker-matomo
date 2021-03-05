@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.2.1-r3 (2021/03/05)
+
+* Propagate plugins configuration (#67)
+
 ## 4.2.1-r2 (2021/03/04)
 
 * Renamed `yasu` (more info https://github.com/crazy-max/yasu#yet-another)

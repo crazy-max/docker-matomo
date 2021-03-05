@@ -86,6 +86,8 @@ if [ ! -L /var/www/matomo/data-plugins ] && [ -d /var/www/matomo/data-plugins ];
   rm -rf /var/www/matomo/data-plugins
 fi
 ln -sf /data/plugins /var/www/matomo/data-plugins
+printf "/var/www/matomo/data-plugins/;data-plugins" > /var/run/s6/container_environment/MATOMO_PLUGIN_DIRS
+printf "/var/www/matomo/data-plugins/" > /var/run/s6/container_environment/MATOMO_PLUGIN_COPY_DIR
 
 # Check user folder
 echo "Checking Matomo user-misc folder..."
