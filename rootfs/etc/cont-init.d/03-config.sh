@@ -89,6 +89,19 @@ ln -sf /data/plugins /var/www/matomo/data-plugins
 printf "/var/www/matomo/data-plugins/;data-plugins" > /var/run/s6/container_environment/MATOMO_PLUGIN_DIRS
 printf "/var/www/matomo/data-plugins/" > /var/run/s6/container_environment/MATOMO_PLUGIN_COPY_DIR
 
+# Check js folder
+echo "Checking Matomo js folder..."
+if [ ! -d /data/tmp/js ]; then
+  runas_user mkdir -p /data/tmp/js
+fi
+if [ -L /var/www/matomo/js ]; then
+  unlink /var/www/matomo/js
+else
+  runas_user rsync -a /var/www/matomo/js/* /data/tmp/js/
+  rm -rf /var/www/matomo/js
+fi
+ln -sf /data/tmp/js /var/www/matomo/js
+
 # Check user folder
 echo "Checking Matomo user-misc folder..."
 if [ ! -d /data/misc/user ]; then
