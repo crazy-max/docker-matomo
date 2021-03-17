@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.2.1-r4 (2021/03/17)
+
+* Handle TagManager plugin (#69)
+
 ## 4.2.1-r3 (2021/03/05)
 
 * Propagate plugins configuration (#67)
