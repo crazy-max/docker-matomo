@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.2.1-r5 (2021/03/18)
+
+* Upstream Alpine update
+
 ## 4.2.1-r4 (2021/03/17)
 
 * Handle TagManager plugin (#69)
