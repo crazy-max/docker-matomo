@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.3.0-r0 (2021/05/17)
+
+* Matomo 4.3.0
+* Alpine Linux 3.13
+* alpine-s6 2.2.0.3
+
 ## 4.2.1-r5 (2021/03/18)
 
 * Upstream Alpine update
