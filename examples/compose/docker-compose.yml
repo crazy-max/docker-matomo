@@ -1,39 +1,6 @@
 version: "3.5"
 
 services:
-  traefik:
-    image: traefik:2.3
-    command:
-      - "--global.checknewversion=false"
-      - "--global.sendanonymoususage=false"
-      - "--log=true"
-      - "--log.level=INFO"
-      - "--entrypoints.http=true"
-      - "--entrypoints.http.address=:80"
-      - "--entrypoints.http.http.redirections.entrypoint.to=https"
-      - "--entrypoints.http.http.redirections.entrypoint.scheme=https"
-      - "--entrypoints.https=true"
-      - "--entrypoints.https.address=:443"
-      - "--certificatesresolvers.letsencrypt"
-      - "--certificatesresolvers.letsencrypt.acme.storage=acme.json"
-      - "--certificatesresolvers.letsencrypt.acme.email=webmaster@example.com"
-      - "--certificatesresolvers.letsencrypt.acme.httpchallenge"
-      - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=http"
-      - "--providers.docker"
-      - "--providers.docker.watch=true"
-      - "--providers.docker.exposedbydefault=false"
-    ports:
-      - target: 80
-        published: 80
-        protocol: tcp
-      - target: 443
-        published: 443
-        protocol: tcp
-    volumes:
-      - "./acme.json:/acme.json"
-      - "/var/run/docker.sock:/var/run/docker.sock"
-    restart: always
-
   db:
     image: mariadb:10.5
     command:
@@ -77,17 +44,13 @@ services:
       - db
       - redis
       - msmtpd
+    ports:
+      - target: 8000
+        published: 8000
+        protocol: tcp
     volumes:
       - "matomo:/data"
       - "geoip-updater:/data/geoip"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.matomo.entrypoints=https"
-      - "traefik.http.routers.matomo.rule=Host(`matomo.example.com`)"
-      - "traefik.http.routers.matomo.tls=true"
-      - "traefik.http.routers.matomo.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.matomo.tls.domains[0].main=matomo.example.com"
-      - "traefik.http.services.matomo.loadbalancer.server.port=8000"
     env_file:
       - "./matomo.env"
     environment:

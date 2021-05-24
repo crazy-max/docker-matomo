@@ -54,7 +54,7 @@ ___
 * OPCache enabled to store precompiled script bytecode in shared memory
 * Redis enabled and ready to enhance server performance
 * [s6-overlay](https://github.com/just-containers/s6-overlay/) as process supervisor
-* [Traefik](https://github.com/containous/traefik-library-image) Docker image as reverse proxy and creation/renewal of Let's Encrypt certificates
+* [Traefik](https://github.com/containous/traefik-library-image) as reverse proxy and creation/renewal of Let's Encrypt certificates (see [this template](examples/traefik))
 * [msmtpd SMTP relay](https://github.com/crazy-max/docker-msmtpd) image to send emails
 * [Redis](https://github.com/docker-library/redis) Docker image ready to use as [Redis cache](https://matomo.org/faq/how-to/faq_20511/) or [QueuedTracking plugin](https://matomo.org/faq/how-to/faq_19738) for better scalability
 * [MariaDB](https://github.com/docker-library/mariadb) Docker image as database instance
@@ -139,10 +139,9 @@ in `/var/matomo/` on your host for example. Edit the compose and env files with 
 commands:
 
 ```shell
-touch acme.json
-chmod 600 acme.json
 docker-compose up -d
 docker-compose logs -f
+# open your browser at http://localhost:8000
 ```
 
 ### Swarm
