@@ -15,7 +15,7 @@ spec:
           - path: /
             backend:
               serviceName: matomo
-              servicePort: 80
+              servicePort: 8000
 #  tls:
 #    - hosts:
 #      - matomo.example.com

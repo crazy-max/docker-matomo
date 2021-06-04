@@ -1,0 +1,7 @@
+#!/bin/sh
+
+if [ -f "/data/config/config.ini.php" ]; then
+  echo "Starting Matomo archiving..."
+  console config:set --section='General' --key='enable_browser_archiving_triggering' --value='0'
+  console core:archive --no-interaction ${ARCHIVE_OPTIONS}
+fi

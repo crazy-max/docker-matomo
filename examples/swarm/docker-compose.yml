@@ -1,0 +1,164 @@
+version: "3.5"
+
+services:
+  traefik:
+    image: traefik:${TRAEFIK_VERSION}
+    command:
+      - "--global.checknewversion=false"
+      - "--global.sendanonymoususage=false"
+      - "--log=true"
+      - "--log.level=${TRAEFIK_LOG_LEVEL}"
+      - "--entrypoints.http=true"
+      - "--entrypoints.http.address=:80"
+      - "--entrypoints.http.http.redirections.entrypoint.to=https"
+      - "--entrypoints.http.http.redirections.entrypoint.scheme=https"
+      - "--entrypoints.https=true"
+      - "--entrypoints.https.address=:443"
+      - "--certificatesresolvers.letsencrypt"
+      - "--certificatesresolvers.letsencrypt.acme.storage=acme.json"
+      - "--certificatesresolvers.letsencrypt.acme.email=webmaster@example.com"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=http"
+      - "--providers.docker"
+      - "--providers.docker.watch=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--providers.docker.swarmmode=true"
+    ports:
+      - target: 80
+        published: 80
+        protocol: tcp
+      - target: 443
+        published: 443
+        protocol: tcp
+    volumes:
+      - "${ROOT_DIR}/acme.json:/acme.json"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+
+  db:
+    image: mariadb:${MARIADB_VERSION}
+    command:
+      - "mysqld"
+      - "--log-warnings=2"
+      - "--character-set-server=utf8mb4"
+      - "--collation-server=utf8mb4_unicode_ci"
+      - "--max-connections=${MYSQL_MAX_CONNECTIONS}"
+      - "--max_allowed_packet=${MYSQL_MAX_ALLOWED_PACKET}"
+      - "--wait-timeout=${MYSQL_WAIT_TIMEOUT}"
+      - "--innodb-buffer-pool-size=${MYSQL_IDB_BUFFER_POOL_SIZE}"
+      - "--innodb-buffer-pool-instances=${MYSQL_IDB_BUFFER_POOL_INSTANCES}"
+    volumes:
+      - "${ROOT_DIR}/db:/var/lib/mysql"
+    environment:
+      - "TZ"
+      - "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}"
+      - "MYSQL_DATABASE=${MYSQL_DATABASE}"
+      - "MYSQL_USER=${MYSQL_USER}"
+      - "MYSQL_PASSWORD=${MYSQL_PASSWORD}"
+    deploy:
+      placement:
+        constraints: [node.role == worker]
+
+  redis:
+    image: redis:${REDIS_VERSION}
+    environment:
+      - "TZ"
+    deploy:
+      placement:
+        constraints: [node.role == worker]
+
+  msmtpd:
+    image: crazymax/msmtpd:${MSMTPD_VERSION}
+    env_file:
+      - "${ROOT_DIR}/msmtpd.env"
+    environment:
+      - "TZ"
+    deploy:
+      placement:
+        constraints: [node.role == worker]
+
+  geoip-updater:
+    image: crazymax/geoip-updater:${GEOIP_UPDATER_VERSION}
+    volumes:
+      - "${ROOT_DIR}/app/geoip:/data"
+    env_file:
+      - "${ROOT_DIR}/geoip-updater.env"
+    environment:
+      - "TZ"
+    deploy:
+      placement:
+        constraints: [node.role == worker]
+
+  matomo:
+    image: crazymax/matomo:${MATOMO_VERSION}
+    depends_on:
+      - db
+      - redis
+      - msmtpd
+    volumes:
+      - "${ROOT_DIR}/app:/data"
+    env_file:
+      - "${ROOT_DIR}/matomo.env"
+    environment:
+      - "TZ"
+    deploy:
+      mode: replicated
+      replicas: ${MATOMO_REPLICAS}
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.matomo.entrypoints=https"
+        - "traefik.http.routers.matomo.rule=Host(`matomo.example.com`)"
+        - "traefik.http.routers.matomo.tls=true"
+        - "traefik.http.routers.matomo.tls.certresolver=letsencrypt"
+        - "traefik.http.routers.matomo.tls.domains[0].main=matomo.example.com"
+        - "traefik.http.services.matomo.loadbalancer.server.port=8000"
+        - "traefik.http.services.matomo.loadbalancer.sticky=true"
+        - "traefik.http.services.matomo.loadbalancer.passhostheader=true"
+      placement:
+        constraints: [node.role == worker]
+
+  archive:
+    image: crazymax/matomo:${MATOMO_VERSION}
+    command:
+      - "console"
+      - "core:archive"
+      - "--no-interaction"
+      - "--url=https://${FQDN}/"
+      - "--concurrent-requests-per-website=${MATOMO_ARCHIVE_REQUESTS}"
+    depends_on:
+      - matomo
+    volumes:
+      - "${ROOT_DIR}/app:/data"
+    env_file:
+      - "${ROOT_DIR}/matomo.env"
+    environment:
+      - "TZ"
+    healthcheck:
+      disable: true
+    deploy:
+      labels:
+        - "swarm.cronjob.enable=true"
+        - "swarm.cronjob.schedule=${MATOMO_CRON_ARCHIVE}"
+        - "swarm.cronjob.skip-running=true"
+      replicas: 0
+      placement:
+        constraints: [node.role == worker]
+      restart_policy:
+        condition: none
+
+  scheduler:
+    image: crazymax/swarm-cronjob:${SWARM_CRONJOB_VERSION}
+    depends_on:
+      - archive
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    environment:
+      - "TZ"
+      - "LOG_LEVEL=info"
+      - "LOG_NOCOLOR=true"
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
