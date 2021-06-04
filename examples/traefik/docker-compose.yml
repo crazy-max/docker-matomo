@@ -1,0 +1,118 @@
+version: "3.5"
+
+services:
+  traefik:
+    image: traefik:2.3
+    command:
+      - "--global.checknewversion=false"
+      - "--global.sendanonymoususage=false"
+      - "--log=true"
+      - "--log.level=INFO"
+      - "--entrypoints.http=true"
+      - "--entrypoints.http.address=:80"
+      - "--entrypoints.http.http.redirections.entrypoint.to=https"
+      - "--entrypoints.http.http.redirections.entrypoint.scheme=https"
+      - "--entrypoints.https=true"
+      - "--entrypoints.https.address=:443"
+      - "--certificatesresolvers.letsencrypt"
+      - "--certificatesresolvers.letsencrypt.acme.storage=acme.json"
+      - "--certificatesresolvers.letsencrypt.acme.email=webmaster@example.com"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=http"
+      - "--providers.docker"
+      - "--providers.docker.watch=true"
+      - "--providers.docker.exposedbydefault=false"
+    ports:
+      - target: 80
+        published: 80
+        protocol: tcp
+      - target: 443
+        published: 443
+        protocol: tcp
+    volumes:
+      - "./acme.json:/acme.json"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    restart: always
+
+  db:
+    image: mariadb:10.5
+    command:
+      - "--character-set-server=utf8mb4"
+      - "--collation-server=utf8mb4_unicode_ci"
+      - "--max_allowed_packet=256M"
+    volumes:
+      - "db:/var/lib/mysql"
+    environment:
+      - "MYSQL_ALLOW_EMPTY_PASSWORD=yes"
+      - "MYSQL_DATABASE=matomo"
+      - "MYSQL_USER=matomo"
+      - "MYSQL_PASSWORD=asupersecretpassword"
+    restart: always
+
+  redis:
+    image: redis:4.0-alpine
+    restart: always
+
+  msmtpd:
+    image: crazymax/msmtpd:latest
+    env_file:
+      - "./msmtpd.env"
+    environment:
+      - "TZ"
+    restart: always
+
+  geoip-updater:
+    image: crazymax/geoip-updater:latest
+    volumes:
+      - "geoip-updater:/data"
+    env_file:
+      - "./geoip-updater.env"
+    environment:
+      - "TZ"
+    restart: always
+
+  matomo:
+    image: crazymax/matomo:latest
+    depends_on:
+      - db
+      - redis
+      - msmtpd
+    volumes:
+      - "matomo:/data"
+      - "geoip-updater:/data/geoip"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.matomo.entrypoints=https"
+      - "traefik.http.routers.matomo.rule=Host(`matomo.example.com`)"
+      - "traefik.http.routers.matomo.tls=true"
+      - "traefik.http.routers.matomo.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.matomo.tls.domains[0].main=matomo.example.com"
+      - "traefik.http.services.matomo.loadbalancer.server.port=8000"
+    env_file:
+      - "./matomo.env"
+    environment:
+      - "TZ"
+    restart: always
+
+  cron:
+    image: crazymax/matomo:latest
+    depends_on:
+      - matomo
+    volumes:
+      - "matomo:/data"
+      - "geoip-updater:/data/geoip"
+    env_file:
+      - "./matomo.env"
+    environment:
+      - "TZ"
+      - "SIDECAR_CRON=1"
+      - "CRON_ARCHIVE=0 * * * *"
+      - "ARCHIVE_OPTIONS=--concurrent-requests-per-website=3"
+    healthcheck:
+      disable: true
+    restart: always
+
+volumes:
+  db:
+  geoip-updater:
+  matomo:

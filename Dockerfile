@@ -1,52 +1,44 @@
-FROM nginx:stable-alpine
+ARG MATOMO_VERSION=4.3.1
 
-ARG BUILD_DATE
-ARG VCS_REF
-ARG VERSION
+FROM crazymax/yasu:latest AS yasu
+FROM --platform=${BUILDPLATFORM:-linux/amd64} crazymax/alpine-s6:3.13-2.2.0.3 AS download
+RUN apk --update --no-cache add curl tar unzip xz
 
-LABEL maintainer="CrazyMax" \
-  org.label-schema.build-date=$BUILD_DATE \
-  org.label-schema.name="matomo" \
-  org.label-schema.description="Matomo (formerly Piwik) based on Alpine Linux and Nginx" \
-  org.label-schema.version=$VERSION \
-  org.label-schema.url="https://github.com/crazy-max/docker-matomo" \
-  org.label-schema.vcs-ref=$VCS_REF \
-  org.label-schema.vcs-url="https://github.com/crazy-max/docker-matomo" \
-  org.label-schema.vendor="CrazyMax" \
-  org.label-schema.schema-version="1.0"
+ARG MATOMO_VERSION
+WORKDIR /dist/matomo
+RUN curl -sSL "https://builds.matomo.org/matomo-${MATOMO_VERSION}.tar.gz" | tar xz matomo --strip 1
+RUN curl -sSL "https://matomo.org/wp-content/uploads/unifont.ttf.zip" -o "unifont.ttf.zip"
+RUN unzip "unifont.ttf.zip" -d "./plugins/ImageGraph/fonts/"
+RUN rm -f "unifont.ttf.zip"
 
-RUN apk --update --no-cache add -t build-dependencies \
-    gcc \
-    gd-dev \
-    geoip-dev \
-    git \
-    gnupg \
-    libc-dev \
-    libmaxminddb-dev \
-    libxslt-dev \
-    linux-headers \
-    make \
-    openssl-dev \
-    pcre-dev \
-    perl-dev \
-    zlib-dev \
-  && cd /usr/src \
-  && wget http://nginx.org/download/nginx-$NGINX_VERSION.tar.gz \
-  && tar zxvf nginx-$NGINX_VERSION.tar.gz \
-  && git clone -b master --single-branch https://github.com/leev/ngx_http_geoip2_module.git \
-  && cd nginx-$NGINX_VERSION \
-  && ./configure --with-compat --with-http_geoip_module=dynamic --add-dynamic-module=../ngx_http_geoip2_module \
-  && make modules \
-  && cp objs/ngx_http_geoip_module.so /etc/nginx/modules \
-  && cp objs/ngx_http_geoip2_module.so /etc/nginx/modules \
-  && apk del build-dependencies \
-  && rm -rf /usr/src/nginx-* /usr/src/ngx_http_geoip2_module /var/cache/apk/* /var/www/* /tmp/*
+WORKDIR /dist/mmdb
+RUN curl -SsOL "https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-ASN.mmdb" \
+  && curl -SsOL "https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-City.mmdb" \
+  && curl -SsOL "https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-Country.mmdb"
+
+FROM crazymax/alpine-s6:3.13-2.2.0.3
+LABEL maintainer="CrazyMax"
+
+COPY --from=yasu / /
+COPY --from=download --chown=nobody:nogroup /dist/matomo /var/www/matomo
+COPY --from=download --chown=nobody:nogroup /dist/mmdb /var/mmdb
+
+ENV S6_BEHAVIOUR_IF_STAGE2_FAILS="2" \
+  TZ="UTC" \
+  PUID="1000" \
+  PGID="1000" \
+  MATOMO_PLUGIN_DIRS="/var/www/matomo/data-plugins/;data-plugins" \
+  MATOMO_PLUGIN_COPY_DIR="/var/www/matomo/data-plugins/"
 
 RUN apk --update --no-cache add \
-    geoip \
-    inotify-tools \
+    bash \
+    ca-certificates \
+    curl \
     libmaxminddb \
+    libressl \
+    nginx \
     php7 \
+    php7-bcmath \
     php7-cli \
     php7-ctype \
     php7-curl \
@@ -54,8 +46,10 @@ RUN apk --update --no-cache add \
     php7-iconv \
     php7-fpm \
     php7-gd \
+    php7-gmp \
     php7-json \
     php7-ldap \
+    php7-maxminddb \
     php7-mbstring \
     php7-opcache \
     php7-openssl \
@@ -66,54 +60,19 @@ RUN apk --update --no-cache add \
     php7-simplexml \
     php7-xml \
     php7-zlib \
-    ssmtp \
-    supervisor \
+    rsync \
+    shadow \
     tzdata \
-    wget \
-  && rm -rf /var/cache/apk/* /var/www/* /tmp/*
+  && addgroup -g ${PGID} matomo \
+  && adduser -D -H -u ${PUID} -G matomo -h /var/www/matomo  -s /bin/sh matomo \
+  && rm -rf /tmp/* /var/cache/apk/*
 
-RUN cd /tmp \
-  && mkdir -p /etc/nginx/geoip \
-  && wget -q http://geolite.maxmind.com/download/geoip/database/GeoLiteCityv6-beta/GeoLiteCityv6.dat.gz \
-  && gzip -d GeoLiteCityv6.dat.gz \
-  && wget -q http://geolite.maxmind.com/download/geoip/database/GeoIPv6.dat.gz \
-  && gzip -d GeoIPv6.dat.gz \
-  && mv GeoLiteCityv6.dat /etc/nginx/geoip/GeoIPv6-City.dat \
-  && mv GeoIPv6.dat /etc/nginx/geoip/GeoIPv6-Country.dat \
-  && wget -q http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz \
-  && wget -q http://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.tar.gz \
-  && wget -q http://geolite.maxmind.com/download/geoip/database/GeoLite2-ASN.tar.gz \
-  && tar -xvzf GeoLite2-City.tar.gz --strip-components=1 \
-  && tar -xvzf GeoLite2-Country.tar.gz --strip-components=1 \
-  && tar -xvzf GeoLite2-ASN.tar.gz --strip-components=1 \
-  && mv *.mmdb /etc/nginx/geoip \
-  && rm -rf /tmp/*
+COPY rootfs /
 
-ENV MATOMO_VERSION="3.7.0" \
-  CRONTAB_PATH="/var/spool/cron/crontabs"
-
-RUN apk --update --no-cache add -t build-dependencies \
-    ca-certificates gnupg libressl tar \
-  && mkdir -p /var/www \
-  && cd /tmp \
-  && wget -q https://builds.matomo.org/piwik-${MATOMO_VERSION}.tar.gz \
-  && wget -q https://builds.matomo.org/piwik-${MATOMO_VERSION}.tar.gz.asc \
-  && wget -q https://builds.matomo.org/signature.asc \
-  && gpg --import signature.asc \
-  && gpg --verify piwik-${MATOMO_VERSION}.tar.gz.asc piwik-${MATOMO_VERSION}.tar.gz \
-  && tar -xzf piwik-${MATOMO_VERSION}.tar.gz --strip 1 -C /var/www \
-  && apk del build-dependencies \
-  && rm -rf /root/.gnupg /tmp/* /var/cache/apk/*
-
-COPY entrypoint.sh /entrypoint.sh
-COPY assets /
-
-RUN chmod a+x /entrypoint.sh /usr/local/bin/* \
-  && chown -R nginx. /etc/nginx /usr/lib/nginx /var/cache/nginx /var/log/nginx /var/log/php7 /var/www
-
-EXPOSE 80
-WORKDIR /var/www
+EXPOSE 8000
 VOLUME [ "/data" ]
 
-ENTRYPOINT [ "/entrypoint.sh" ]
-CMD [ "/usr/bin/supervisord", "-c", "/etc/supervisord.conf" ]
+ENTRYPOINT [ "/init" ]
+
+HEALTHCHECK --interval=30s --timeout=20s --start-period=10s \
+  CMD /usr/local/bin/healthcheck

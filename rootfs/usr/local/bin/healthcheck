@@ -1,0 +1,8 @@
+#!/bin/sh
+set -e
+
+if [ "$SIDECAR_CRON" = "1" ]; then
+  pgrep -f "busybox crond -f -L /dev/stdout"
+else
+  curl --fail http://127.0.0.1:12345/ping || exit 1
+fi
