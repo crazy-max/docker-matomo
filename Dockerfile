@@ -64,7 +64,7 @@ RUN apk --update --no-cache add \
     tzdata \
   && addgroup -g ${PGID} matomo \
   && adduser -D -H -u ${PUID} -G matomo -h /var/www/matomo  -s /bin/sh matomo \
-  && rm -rf /tmp/* /var/cache/apk/*
+  && rm -rf /tmp/*
 
 COPY rootfs /
 
