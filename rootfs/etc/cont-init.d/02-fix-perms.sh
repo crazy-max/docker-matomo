@@ -1,4 +1,5 @@
 #!/usr/bin/with-contenv sh
+# shellcheck shell=sh
 
 echo "Fixing perms..."
 mkdir -p /data/config \
@@ -9,7 +10,7 @@ mkdir -p /data/config \
   /data/tmp \
   /var/lib/nginx \
   /var/log/nginx \
-  /var/log/php7 \
+  /var/log/php8 \
   /var/run/nginx \
   /var/run/php-fpm
 chown matomo. \
@@ -27,7 +28,7 @@ chown -R matomo. \
   /tpls \
   /var/lib/nginx \
   /var/log/nginx \
-  /var/log/php7 \
+  /var/log/php8 \
   /var/run/nginx \
   /var/run/php-fpm \
   /var/www/matomo/config \
