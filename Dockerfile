@@ -36,32 +36,33 @@ RUN apk --update --no-cache add \
     libmaxminddb \
     nginx \
     openssl \
-    php7 \
-    php7-bcmath \
-    php7-cli \
-    php7-ctype \
-    php7-curl \
-    php7-dom \
-    php7-iconv \
-    php7-fpm \
-    php7-gd \
-    php7-gmp \
-    php7-json \
-    php7-ldap \
-    php7-maxminddb \
-    php7-mbstring \
-    php7-opcache \
-    php7-openssl \
-    php7-pdo \
-    php7-pdo_mysql \
-    php7-redis \
-    php7-session \
-    php7-simplexml \
-    php7-xml \
-    php7-zlib \
+    php8 \
+    php8-bcmath \
+    php8-cli \
+    php8-ctype \
+    php8-curl \
+    php8-dom \
+    php8-iconv \
+    php8-fpm \
+    php8-gd \
+    php8-gmp \
+    php8-json \
+    php8-ldap \
+    php8-mbstring \
+    php8-opcache \
+    php8-openssl \
+    php8-pdo \
+    php8-pdo_mysql \
+    php8-pecl-maxminddb \
+    php8-redis \
+    php8-session \
+    php8-simplexml \
+    php8-xml \
+    php8-zlib \
     rsync \
     shadow \
     tzdata \
+  && ln -s /usr/bin/php8 /usr/bin/php \
   && addgroup -g ${PGID} matomo \
   && adduser -D -H -u ${PUID} -G matomo -h /var/www/matomo  -s /bin/sh matomo \
   && rm -rf /tmp/*
