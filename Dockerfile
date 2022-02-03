@@ -1,4 +1,4 @@
-ARG MATOMO_VERSION=4.6.2
+ARG MATOMO_VERSION=4.7.0
 
 FROM crazymax/yasu:latest AS yasu
 FROM --platform=${BUILDPLATFORM:-linux/amd64} crazymax/alpine-s6:3.14-2.2.0.3 AS download
