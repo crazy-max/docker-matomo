@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-ARG MATOMO_VERSION=4.12.2
+ARG MATOMO_VERSION=4.12.3
 ARG ALPINE_VERSION=3.16
 
 FROM crazymax/yasu:latest AS yasu
