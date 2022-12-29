@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 ARG MATOMO_VERSION=4.13.0
-ARG ALPINE_VERSION=3.16
+ARG ALPINE_VERSION=3.17
 
 FROM crazymax/yasu:latest AS yasu
 FROM --platform=${BUILDPLATFORM:-linux/amd64} crazymax/alpine-s6:${ALPINE_VERSION}-2.2.0.3 AS download
@@ -65,7 +65,6 @@ RUN apk --update --no-cache add \
     rsync \
     shadow \
     tzdata \
-  && ln -s /usr/bin/php81 /usr/bin/php \
   && addgroup -g ${PGID} matomo \
   && adduser -D -H -u ${PUID} -G matomo -h /var/www/matomo  -s /bin/sh matomo \
   && rm -rf /tmp/*
