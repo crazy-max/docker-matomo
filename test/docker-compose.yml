@@ -1,0 +1,75 @@
+name: matomo
+
+services:
+  db:
+    image: mariadb:10.5
+    container_name: matomo_db
+    command:
+      - "--character-set-server=utf8mb4"
+      - "--collation-server=utf8mb4_unicode_ci"
+      - "--max_allowed_packet=256M"
+    networks:
+      - matomo
+    volumes:
+      - "db:/var/lib/mysql"
+    environment:
+      - "MYSQL_ALLOW_EMPTY_PASSWORD=yes"
+      - "MYSQL_DATABASE=matomo"
+      - "MYSQL_USER=matomo"
+      - "MYSQL_PASSWORD=asupersecretpassword"
+    restart: always
+
+  redis:
+    image: redis:4.0-alpine
+    container_name: matomo_redis
+    networks:
+      - matomo
+    restart: always
+
+  matomo:
+    image: ${MATOMO_IMAGE:-crazymax/matomo:latest}
+    container_name: ${MATOMO_CONTAINER:-matomo}
+    depends_on:
+      - db
+      - redis
+    networks:
+      - matomo
+    ports:
+      - target: 8000
+        published: 8000
+        protocol: tcp
+    volumes:
+      - "matomo:/data"
+    env_file:
+      - "./matomo.env"
+    environment:
+      - "TZ"
+    restart: always
+
+  cron:
+    image: ${MATOMO_IMAGE:-crazymax/matomo:latest}
+    container_name: matomo_cron
+    depends_on:
+      - matomo
+    networks:
+      - matomo
+    volumes:
+      - "matomo:/data"
+    env_file:
+      - "./matomo.env"
+    environment:
+      - "TZ"
+      - "SIDECAR_CRON=1"
+      - "CRON_ARCHIVE=0 * * * *"
+      - "ARCHIVE_OPTIONS=--concurrent-requests-per-website=3"
+    healthcheck:
+      disable: true
+    restart: always
+
+volumes:
+  db:
+  matomo:
+
+networks:
+  matomo:
+    name: matomo
