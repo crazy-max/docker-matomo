@@ -149,10 +149,10 @@
 > 
 > As the Docker container now runs as a non-root user, you have to first stop the container and change permissions to `data` volume:
 > ```
-> docker-compose stop
+> docker compose stop
 > chown -R 1000:1000 data/
-> docker-compose pull
-> docker-compose up -d
+> docker compose pull
+> docker compose up -d
 > ```
 > 
 > Other changes:
@@ -195,7 +195,7 @@
 
 > You may need to [convert the database to utf8mb4 charset](https://matomo.org/faq/how-to-update/how-to-convert-the-database-to-utf8mb4-charset/):
 > 
-> `docker-compose exec matomo console core:convert-to-utf8mb4`
+> `docker compose exec matomo console core:convert-to-utf8mb4`
 
 ## 3.14.1-RC1 (2020/10/16)
 
@@ -393,7 +393,7 @@
 
 > :warning: **UPGRADE NOTES**
 > Sidecar cron container is now handled with `SIDECAR_CRON` environment variable.
-> See docker-compose example and README for more info.
+> See Docker Compose example and README for more info.
 
 ## 3.6.0-RC1 (2018/08/29)
 

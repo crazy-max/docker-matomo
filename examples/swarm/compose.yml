@@ -53,10 +53,10 @@ services:
       - "${ROOT_DIR}/db:/var/lib/mysql"
     environment:
       - "TZ"
-      - "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}"
-      - "MYSQL_DATABASE=${MYSQL_DATABASE}"
-      - "MYSQL_USER=${MYSQL_USER}"
-      - "MYSQL_PASSWORD=${MYSQL_PASSWORD}"
+      - "MYSQL_ROOT_PASSWORD"
+      - "MYSQL_DATABASE"
+      - "MYSQL_USER"
+      - "MYSQL_PASSWORD"
     deploy:
       placement:
         constraints: [node.role == worker]
