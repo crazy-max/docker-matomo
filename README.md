@@ -78,10 +78,10 @@ docker buildx bake image-all
 
 ## Image
 
-| Registry                                                                                         | Image                           |
-|--------------------------------------------------------------------------------------------------|---------------------------------|
-| [Docker Hub](https://hub.docker.com/r/crazymax/matomo/)                                            | `crazymax/matomo`                 |
-| [GitHub Container Registry](https://github.com/users/crazy-max/packages/container/package/matomo)  | `ghcr.io/crazy-max/matomo`        |
+| Registry                                                                                          | Image                      |
+|---------------------------------------------------------------------------------------------------|----------------------------|
+| [Docker Hub](https://hub.docker.com/r/crazymax/matomo/)                                           | `crazymax/matomo`          |
+| [GitHub Container Registry](https://github.com/users/crazy-max/packages/container/package/matomo) | `ghcr.io/crazy-max/matomo` |
 
 Following platforms for this image are available:
 
@@ -142,8 +142,8 @@ in `/var/matomo/` on your host for example. Edit the compose and env files with 
 commands:
 
 ```shell
-docker-compose up -d
-docker-compose logs -f
+docker compose up -d
+docker compose logs -f
 # open your browser at http://localhost:8000
 ```
 
@@ -173,8 +173,8 @@ You can upgrade Matomo automatically through the UI, it works well. But I recomm
 whenever I push an update:
 
 ```shell
-docker-compose pull
-docker-compose up -d
+docker compose pull
+docker compose up -d
 ```
 
 ## Notes
@@ -184,13 +184,13 @@ docker-compose up -d
 If you want to use the `console` command to perform common server operations, type:
 
 ```shell
-docker-compose exec matomo console
+docker compose exec matomo console
 ```
 
 ### Email server settings
 
-You can use our SMTP relay `msmtpd` service published on port `2500` and declared in our
-[`docker-compose.yml`](examples/compose/docker-compose.yml):
+You can use our SMTP relay `msmtpd` service published on port `2500` and
+declared in the [`compose.yml`](examples/compose/compose.yml):
 
 ![Email server settings](.github/email-server-settings.png)
 
@@ -201,7 +201,7 @@ On a HA environment, **enable backend sticky sessions** on your load balancer.
 ### Cron
 
 If you want to enable the cron job, you have to run a "sidecar" container like in the
-[docker-compose file](examples/compose/docker-compose.yml) or run a simple container like this:
+[compose file](examples/compose/compose.yml) or run a simple container like this:
 
 ```bash
 docker run -d --name matomo_cron \

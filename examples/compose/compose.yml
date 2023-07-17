@@ -1,4 +1,4 @@
-version: "3.5"
+name: matomo
 
 services:
   db:
@@ -10,10 +10,11 @@ services:
     volumes:
       - "db:/var/lib/mysql"
     environment:
+      - "TZ"
       - "MYSQL_ALLOW_EMPTY_PASSWORD=yes"
-      - "MYSQL_DATABASE=matomo"
-      - "MYSQL_USER=matomo"
-      - "MYSQL_PASSWORD=asupersecretpassword"
+      - "MYSQL_DATABASE"
+      - "MYSQL_USER"
+      - "MYSQL_PASSWORD"
     restart: always
 
   redis:

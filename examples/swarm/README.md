@@ -21,8 +21,8 @@ chmod 600 ${ROOT_DIR}/acme.json
 
 ### Deploy
 
-And deploy [the stack](docker-compose.yml) with this command:
+And deploy [the stack](compose.yml) with this command:
 
 ```shell
-docker stack deploy matomo -c docker-compose.yml
+docker stack deploy matomo -c compose.yml
 ```
