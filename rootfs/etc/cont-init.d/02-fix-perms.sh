@@ -23,7 +23,8 @@ chown matomo. \
   /data/tmp \
   /var/www/matomo/plugins \
   /var/www/matomo/matomo.js \
-  /var/www/matomo/piwik.js
+  /var/www/matomo/piwik.js \
+  /var/www/matomo/vendor/tecnickcom/tcpdf/fonts
 chown -R matomo. \
   /tpls \
   /var/lib/nginx \
