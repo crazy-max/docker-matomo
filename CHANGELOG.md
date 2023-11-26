@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.15.1-r0 (2023/11/26)
+
+* Matomo 4.15.1 (#145)
+* Fix perms of `vendor/tecnickcom/tcpdf/fonts` (#144)
+
 ## 4.15.0-r0 (2023/07/08)
 
 * Matomo 4.15.0 (#132)
