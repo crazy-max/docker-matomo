@@ -40,7 +40,7 @@ services:
     restart: always
 
   matomo:
-    image: crazymax/matomo:latest
+    image: ghcr.io/pxs-iz/matomo:latest
     depends_on:
       - db
       - redis
@@ -59,7 +59,7 @@ services:
     restart: always
 
   cron:
-    image: crazymax/matomo:latest
+    image: ghcr.io/pxs-iz/matomo:latest
     depends_on:
       - matomo
     volumes:
