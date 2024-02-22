@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.0.2-r0 (2024/02/22)
+
+* Matomo 5.0.2 [(#5)](https://github.com/pxs-iz/docker-matomo/pull/5)
+
 ## 5.0.1-r0 (2024/02/01)
 
 * Matomo 5.0.1 [(#4)](https://github.com/pxs-iz/docker-matomo/pull/4)
