@@ -2,9 +2,18 @@ variable "DEFAULT_TAG" {
   default = "matomo:local"
 }
 
+variable "DOCKERFILE" {
+  default = "5.Dockerfile"
+}
+
 // Special target: https://github.com/docker/metadata-action#bake-definition
 target "docker-metadata-action" {
   tags = ["${DEFAULT_TAG}"]
+}
+
+target "_common" {
+  inherits = ["docker-metadata-action"]
+  dockerfile = DOCKERFILE
 }
 
 // Default target if none specified
@@ -13,7 +22,7 @@ group "default" {
 }
 
 target "image" {
-  inherits = ["docker-metadata-action"]
+  inherits = ["_common"]
 }
 
 target "image-local" {
