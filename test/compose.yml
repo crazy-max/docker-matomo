@@ -2,7 +2,7 @@ name: matomo
 
 services:
   db:
-    image: mariadb:10.5
+    image: mariadb:10
     container_name: matomo_db
     command:
       - "--character-set-server=utf8mb4"
