@@ -53,7 +53,7 @@ services:
       - "${ROOT_DIR}/db:/var/lib/mysql"
     environment:
       - "TZ"
-      - "MYSQL_ROOT_PASSWORD"
+      - "MARIADB_RANDOM_ROOT_PASSWORD=yes"
       - "MYSQL_DATABASE"
       - "MYSQL_USER"
       - "MYSQL_PASSWORD"
