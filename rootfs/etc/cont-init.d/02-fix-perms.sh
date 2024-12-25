@@ -10,7 +10,7 @@ mkdir -p /data/config \
   /data/tmp \
   /var/lib/nginx \
   /var/log/nginx \
-  /var/log/php82 \
+  /var/log/php83 \
   /var/run/nginx \
   /var/run/php-fpm
 chown matomo:matomo \
@@ -29,7 +29,7 @@ chown -R matomo:matomo \
   /tpls \
   /var/lib/nginx \
   /var/log/nginx \
-  /var/log/php82 \
+  /var/log/php83 \
   /var/run/nginx \
   /var/run/php-fpm \
   /var/www/matomo/config \
