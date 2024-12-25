@@ -36,29 +36,29 @@ RUN apk --update --no-cache add \
     libmaxminddb \
     nginx \
     openssl \
-    php82 \
-    php82-bcmath \
-    php82-cli \
-    php82-ctype \
-    php82-curl \
-    php82-dom \
-    php82-iconv \
-    php82-fpm \
-    php82-gd \
-    php82-gmp \
-    php82-json \
-    php82-ldap \
-    php82-mbstring \
-    php82-opcache \
-    php82-openssl \
-    php82-pdo \
-    php82-pdo_mysql \
-    php82-pecl-maxminddb \
-    php82-redis \
-    php82-session \
-    php82-simplexml \
-    php82-xml \
-    php82-zlib \
+    php83 \
+    php83-bcmath \
+    php83-cli \
+    php83-ctype \
+    php83-curl \
+    php83-dom \
+    php83-iconv \
+    php83-fpm \
+    php83-gd \
+    php83-gmp \
+    php83-json \
+    php83-ldap \
+    php83-mbstring \
+    php83-opcache \
+    php83-openssl \
+    php83-pdo \
+    php83-pdo_mysql \
+    php83-pecl-maxminddb \
+    php83-redis \
+    php83-session \
+    php83-simplexml \
+    php83-xml \
+    php83-zlib \
     rsync \
     shadow \
     tzdata \
