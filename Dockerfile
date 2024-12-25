@@ -1,19 +1,16 @@
 # syntax=docker/dockerfile:1
 
 ARG MATOMO_VERSION=5.1.1
-ARG ALPINE_VERSION=3.19
+ARG ALPINE_VERSION=3.21
 
-FROM crazymax/yasu:latest AS yasu
-FROM --platform=${BUILDPLATFORM:-linux/amd64} crazymax/alpine-s6:${ALPINE_VERSION}-2.2.0.3 AS download
+FROM --platform=${BUILDPLATFORM} crazymax/alpine-s6:${ALPINE_VERSION}-2.2.0.3 AS download
 RUN apk --update --no-cache add curl tar unzip xz
-
 ARG MATOMO_VERSION
 WORKDIR /dist/matomo
 RUN curl -sSL "https://builds.matomo.org/matomo-${MATOMO_VERSION}.tar.gz" | tar xz matomo --strip 1
 RUN curl -sSL "https://matomo.org/wp-content/uploads/unifont.ttf.zip" -o "unifont.ttf.zip"
 RUN unzip "unifont.ttf.zip" -d "./plugins/ImageGraph/fonts/"
 RUN rm -f "unifont.ttf.zip"
-
 WORKDIR /dist/mmdb
 RUN curl -SsOL "https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-ASN.mmdb" \
   && curl -SsOL "https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-City.mmdb" \
@@ -21,16 +18,16 @@ RUN curl -SsOL "https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-ASN
 
 FROM crazymax/alpine-s6:${ALPINE_VERSION}-2.2.0.3
 
-COPY --from=yasu / /
-COPY --from=download --chown=nobody:nogroup /dist/matomo /var/www/matomo
-COPY --from=download --chown=nobody:nogroup /dist/mmdb /var/mmdb
-
 ENV S6_BEHAVIOUR_IF_STAGE2_FAILS="2" \
   TZ="UTC" \
   PUID="1000" \
   PGID="1000" \
   MATOMO_PLUGIN_DIRS="/var/www/matomo/data-plugins/;data-plugins" \
   MATOMO_PLUGIN_COPY_DIR="/var/www/matomo/data-plugins/"
+
+COPY --from=crazymax/yasu:latest / /
+COPY --from=download --chown=nobody:nogroup /dist/matomo /var/www/matomo
+COPY --from=download --chown=nobody:nogroup /dist/mmdb /var/mmdb
 
 RUN apk --update --no-cache add \
     bash \

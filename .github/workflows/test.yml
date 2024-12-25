@@ -21,12 +21,6 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        dockerfile:
-          - 4.Dockerfile
-          - 5.Dockerfile
     steps:
       -
         name: Checkout
@@ -44,7 +38,6 @@ jobs:
           targets: image-local
         env:
           DEFAULT_TAG: ${{ env.BUILD_TAG }}
-          DOCKERFILE: ${{ matrix.dockerfile }}
       -
         name: Start
         run: |

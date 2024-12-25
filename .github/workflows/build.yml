@@ -17,7 +17,6 @@ on:
       - '**.md'
 
 env:
-  LATEST_DOCKERFILE: 5.Dockerfile
   DOCKERHUB_SLUG: crazymax/matomo
   GHCR_SLUG: ghcr.io/crazy-max/matomo
 
@@ -28,16 +27,6 @@ jobs:
       -
         name: Checkout
         uses: actions/checkout@v4
-      -
-        name: Prepare
-        run: |
-          DOCKERFILE=${{ env.LATEST_DOCKERFILE }}
-          if [[ $GITHUB_REF == refs/tags/* ]]; then
-            TAG=${GITHUB_REF#refs/tags/}
-            VERSION=${TAG%-*}
-            DOCKERFILE=${TAG%%.*}.Dockerfile
-          fi
-          echo "DOCKERFILE=${DOCKERFILE}" >> $GITHUB_ENV
       -
         name: Docker meta
         id: meta
@@ -50,8 +39,6 @@ jobs:
             type=match,pattern=(.*)-r,group=1
             type=ref,event=pr
             type=edge
-          flavor: |
-            latest=${{ env.DOCKERFILE == env.LATEST_DOCKERFILE && startsWith(github.ref, 'refs/tags/') }}
           labels: |
             org.opencontainers.image.title=Matomo
             org.opencontainers.image.description=Matomo (formerly Piwik)

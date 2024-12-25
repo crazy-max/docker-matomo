@@ -13,7 +13,7 @@ mkdir -p /data/config \
   /var/log/php82 \
   /var/run/nginx \
   /var/run/php-fpm
-chown matomo. \
+chown matomo:matomo \
   /data \
   /data/config \
   /data/geoip \
@@ -25,7 +25,7 @@ chown matomo. \
   /var/www/matomo/matomo.js \
   /var/www/matomo/piwik.js \
   /var/www/matomo/vendor/tecnickcom/tcpdf/fonts
-chown -R matomo. \
+chown -R matomo:matomo \
   /tpls \
   /var/lib/nginx \
   /var/log/nginx \
