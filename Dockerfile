@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 ARG MATOMO_VERSION=5.3.2
-ARG ALPINE_VERSION=3.21
+ARG ALPINE_VERSION=3.22
 
 FROM --platform=${BUILDPLATFORM} crazymax/alpine-s6:${ALPINE_VERSION}-2.2.0.3 AS download
 RUN apk --update --no-cache add curl tar unzip xz
