@@ -3,6 +3,8 @@
 ARG MATOMO_VERSION=5.8.0
 ARG ALPINE_VERSION=3.22
 
+FROM tianon/gosu:latest AS gosu
+
 FROM --platform=${BUILDPLATFORM} crazymax/alpine-s6:${ALPINE_VERSION}-2.2.0.3 AS download
 RUN apk --update --no-cache add curl tar unzip xz
 ARG MATOMO_VERSION
@@ -25,7 +27,7 @@ ENV S6_BEHAVIOUR_IF_STAGE2_FAILS="2" \
   MATOMO_PLUGIN_DIRS="/var/www/matomo/data-plugins/;data-plugins" \
   MATOMO_PLUGIN_COPY_DIR="/var/www/matomo/data-plugins/"
 
-COPY --from=crazymax/yasu:latest / /
+COPY --from=gosu /gosu /usr/local/bin/
 COPY --from=download --chown=nobody:nogroup /dist/matomo /var/www/matomo
 COPY --from=download --chown=nobody:nogroup /dist/mmdb /var/mmdb
 
