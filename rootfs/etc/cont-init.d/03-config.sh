@@ -2,7 +2,7 @@
 # shellcheck shell=sh
 
 runas_user() {
-  yasu matomo:matomo "$@"
+  gosu matomo:matomo "$@"
 }
 
 TZ=${TZ:-UTC}
