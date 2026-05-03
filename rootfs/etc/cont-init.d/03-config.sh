@@ -5,6 +5,10 @@ runas_user() {
   gosu matomo:matomo "$@"
 }
 
+has_database_config() {
+  [ -f "$1" ] && grep -q '^\[database\]' "$1"
+}
+
 TZ=${TZ:-UTC}
 MEMORY_LIMIT=${MEMORY_LIMIT:-256M}
 UPLOAD_MAX_SIZE=${UPLOAD_MAX_SIZE:-16M}
@@ -73,7 +77,10 @@ fi
 
 # Check config
 echo "Checking Matomo config..."
-if [ ! -f "/data/config/config.ini.php" ] && [ -f "/var/www/matomo/config/config.ini.php" ]; then
+if ! has_database_config "/data/config/config.ini.php" && has_database_config "/var/www/matomo/config/config.ini.php"; then
+  echo "Persisting Matomo config to /data/config/config.ini.php..."
+  runas_user cp "/var/www/matomo/config/config.ini.php" "/data/config/config.ini.php"
+elif [ ! -f "/data/config/config.ini.php" ] && [ -f "/var/www/matomo/config/config.ini.php" ]; then
   runas_user cp "/var/www/matomo/config/config.ini.php" "/data/config/config.ini.php"
 fi
 ln -sf "/data/config/config.ini.php" "/var/www/matomo/config/config.ini.php"
