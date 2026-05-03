@@ -15,74 +15,37 @@ on:
       - '*'
   pull_request:
 
-env:
-  DOCKERHUB_SLUG: crazymax/matomo
-  GHCR_SLUG: ghcr.io/crazy-max/matomo
-
 jobs:
   build:
-    runs-on: ubuntu-latest
+    uses: docker/github-builder/.github/workflows/bake.yml@7d2a02426d4b989616ba5aaee4e879afd4134b0d # v1.6.0
     permissions:
       contents: read # same as global permissions
+      id-token: write # for signing attestation(s) with GitHub OIDC Token
       packages: write # required to push to GHCR
-    steps:
-      -
-        name: Docker meta
-        id: meta
-        uses: docker/metadata-action@030e881283bb7a6894de51c315a6bfe6a94e05cf # v6.0.0
-        with:
-          images: |
-            ${{ env.DOCKERHUB_SLUG }}
-            ${{ env.GHCR_SLUG }}
-          tags: |
-            type=match,pattern=(.*)-r,group=1
-            type=ref,event=pr
-            type=edge
-          labels: |
-            org.opencontainers.image.title=Matomo
-            org.opencontainers.image.description=Matomo (formerly Piwik)
-            org.opencontainers.image.vendor=CrazyMax
-      -
-        name: Set up QEMU
-        uses: docker/setup-qemu-action@ce360397dd3f832beb865e1373c09c0e9f86d70a # v4.0.0
-      -
-        name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@4d04d5d9486b7bd6fa91e7baf45bbb4f8b9deedd # v4.0.0
-      -
-        name: Login to DockerHub
-        if: github.event_name != 'pull_request'
-        uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121 # v4.1.0
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
+    with:
+      setup-qemu: true
+      target: image-all
+      cache: true
+      cache-scope: build
+      output: image
+      push: ${{ github.event_name != 'pull_request' }}
+      set-meta-labels: true
+      meta-images: |
+        crazymax/matomo
+        ghcr.io/crazy-max/matomo
+      meta-tags: |
+        type=match,pattern=(.*)-r,group=1
+        type=ref,event=pr
+        type=edge
+      meta-labels: |
+        org.opencontainers.image.title=Matomo
+        org.opencontainers.image.description=Matomo (formerly Piwik)
+        org.opencontainers.image.vendor=CrazyMax
+    secrets:
+      registry-auths: |
+        - registry: docker.io
+          username: ${{ vars.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      -
-        name: Login to GHCR
-        if: github.event_name != 'pull_request'
-        uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121 # v4.1.0
-        with:
-          registry: ghcr.io
+        - registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      -
-        name: Build
-        uses: docker/bake-action@a66e1c87e2eca0503c343edf1d208c716d54b8a8 # v7.1.0
-        with:
-          files: |
-            ./docker-bake.hcl
-            cwd://${{ steps.meta.outputs.bake-file }}
-          targets: image-all
-          push: ${{ github.event_name != 'pull_request' }}
-      -
-        name: Check manifest
-        if: github.event_name != 'pull_request'
-        run: |
-          docker buildx imagetools inspect ${{ env.DOCKERHUB_SLUG }}:${{ steps.meta.outputs.version }}
-          docker buildx imagetools inspect ${{ env.GHCR_SLUG }}:${{ steps.meta.outputs.version }}
-      -
-        name: Inspect image
-        if: github.event_name != 'pull_request'
-        run: |
-          docker pull ${{ env.DOCKERHUB_SLUG }}:${{ steps.meta.outputs.version }}
-          docker image inspect ${{ env.DOCKERHUB_SLUG }}:${{ steps.meta.outputs.version }}
-          docker pull ${{ env.GHCR_SLUG }}:${{ steps.meta.outputs.version }}
-          docker image inspect ${{ env.GHCR_SLUG }}:${{ steps.meta.outputs.version }}
