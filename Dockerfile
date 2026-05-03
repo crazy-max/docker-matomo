@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 ARG MATOMO_VERSION=5.9.0
-ARG ALPINE_VERSION=3.22
+ARG ALPINE_VERSION=3.23
 
 FROM tianon/gosu:latest AS gosu
 
