@@ -53,6 +53,7 @@ ___
 * Ability to pass [additional options](https://matomo.org/docs/setup-auto-archiving/#help-for-corearchive-command) during cron archive
 * Plugins and config are kept across upgrades of this image
 * OPCache enabled to store precompiled script bytecode in shared memory
+* Gzip and Brotli compression through Nginx
 * Redis enabled and ready to enhance server performance
 * [s6-overlay](https://github.com/just-containers/s6-overlay/) as process supervisor
 * [Traefik](https://github.com/containous/traefik-library-image) as reverse proxy and creation/renewal of Let's Encrypt certificates (see [this template](examples/traefik))

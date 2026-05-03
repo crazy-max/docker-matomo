@@ -37,6 +37,7 @@ RUN apk --update --no-cache add \
     curl \
     libmaxminddb \
     nginx \
+    nginx-mod-http-brotli \
     openssl \
     php84 \
     php84-bcmath \
