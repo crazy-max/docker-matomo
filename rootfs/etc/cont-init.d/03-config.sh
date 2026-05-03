@@ -105,7 +105,7 @@ fi
 if [ -L /var/www/matomo/js ]; then
   unlink /var/www/matomo/js
 else
-  runas_user rsync -a /var/www/matomo/js/* /data/tmp/js/
+  runas_user rsync -r --inplace /var/www/matomo/js/ /data/tmp/js/
   rm -rf /var/www/matomo/js
 fi
 ln -sf /data/tmp/js /var/www/matomo/js
