@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 ARG MATOMO_VERSION=5.9.0
-ARG ALPINE_VERSION=3.22
+ARG ALPINE_VERSION=3.23
 
 FROM tianon/gosu:latest AS gosu
 
@@ -38,29 +38,29 @@ RUN apk --update --no-cache add \
     libmaxminddb \
     nginx \
     openssl \
-    php83 \
-    php83-bcmath \
-    php83-cli \
-    php83-ctype \
-    php83-curl \
-    php83-dom \
-    php83-iconv \
-    php83-fpm \
-    php83-gd \
-    php83-gmp \
-    php83-json \
-    php83-ldap \
-    php83-mbstring \
-    php83-opcache \
-    php83-openssl \
-    php83-pdo \
-    php83-pdo_mysql \
-    php83-pecl-maxminddb \
-    php83-redis \
-    php83-session \
-    php83-simplexml \
-    php83-xml \
-    php83-zlib \
+    php84 \
+    php84-bcmath \
+    php84-cli \
+    php84-ctype \
+    php84-curl \
+    php84-dom \
+    php84-iconv \
+    php84-fpm \
+    php84-gd \
+    php84-gmp \
+    php84-json \
+    php84-ldap \
+    php84-mbstring \
+    php84-opcache \
+    php84-openssl \
+    php84-pdo \
+    php84-pdo_mysql \
+    php84-pecl-maxminddb \
+    php84-redis \
+    php84-session \
+    php84-simplexml \
+    php84-xml \
+    php84-zlib \
     rsync \
     shadow \
     tzdata \
