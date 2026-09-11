@@ -103,6 +103,7 @@ linux/s390x
 * `PUID`: Matomo user id (default `1000`)
 * `PGID`: Matomo group id (default `1000`)
 * `MEMORY_LIMIT`: PHP memory limit (default `256M`)
+* `NGINX_WORKER_PROCESSES`: Number of Nginx worker processes (default `auto`)
 * `UPLOAD_MAX_SIZE`: Upload max size (default `16M`)
 * `CLEAR_ENV`: Clear environment in FPM workers (default `yes`)
 * `OPCACHE_MEM_SIZE`: PHP OpCache memory consumption (default `128`)
