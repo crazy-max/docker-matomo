@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 ARG MATOMO_VERSION=5.13.0
-ARG ALPINE_VERSION=3.23
+ARG ALPINE_VERSION=3.24
 
 FROM tianon/gosu:latest AS gosu
 
@@ -39,29 +39,28 @@ RUN apk --update --no-cache add \
     nginx \
     nginx-mod-http-brotli \
     openssl \
-    php84 \
-    php84-bcmath \
-    php84-cli \
-    php84-ctype \
-    php84-curl \
-    php84-dom \
-    php84-iconv \
-    php84-fpm \
-    php84-gd \
-    php84-gmp \
-    php84-json \
-    php84-ldap \
-    php84-mbstring \
-    php84-opcache \
-    php84-openssl \
-    php84-pdo \
-    php84-pdo_mysql \
-    php84-pecl-maxminddb \
-    php84-redis \
-    php84-session \
-    php84-simplexml \
-    php84-xml \
-    php84-zlib \
+    php85 \
+    php85-bcmath \
+    php85-cli \
+    php85-ctype \
+    php85-curl \
+    php85-dom \
+    php85-iconv \
+    php85-fpm \
+    php85-gd \
+    php85-gmp \
+    php85-json \
+    php85-ldap \
+    php85-mbstring \
+    php85-openssl \
+    php85-pdo \
+    php85-pdo_mysql \
+    php85-pecl-maxminddb \
+    php85-redis \
+    php85-session \
+    php85-simplexml \
+    php85-xml \
+    php85-zlib \
     rsync \
     shadow \
     tzdata \
