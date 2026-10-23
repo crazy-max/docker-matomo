@@ -1,7 +1,9 @@
 # syntax=docker/dockerfile:1
 
-ARG MATOMO_VERSION=5.7.1
-ARG ALPINE_VERSION=3.23
+ARG MATOMO_VERSION=5.14.1
+ARG ALPINE_VERSION=3.24
+
+FROM tianon/gosu:latest AS gosu
 
 FROM --platform=${BUILDPLATFORM} crazymax/alpine-s6:${ALPINE_VERSION}-2.2.0.3 AS download
 RUN apk --update --no-cache add curl tar unzip xz
@@ -69,7 +71,7 @@ ENV S6_BEHAVIOUR_IF_STAGE2_FAILS="2" \
   MATOMO_PLUGIN_DIRS="/var/www/matomo/data-plugins/;data-plugins" \
   MATOMO_PLUGIN_COPY_DIR="/var/www/matomo/data-plugins/"
 
-COPY --from=crazymax/yasu:latest / /
+COPY --from=gosu /gosu /usr/local/bin/
 COPY --from=download --chown=nobody:nogroup /dist/matomo /var/www/matomo
 COPY --from=download --chown=nobody:nogroup /dist/mmdb /var/mmdb
 
@@ -79,6 +81,7 @@ RUN apk --update --no-cache add \
     curl \
     libmaxminddb \
     nginx \
+    nginx-mod-http-brotli \
     openssl \
     php85 \
     php85-bcmath \
@@ -97,7 +100,7 @@ RUN apk --update --no-cache add \
     php85-pdo \
     php85-pdo_mysql \
     php85-pecl-maxminddb \
-    php85-pecl-redis \
+    php85-redis \
     php85-session \
     php85-simplexml \
     php85-xml \

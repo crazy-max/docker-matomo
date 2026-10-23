@@ -1,28 +1,24 @@
-version: "3.5"
+name: matomo
 
 services:
   traefik:
     image: traefik:${TRAEFIK_VERSION}
     command:
-      - "--global.checknewversion=false"
-      - "--global.sendanonymoususage=false"
-      - "--log=true"
+      - "--global.checkNewVersion=false"
+      - "--global.sendAnonymousUsage=false"
       - "--log.level=${TRAEFIK_LOG_LEVEL}"
-      - "--entrypoints.http=true"
       - "--entrypoints.http.address=:80"
       - "--entrypoints.http.http.redirections.entrypoint.to=https"
       - "--entrypoints.http.http.redirections.entrypoint.scheme=https"
-      - "--entrypoints.https=true"
       - "--entrypoints.https.address=:443"
-      - "--certificatesresolvers.letsencrypt"
-      - "--certificatesresolvers.letsencrypt.acme.storage=acme.json"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/acme.json"
       - "--certificatesresolvers.letsencrypt.acme.email=webmaster@example.com"
-      - "--certificatesresolvers.letsencrypt.acme.httpchallenge"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge=true"
       - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=http"
-      - "--providers.docker"
-      - "--providers.docker.watch=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--providers.docker.swarmmode=true"
+      - "--providers.swarm=true"
+      - "--providers.swarm.endpoint=unix:///var/run/docker.sock"
+      - "--providers.swarm.watch=true"
+      - "--providers.swarm.exposedbydefault=false"
     ports:
       - target: 80
         published: 80
@@ -114,7 +110,7 @@ services:
         - "traefik.http.routers.matomo.tls.certresolver=letsencrypt"
         - "traefik.http.routers.matomo.tls.domains[0].main=matomo.example.com"
         - "traefik.http.services.matomo.loadbalancer.server.port=8000"
-        - "traefik.http.services.matomo.loadbalancer.sticky=true"
+        - "traefik.http.services.matomo.loadbalancer.sticky.cookie=true"
         - "traefik.http.services.matomo.loadbalancer.passhostheader=true"
       placement:
         constraints: [node.role == worker]

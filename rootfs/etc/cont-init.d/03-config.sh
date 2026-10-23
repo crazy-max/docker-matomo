@@ -2,12 +2,17 @@
 # shellcheck shell=sh
 
 runas_user() {
-  yasu matomo:matomo "$@"
+  gosu matomo:matomo "$@"
+}
+
+has_database_config() {
+  [ -f "$1" ] && grep -q '^\[database\]' "$1"
 }
 
 TZ=${TZ:-UTC}
 MEMORY_LIMIT=${MEMORY_LIMIT:-256M}
 UPLOAD_MAX_SIZE=${UPLOAD_MAX_SIZE:-16M}
+NGINX_WORKER_PROCESSES=${NGINX_WORKER_PROCESSES:-auto}
 CLEAR_ENV=${CLEAR_ENV:-yes}
 OPCACHE_MEM_SIZE=${OPCACHE_MEM_SIZE:-128}
 LISTEN_IPV6=${LISTEN_IPV6:-true}
@@ -42,6 +47,7 @@ sed -e "s/@OPCACHE_MEM_SIZE@/$OPCACHE_MEM_SIZE/g" \
 # Nginx
 echo "Setting Nginx configuration..."
 sed -e "s#@UPLOAD_MAX_SIZE@#$UPLOAD_MAX_SIZE#g" \
+  -e "s#@NGINX_WORKER_PROCESSES@#$NGINX_WORKER_PROCESSES#g" \
   -e "s#@REAL_IP_FROM@#$REAL_IP_FROM#g" \
   -e "s#@REAL_IP_HEADER@#$REAL_IP_HEADER#g" \
   -e "s#@LOG_IP_VAR@#$LOG_IP_VAR#g" \
@@ -73,7 +79,10 @@ fi
 
 # Check config
 echo "Checking Matomo config..."
-if [ ! -f "/data/config/config.ini.php" ] && [ -f "/var/www/matomo/config/config.ini.php" ]; then
+if ! has_database_config "/data/config/config.ini.php" && has_database_config "/var/www/matomo/config/config.ini.php"; then
+  echo "Persisting Matomo config to /data/config/config.ini.php..."
+  runas_user cp "/var/www/matomo/config/config.ini.php" "/data/config/config.ini.php"
+elif [ ! -f "/data/config/config.ini.php" ] && [ -f "/var/www/matomo/config/config.ini.php" ]; then
   runas_user cp "/var/www/matomo/config/config.ini.php" "/data/config/config.ini.php"
 fi
 ln -sf "/data/config/config.ini.php" "/var/www/matomo/config/config.ini.php"
@@ -98,7 +107,7 @@ fi
 if [ -L /var/www/matomo/js ]; then
   unlink /var/www/matomo/js
 else
-  runas_user rsync -a /var/www/matomo/js/* /data/tmp/js/
+  runas_user rsync -r --inplace /var/www/matomo/js/ /data/tmp/js/
   rm -rf /var/www/matomo/js
 fi
 ln -sf /data/tmp/js /var/www/matomo/js

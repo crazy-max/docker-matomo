@@ -53,6 +53,7 @@ ___
 * Ability to pass [additional options](https://matomo.org/docs/setup-auto-archiving/#help-for-corearchive-command) during cron archive
 * Plugins and config are kept across upgrades of this image
 * OPCache enabled to store precompiled script bytecode in shared memory
+* Gzip and Brotli compression through Nginx
 * Redis enabled and ready to enhance server performance
 * [s6-overlay](https://github.com/just-containers/s6-overlay/) as process supervisor
 * [Traefik](https://github.com/containous/traefik-library-image) as reverse proxy and creation/renewal of Let's Encrypt certificates (see [this template](examples/traefik))
@@ -88,9 +89,7 @@ Following platforms for this image are available:
 $ docker buildx imagetools inspect crazymax/matomo --format "{{json .Manifest}}" | \
   jq -r '.manifests[] | select(.platform.os != null and .platform.os != "unknown") | .platform | "\(.os)/\(.architecture)\(if .variant then "/" + .variant else "" end)"'
 
-linux/386
 linux/amd64
-linux/arm/v6
 linux/arm/v7
 linux/arm64
 linux/ppc64le
@@ -104,6 +103,7 @@ linux/s390x
 * `PUID`: Matomo user id (default `1000`)
 * `PGID`: Matomo group id (default `1000`)
 * `MEMORY_LIMIT`: PHP memory limit (default `256M`)
+* `NGINX_WORKER_PROCESSES`: Number of Nginx worker processes (default `auto`)
 * `UPLOAD_MAX_SIZE`: Upload max size (default `16M`)
 * `CLEAR_ENV`: Clear environment in FPM workers (default `yes`)
 * `OPCACHE_MEM_SIZE`: PHP OpCache memory consumption (default `128`)
