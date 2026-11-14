@@ -1,5 +1,4 @@
-#!/usr/bin/with-contenv sh
-# shellcheck shell=sh
+#!/bin/sh
 
 runas_user() {
   gosu matomo:matomo "$@"
@@ -96,8 +95,8 @@ if [ ! -L /var/www/matomo/data-plugins ] && [ -d /var/www/matomo/data-plugins ];
   rm -rf /var/www/matomo/data-plugins
 fi
 ln -sf /data/plugins /var/www/matomo/data-plugins
-printf "/var/www/matomo/data-plugins/;data-plugins" > /var/run/s6/container_environment/MATOMO_PLUGIN_DIRS
-printf "/var/www/matomo/data-plugins/" > /var/run/s6/container_environment/MATOMO_PLUGIN_COPY_DIR
+printf "/var/www/matomo/data-plugins/;data-plugins" > /run/s6/container_environment/MATOMO_PLUGIN_DIRS
+printf "/var/www/matomo/data-plugins/" > /run/s6/container_environment/MATOMO_PLUGIN_COPY_DIR
 
 # Check js folder
 echo "Checking Matomo js folder..."

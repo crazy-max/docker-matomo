@@ -1,5 +1,4 @@
-#!/usr/bin/with-contenv sh
-# shellcheck shell=sh
+#!/bin/sh
 
 SIDECAR_CRON=${SIDECAR_CRON:-0}
 
@@ -22,21 +21,3 @@ else
   echo ">> Open your browser to install Matomo through the wizard"
   echo ">>"
 fi
-
-mkdir -p /etc/services.d/nginx
-cat > /etc/services.d/nginx/run <<EOL
-#!/usr/bin/execlineb -P
-with-contenv
-s6-setuidgid ${PUID}:${PGID}
-nginx -g "daemon off;"
-EOL
-chmod +x /etc/services.d/nginx/run
-
-mkdir -p /etc/services.d/php-fpm
-cat > /etc/services.d/php-fpm/run <<EOL
-#!/usr/bin/execlineb -P
-with-contenv
-s6-setuidgid ${PUID}:${PGID}
-php-fpm85 -F
-EOL
-chmod +x /etc/services.d/php-fpm/run

@@ -45,6 +45,8 @@ services:
       - "./matomo.env"
     environment:
       - "TZ"
+      - "PUID=1234"
+      - "PGID=1235"
     restart: always
 
   cron:
@@ -60,6 +62,8 @@ services:
       - "./matomo.env"
     environment:
       - "TZ"
+      - "PUID=1234"
+      - "PGID=1235"
       - "SIDECAR_CRON=1"
       - "CRON_ARCHIVE=0 * * * *"
       - "ARCHIVE_OPTIONS=--concurrent-requests-per-website=3"
