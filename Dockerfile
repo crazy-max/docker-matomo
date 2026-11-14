@@ -5,7 +5,7 @@ ARG ALPINE_VERSION=3.24
 
 FROM tianon/gosu:latest AS gosu
 
-FROM --platform=${BUILDPLATFORM} crazymax/alpine-s6:${ALPINE_VERSION}-2.2.0.3 AS download
+FROM --platform=${BUILDPLATFORM} alpine:${ALPINE_VERSION} AS download
 RUN apk --update --no-cache add curl tar unzip xz
 ARG MATOMO_VERSION
 WORKDIR /dist/matomo
@@ -18,9 +18,10 @@ RUN curl -SsOL "https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-ASN
   && curl -SsOL "https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-City.mmdb" \
   && curl -SsOL "https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-Country.mmdb"
 
-FROM crazymax/alpine-s6:${ALPINE_VERSION}-2.2.0.3
+FROM alpine:${ALPINE_VERSION}
 
 ENV S6_BEHAVIOUR_IF_STAGE2_FAILS="2" \
+  S6_STAGE2_HOOK="/etc/s6-overlay/scripts/runtime-bundles" \
   TZ="UTC" \
   PUID="1000" \
   PGID="1000" \
@@ -62,6 +63,7 @@ RUN apk --update --no-cache add \
     php85-xml \
     php85-zlib \
     rsync \
+    s6-overlay \
     shadow \
     tzdata \
   && addgroup -g ${PGID} matomo \
