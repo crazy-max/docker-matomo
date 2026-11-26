@@ -1,6 +1,8 @@
 # syntax=docker/dockerfile:1
 
+# renovate: datasource=github-releases depName=matomo-org/matomo
 ARG MATOMO_VERSION=5.14.1
+# renovate: datasource=docker depName=alpine versioning=docker
 ARG ALPINE_VERSION=3.24
 
 FROM tianon/gosu:latest AS gosu
